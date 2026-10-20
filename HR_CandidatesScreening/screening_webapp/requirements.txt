@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+google-auth
+requests
+python-docx
+pypdf
+openpyxl
+python-dotenv
+google-adk
+google-genai
+python-multipart
+pytest
+pytest-asyncio
+httpx

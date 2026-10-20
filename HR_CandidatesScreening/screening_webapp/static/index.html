@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidates Screening Agent — Enterprise HR Review Portal</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <!-- Sign-In Page View -->
+  <div id="signin-view" class="signin-container">
+    <div class="signin-split-shell">
+      <!-- Left Panel: 3-Step Visual Workflow Diagram -->
+      <div class="signin-left-panel">
+        <div class="signin-brand-badge">
+          <span class="signin-dot"></span>
+          <span>ENTERPRISE AI TALENT ACQUISITION · AGENT #01</span>
+        </div>
+        <h1 class="signin-hero-title">Candidates Screening Agent</h1>
+        <p class="signin-hero-subtitle">
+          Blind CV redaction, multi-agent Gemini rubric scoring, and Human-in-the-Loop HR shortlisting with full SQLite &amp; Excel auditability.
+        </p>
+
+        <div class="signin-workflow-title">3-Step Autonomous Screening Workflow</div>
+        <div class="signin-workflow-steps">
+          <div class="signin-step-card">
+            <div class="signin-step-num">1</div>
+            <div class="signin-step-body">
+              <div class="signin-step-heading">Ingest JD &amp; Blind-Redact Applications</div>
+              <div class="signin-step-desc">
+                Parses job descriptions (<code>.docx</code>, <code>.pdf</code>, <code>.txt</code>) and candidate folders while automatically stripping PII (names, contact info, age, gender) before AI evaluation.
+              </div>
+            </div>
+          </div>
+
+          <div class="signin-step-card">
+            <div class="signin-step-num">2</div>
+            <div class="signin-step-body">
+              <div class="signin-step-heading">Multi-Agent Rubric Scoring &amp; Uncertainty Detection</div>
+              <div class="signin-step-desc">
+                Evaluates every candidate against weighted Must-Have and Nice-to-Have criteria with verbatim evidence citations and automatic borderline/missing-evidence flags.
+              </div>
+            </div>
+          </div>
+
+          <div class="signin-step-card">
+            <div class="signin-step-num">3</div>
+            <div class="signin-step-body">
+              <div class="signin-step-heading">Human-in-the-Loop HR Override &amp; Audit Export</div>
+              <div class="signin-step-desc">
+                Surfaces uncertain candidates for 1-click HR Shortlist / Reject decisions with mandatory audit notes and instant multi-sheet Excel (<code>.xlsx</code>) export.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="signin-trust-row">
+          <span class="signin-trust-pill">Google OAuth 2.0 / OIDC Verified</span>
+          <span class="signin-trust-pill">Mandatory PII Redaction Guard</span>
+          <span class="signin-trust-pill">SQLite + Excel Audit Trail</span>
+        </div>
+      </div>
+
+      <!-- Right Panel: Enterprise SSO & Instant Demo Login -->
+      <div class="signin-card">
+        <div class="signin-card-badge">ENTERPRISE WORKSPACE SSO</div>
+        <h1>Sign In to Screening Agent</h1>
+        <p>Authenticate with your authorized Google Workspace account, corporate email, or launch an instant executive demo session.</p>
+
+        <div id="signin-error" class="status-toast error hidden"></div>
+
+        <!-- 1-Click Instant Demo SSO Sign-In -->
+        <div class="signin-demo-box">
+          <div class="signin-demo-label">INSTANT EVALUATION ACCESS</div>
+          <button id="btn-demo-sso" type="button" class="btn-demo-sso" onclick="signInDemo()">
+            <span>⚡ Instant Demo SSO Sign-In (Head of Talent Acquisition)</span>
+            <span class="btn-demo-arrow">→</span>
+          </button>
+          <div class="signin-demo-sub">Signs in as <strong>guruprem.saginadham@sybyl.com</strong> (Root Admin) with pre-loaded job &amp; scored candidates</div>
+        </div>
+
+        <div class="signin-divider"><span>OR CONTINUE WITH GOOGLE OAUTH 2.0</span></div>
+
+        <div class="google-btn-wrapper">
+          <div id="g_id_onload"
+               data-client_id="259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com"
+               data-callback="handleGoogleCredentialResponse"
+               data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin"
+               data-type="standard"
+               data-size="large"
+               data-theme="outline"
+               data-text="sign_in_with"
+               data-shape="rectangular"
+               data-logo_alignment="left"
+               data-width="340">
+          </div>
+        </div>
+
+        <div class="signin-divider"><span>OR WORKSPACE EMAIL SSO</span></div>
+
+        <form id="sso-email-form" class="signin-email-form" onsubmit="signInWithWorkEmail(event)">
+          <input id="sso-email-input" type="email" class="text-input" placeholder="name@company.com" value="guruprem.saginadham@sybyl.com" required />
+          <button type="submit" class="btn btn-primary signin-email-btn">Sign In with Work Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authenticated Application View -->
+  <div id="app-view" class="hidden">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <div>
+          <h1>Candidates Screening Agent</h1>
+          <div class="topbar-subtitle">Autonomous Rubric Evaluation &amp; Human-in-the-Loop HR Shortlisting</div>
+        </div>
+        <span id="topbar-active-job" class="badge badge-hr hidden"></span>
+      </div>
+      <div class="topbar-actions">
+        <select id="theme-select" class="select-input" style="width: auto;" aria-label="Color theme">
+          <option value="system">Theme: Follow OS</option>
+          <option value="light">Theme: Light</option>
+          <option value="dark">Theme: Dark</option>
+        </select>
+        <button id="btn-default-settings" type="button" class="btn btn-outline" aria-expanded="false" aria-controls="settings-panel">
+          Default settings
+        </button>
+        <span id="settings-summary" class="settings-summary-pill" aria-live="polite">Threshold 70 · gemini-4-argon · Redaction on</span>
+        <button id="btn-export-excel" type="button" class="btn btn-outline">
+          Export Excel (.xlsx)
+        </button>
+        <span id="signed-in-user" class="user-pill"></span>
+        <button id="btn-logout" type="button" class="btn btn-outline">
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <!-- Folded-by-default Default Screening Settings Panel -->
+    <aside id="settings-panel" class="settings-panel collapsed hidden" data-folded="true" aria-hidden="true" aria-label="Default Screening Settings">
+      <div class="settings-panel-inner">
+        <div class="settings-panel-header">
+          <h2>Default Screening Settings</h2>
+          <button id="btn-close-settings" type="button" class="btn btn-outline btn-xs">
+            Fold panel
+          </button>
+        </div>
+
+        <div class="settings-panel-grid">
+          <div class="form-group">
+            <label for="setting-threshold">
+              <span>Pass Threshold</span>
+              <span id="threshold-display">70 / 100</span>
+            </label>
+            <input id="setting-threshold" type="range" min="0" max="100" step="1" value="70" class="slider-input" />
+            <div class="form-help">Minimum score out of 100 recommended for shortlisting.</div>
+          </div>
+
+          <div class="form-group">
+            <div class="toggle-row">
+              <label for="setting-continuity" style="margin-bottom: 0;">Require Continuous Employment</label>
+              <input id="setting-continuity" type="checkbox" />
+            </div>
+            <div class="form-help">Only turn on if the job advert strictly requires no career gaps.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="setting-model">AI Model</label>
+            <select id="setting-model" class="select-input">
+              <option value="gemini-4-argon">gemini-4-argon (Strongest)</option>
+              <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+              <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Personal Data Redaction</label>
+            <div>
+              <span class="status-on-pill">On — Always active before scoring</span>
+            </div>
+            <div class="form-help">Names, contact details, age, gender, and photos are removed before the AI scores any CV.</div>
+          </div>
+        </div>
+
+        <div class="settings-panel-actions">
+          <button id="btn-save-settings" type="button" class="btn btn-primary">
+            Save Default Settings
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-layout">
+      <!-- Main Area: Tabs -->
+      <main class="main-area">
+        <div id="global-toast" class="status-toast hidden"></div>
+
+        <nav class="tabs-bar" role="tablist">
+          <button type="button" class="tab-btn active" data-tab="jobs" role="tab">
+            1. Jobs
+          </button>
+          <button type="button" class="tab-btn" data-tab="candidates" role="tab">
+            2. Candidates
+          </button>
+          <button type="button" class="tab-btn" data-tab="results" role="tab">
+            3. Results
+          </button>
+          <button type="button" class="tab-btn" data-tab="history" role="tab">
+            4. History
+          </button>
+          <button id="tab-btn-access" type="button" class="tab-btn hidden" data-tab="access" role="tab">
+            5. Access
+          </button>
+        </nav>
+
+        <!-- Tab 1: Jobs (First Screen: Job Form & Job List Only) -->
+        <section id="tab-jobs" class="tab-panel">
+          <div class="table-card job-create-card">
+            <h3 class="section-title" style="margin-top: 0;">Create a New Screening Job</h3>
+            <p class="form-help" style="margin-bottom: 14px;">
+              Each job receives a unique Job ID (e.g. <strong>JOB-2026-001</strong>). Upload the job description and select the candidate CV folder to screen.
+            </p>
+            <div class="job-form-grid">
+              <div class="form-group">
+                <label for="new-job-title">Job Title</label>
+                <input id="new-job-title" type="text" class="text-input" placeholder="e.g. Sales Executive - Retail and Business Clients" />
+              </div>
+
+              <div class="form-group">
+                <label for="new-job-jd-file">Job Description File (.docx or .pdf)</label>
+                <input id="new-job-jd-file" type="file" accept=".docx,.pdf,.txt" class="text-input file-input" />
+              </div>
+
+              <div class="form-group">
+                <label for="new-job-cv-folder">
+                  <span>Candidate CV Folder (Browser Folder Picker)</span>
+                  <span id="new-job-cv-count" class="badge badge-ai">0 files selected</span>
+                </label>
+                <input id="new-job-cv-folder" type="file" webkitdirectory directory multiple class="text-input file-input" />
+                <div class="form-help">Pick a folder containing candidate subfolders or CV documents. Files are stored under <code>screening_webapp/data/jobs/&lt;JOB-ID&gt;/</code>.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="new-job-server-dir">Or Server Folder Path (Optional, inside project root)</label>
+                <input id="new-job-server-dir" type="text" class="text-input" placeholder="Leave blank when uploading a folder above" />
+              </div>
+            </div>
+
+            <div class="job-settings-row">
+              <div class="form-group" style="margin-bottom: 0; min-width: 170px;">
+                <label for="new-job-threshold">
+                  <span>Pass Threshold</span>
+                  <span id="new-job-threshold-display">70 / 100</span>
+                </label>
+                <input id="new-job-threshold" type="range" min="0" max="100" step="1" value="70" class="slider-input" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="new-job-continuity" style="gap: 8px; cursor: pointer;">
+                  <input id="new-job-continuity" type="checkbox" />
+                  <span>Require Continuous Employment</span>
+                </label>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                <label for="new-job-model">AI Model</label>
+                <select id="new-job-model" class="select-input">
+                  <option value="gemini-4-argon">gemini-4-argon (Strongest)</option>
+                  <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+                  <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                </select>
+              </div>
+
+              <div class="job-form-actions">
+                <button id="btn-create-job" type="button" class="btn btn-outline">
+                  Create Job
+                </button>
+                <button id="btn-create-and-run-job" type="button" class="btn btn-primary">
+                  Create &amp; Run screening
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="run-progress-box" class="progress-box hidden" style="margin-bottom: 14px;">
+            <div id="run-progress-label" style="font-size: 12.5px; font-weight: 600;">Starting screening...</div>
+            <div class="progress-track">
+              <div id="run-progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <h3 class="section-title">All Screening Jobs</h3>
+          <div class="table-card">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Job ID</th>
+                  <th>Job Title</th>
+                  <th>Job Description</th>
+                  <th>Candidates</th>
+                  <th>Settings</th>
+                  <th>Last Run</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="jobs-tbody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                    No jobs created yet. Use the form above to create your first job.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab 2: Candidates -->
+        <section id="tab-candidates" class="tab-panel hidden">
+          <div class="toolbar-card">
+            <div class="toolbar-row">
+              <div class="toolbar-group">
+                <label for="candidates-job-select" class="toolbar-label">Job:</label>
+                <select id="candidates-job-select" class="select-input" style="min-width: 280px;"></select>
+              </div>
+              <div class="toolbar-group">
+                <span id="candidates-count-badge" class="badge badge-ai">0 candidates</span>
+              </div>
+            </div>
+          </div>
+          <div id="candidates-list" class="candidates-grid"></div>
+        </section>
+
+        <!-- Tab 3: Results -->
+        <section id="tab-results" class="tab-panel hidden">
+          <!-- Job ID Selector Bar -->
+          <div class="toolbar-card">
+            <div class="toolbar-row">
+              <div class="toolbar-group" style="flex: 1; min-width: 220px;">
+                <label for="results-job-search" class="toolbar-label">Find Job:</label>
+                <input id="results-job-search" type="text" class="text-input" placeholder="Filter jobs by Job ID or title..." />
+              </div>
+              <div class="toolbar-group" style="flex: 1.5; min-width: 260px;">
+                <label for="results-job-select" class="toolbar-label">Job ID:</label>
+                <select id="results-job-select" class="select-input"></select>
+              </div>
+              <div class="toolbar-group">
+                <span id="results-active-job-badge" class="badge badge-hr">No Job Selected</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="label">Total Candidates</div>
+              <div id="sum-total" class="value">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">Needs Your Review</div>
+              <div id="sum-review" class="value" style="color: var(--warning-text);">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">AI Decided</div>
+              <div id="sum-ai" class="value">0</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">You Decided</div>
+              <div id="sum-hr" class="value" style="color: var(--primary);">0</div>
+            </div>
+          </div>
+
+          <!-- Compact Filter, Search & Sort Bar -->
+          <div class="toolbar-card">
+            <div class="toolbar-row">
+              <div class="toolbar-group" style="flex: 1; min-width: 220px;">
+                <input id="results-candidate-search" type="text" class="text-input" placeholder="Search by candidate name or ID (e.g. CAND-001)..." />
+              </div>
+              <div class="toolbar-group">
+                <label class="checkbox-pill" for="results-needs-review-only">
+                  <input id="results-needs-review-only" type="checkbox" />
+                  <span>Needs your review only</span>
+                </label>
+              </div>
+              <div class="toolbar-group" style="min-width: 240px;">
+                <label for="results-sort-by" class="toolbar-label">Sort:</label>
+                <select id="results-sort-by" class="select-input">
+                  <option value="needs_review">Needs review first, then score</option>
+                  <option value="score_desc">Score: High to Low</option>
+                  <option value="score_asc">Score: Low to High</option>
+                  <option value="name">Candidate Name (A–Z)</option>
+                  <option value="id">Candidate ID</option>
+                  <option value="status">Decision Status</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Documents</th>
+                  <th>Score</th>
+                  <th>AI Recommendation</th>
+                  <th>Why</th>
+                  <th>Status</th>
+                  <th>Your Decision</th>
+                </tr>
+              </thead>
+              <tbody id="results-tbody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 28px;">
+                    No screening results for this job yet. Click "Run screening" to evaluate candidates.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="results-pagination" class="pagination-bar">
+              <span id="results-page-info" class="folder-tag">Showing 0 candidates (25 per page)</span>
+              <div class="pagination-actions">
+                <button id="btn-page-prev" type="button" class="btn btn-outline btn-xs" disabled>Previous</button>
+                <button id="btn-page-next" type="button" class="btn btn-outline btn-xs" disabled>Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 4: History -->
+        <section id="tab-history" class="tab-panel hidden">
+          <h3 class="section-title" style="margin-top: 0;">Past Screening Runs</h3>
+          <div class="table-card" style="margin-bottom: 24px;">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Run ID</th>
+                  <th>Job ID</th>
+                  <th>Date (UTC)</th>
+                  <th>Settings Used</th>
+                  <th>Candidates</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="history-runs-tbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted);">No runs recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">Decision &amp; Activity Audit Log</h3>
+          <div class="table-card">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Time (UTC)</th>
+                  <th>User</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="history-audit-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-muted);">No audit events recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab 5: Access (Visible to Admins Only) -->
+        <section id="tab-access" class="tab-panel hidden">
+          <h3 class="section-title" style="margin-top: 0;">Allowed Users</h3>
+          <div class="table-card" style="padding: 16px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+              <div style="flex: 1; min-width: 240px;">
+                <label for="access-user-email" style="display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 4px;">
+                  User Email Address
+                </label>
+                <input id="access-user-email" type="email" class="text-input" placeholder="colleague@company.com" />
+              </div>
+              <div style="width: 160px;">
+                <label for="access-user-role" style="display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 4px;">
+                  Role
+                </label>
+                <select id="access-user-role" class="select-input">
+                  <option value="hr">HR Reviewer (hr)</option>
+                  <option value="admin">Admin (admin)</option>
+                </select>
+              </div>
+              <button id="btn-add-user" type="button" class="btn btn-primary">
+                Add User
+              </button>
+            </div>
+            <div class="form-help" style="margin-top: 8px;">
+              Changes take effect on the very next request (no server restart needed). Root admins cannot be deactivated or removed, and the last active admin cannot be removed.
+            </div>
+          </div>
+
+          <div class="table-card" style="margin-bottom: 24px;">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Added By</th>
+                  <th>When (UTC)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="access-users-tbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted);">Loading users...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">Allowed Organisation Domains</h3>
+          <div class="table-card" style="padding: 16px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+              <div style="flex: 1; min-width: 240px;">
+                <label for="access-domain-name" style="display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 4px;">
+                  Organisation Domain
+                </label>
+                <input id="access-domain-name" type="text" class="text-input" placeholder="e.g. example.gov" />
+              </div>
+              <div style="width: 160px;">
+                <label for="access-domain-role" style="display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 4px;">
+                  Role
+                </label>
+                <select id="access-domain-role" class="select-input">
+                  <option value="hr">HR Reviewer (hr)</option>
+                </select>
+              </div>
+              <button id="btn-add-domain" type="button" class="btn btn-primary">
+                Add Domain
+              </button>
+            </div>
+            <div class="form-help" style="margin-top: 8px;">
+              Domain rules allow everyone with a verified Google account at that domain to sign in with HR access. Empty by default until configured by an admin.
+            </div>
+          </div>
+
+          <div class="table-card" style="margin-bottom: 24px;">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Domain</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Added By</th>
+                  <th>When (UTC)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="access-domains-tbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted);">No domain rules configured (empty by default).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">Access Changes Audit Trail</h3>
+          <div class="table-card">
+            <table class="results-table compact-table">
+              <thead>
+                <tr>
+                  <th>Time (UTC)</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="access-audit-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-muted);">No access events recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Candidate Document Preview Modal -->
+  <div id="doc-preview-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="doc-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="doc-modal-title" style="margin: 0;">Candidate Documents</h3>
+        <button id="btn-close-doc-modal" type="button" class="btn btn-outline btn-xs">Close</button>
+      </div>
+      <div id="doc-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

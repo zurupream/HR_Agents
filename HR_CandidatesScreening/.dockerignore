@@ -1,0 +1,14 @@
+**/.venv/
+.venv/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+screening_agent/.pytest_cache/
+screening_agent/.env
+screening_webapp/data/*.db
+screening_webapp/data/jobs/
+runner.log
+runner.out
+demo/
+tasks/
+hr_recruitment_doc/

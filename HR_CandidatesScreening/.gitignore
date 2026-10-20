@@ -1,0 +1,24 @@
+﻿
+# --- work-backup defaults ---
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*credentials*.txt
+*service-account*.json
+*-sa-key.json
+node_modules/
+.venv/
+venv/
+__pycache__/
+.adk/
+*.pyc
+dist/
+build/
+.terraform/
+*.tfstate
+*.tfstate.*
+.DS_Store
+Thumbs.db

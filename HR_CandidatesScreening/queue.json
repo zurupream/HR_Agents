@@ -1,0 +1,75 @@
+{
+  "project": "candidates_screening",
+  "tasks": [
+    {
+      "id": "T010",
+      "priority": 1,
+      "status": "done",
+      "title": "Candidate screening agent (Google ADK, Python)",
+      "file": "tasks/T010_candidate_screening.md"
+    },
+    {
+      "id": "T011",
+      "priority": 2,
+      "status": "done",
+      "title": "HR & Recruitment use case Word document",
+      "file": "tasks/T011_hr_use_case_doc.md"
+    },
+    {
+      "id": "T012",
+      "priority": 3,
+      "status": "done",
+      "title": "Generate dummy data package for local demo",
+      "file": "tasks/T012_dummy_data.md"
+    },
+    {
+      "id": "T013",
+      "priority": 4,
+      "status": "done",
+      "title": "Fix ADK web crash on first message; use strongest Gemini model",
+      "file": "tasks/T013_fix_adk_web.md"
+    },
+    {
+      "id": "T014",
+      "priority": 5,
+      "status": "done",
+      "title": "End-to-end live test with gemini-4-argon, ADK web check, then hand back",
+      "file": "tasks/T014_end_to_end_test.md"
+    },
+    {
+      "id": "T015",
+      "priority": 6,
+      "status": "done",
+      "title": "Human in the loop: HR decides uncertain cases, can always override",
+      "file": "tasks/T015_human_in_the_loop.md"
+    },
+    {
+      "id": "T016",
+      "priority": 7,
+      "status": "done",
+      "title": "HR web app: folders, CVs, settings, run, plain-language results, decisions in SQLite",
+      "file": "tasks/T016_webapp.md"
+    },
+    {
+      "id": "T017",
+      "priority": 8,
+      "status": "done",
+      "title": "Explain and fix HR allow-list denial on local Google sign-in",
+      "file": "tasks/T017_allowlist.md"
+    },
+    {
+      "id": "T018",
+      "priority": 9,
+      "status": "done",
+      "title": "Admin portal for access control (root admin, users, domains, audit)",
+      "file": "tasks/T018_admin_allowlist.md"
+    },
+    {
+      "id": "T019",
+      "priority": 10,
+      "status": "done",
+      "title": "Owner feedback: sales example, remove demo data, Jobs with Job IDs, compact results",
+      "file": "tasks/T019_ux_and_jobs.md"
+    }
+  ]
+}

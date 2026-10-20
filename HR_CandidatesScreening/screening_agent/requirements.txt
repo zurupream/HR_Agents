@@ -1,0 +1,10 @@
+google-adk
+python-docx
+pypdf
+openpyxl
+pydantic
+google-auth
+requests
+python-dotenv
+pytest
+pytest-asyncio

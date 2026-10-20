@@ -1,0 +1,513 @@
+[2026-10-14T11:41:13Z] starting agy pass
+- **T010 (`done`)**: Built the Google ADK candidate screening pipeline ([agent.py](file:///home/ubuntu/candidates_screening/screening_agent/agent.py), [tools.py](file:///home/ubuntu/candidates_screening/screening_agent/tools.py), [schemas.py](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py), [rubric_prompt.md](file:///home/ubuntu/candidates_screening/screening_agent/prompts/rubric_prompt.md), [screening_prompt.md](file:///home/ubuntu/candidates_screening/screening_agent/prompts/screening_prompt.md), [requirements.txt](file:///home/ubuntu/candidates_screening/screening_agent/requirements.txt)) with Google OAuth ID token verification (`aud=259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com`), PII/protected-attribute anonymisation, and isolated per-candidate `LlmAgent` runs; verified end-to-end on [job_advert.docx](file:///home/ubuntu/candidates_screening/screening_agent/data/job_advert.docx) and 3 fictional candidates producing [rubric.json](file:///home/ubuntu/candidates_screening/screening_agent/output/rubric.json) and [screening_results.xlsx](file:///home/ubuntu/candidates_screening/screening_agent/output/screening_results.xlsx) (`C001` Dummy Candidate A: 93.0 Shortlisted, `C002` Dummy Candidate B: 70.0 Shortlisted + Needs Human Review, `C003` Dummy Candidate C: 5.0 Not Shortlisted; no blockers).
+- **T011 (`done`)**: Built and verified [AgentWorks_HR_Recruitment_Use_Case.docx](file:///home/ubuntu/candidates_screening/hr_recruitment_doc/output/AgentWorks_HR_Recruitment_Use_Case.docx) via [build_doc.py](file:///home/ubuntu/candidates_screening/hr_recruitment_doc/build_doc.py) using `python-docx` with Word headings and bullet/numbered lists across all required sections (*Title: AI Agents for HR & Recruitment*, *Intro*, *The challenge*, *The AgentWorks solution*, *Workflow in four steps*, *Worked example - Screening 80 applicants against a scorecard*, *Results & benefits*) and no "Relevant agents" section or template links.
+[2026-10-14T11:49:51Z] agy pass finished
+[2026-10-14T11:54:51Z] queue empty, idle
+[2026-10-14T11:59:51Z] queue empty, idle
+[2026-10-14T12:04:51Z] queue empty, idle
+[2026-10-14T12:09:51Z] queue empty, idle
+[2026-10-14T12:14:51Z] queue empty, idle
+[2026-10-14T12:19:51Z] queue empty, idle
+[2026-10-14T12:24:51Z] queue empty, idle
+[2026-10-14T12:29:51Z] queue empty, idle
+[2026-10-14T12:34:51Z] queue empty, idle
+[2026-10-14T12:39:51Z] queue empty, idle
+[2026-10-14T12:44:51Z] queue empty, idle
+[2026-10-14T12:49:51Z] queue empty, idle
+[2026-10-14T12:54:51Z] queue empty, idle
+[2026-10-14T12:59:51Z] queue empty, idle
+[2026-10-14T13:04:51Z] queue empty, idle
+[2026-10-14T13:09:51Z] queue empty, idle
+[2026-10-14T13:14:51Z] queue empty, idle
+[2026-10-14T13:19:51Z] queue empty, idle
+[2026-10-14T13:24:51Z] queue empty, idle
+[2026-10-14T13:29:51Z] queue empty, idle
+[2026-10-14T13:34:51Z] queue empty, idle
+[2026-10-14T13:39:52Z] queue empty, idle
+[2026-10-14T13:44:52Z] queue empty, idle
+[2026-10-14T13:49:52Z] queue empty, idle
+[2026-10-14T13:54:52Z] queue empty, idle
+[2026-10-14T13:59:52Z] queue empty, idle
+[2026-10-14T14:04:52Z] queue empty, idle
+[2026-10-14T14:09:52Z] queue empty, idle
+[2026-10-14T14:14:52Z] queue empty, idle
+[2026-10-14T14:19:52Z] queue empty, idle
+[2026-10-14T14:24:52Z] queue empty, idle
+[2026-10-14T14:29:52Z] queue empty, idle
+[2026-10-14T14:34:52Z] queue empty, idle
+[2026-10-14T14:39:52Z] queue empty, idle
+[2026-10-14T14:44:52Z] queue empty, idle
+[2026-10-14T14:49:52Z] queue empty, idle
+[2026-10-14T14:54:52Z] queue empty, idle
+[2026-10-14T14:59:52Z] queue empty, idle
+[2026-10-14T15:04:52Z] queue empty, idle
+[2026-10-14T15:09:52Z] queue empty, idle
+[2026-10-14T15:14:52Z] queue empty, idle
+[2026-10-14T15:19:52Z] queue empty, idle
+[2026-10-14T15:24:52Z] queue empty, idle
+[2026-10-14T15:29:52Z] queue empty, idle
+[2026-10-14T15:34:52Z] queue empty, idle
+[2026-10-14T15:39:52Z] queue empty, idle
+[2026-10-14T15:44:52Z] queue empty, idle
+[2026-10-14T15:49:52Z] queue empty, idle
+[2026-10-14T15:54:52Z] queue empty, idle
+[2026-10-14T15:59:52Z] queue empty, idle
+[2026-10-14T16:04:52Z] queue empty, idle
+[2026-10-14T16:09:52Z] queue empty, idle
+[2026-10-14T16:14:53Z] queue empty, idle
+[2026-10-14T16:19:53Z] starting agy pass
+- **T012 (`done`)**: Generated fictional test data via [create_dummy_data.py](file:///home/ubuntu/candidates_screening/screening_agent/create_dummy_data.py), packaged only `data/` (`data/job_advert.docx` and 3 candidate folders under `data/applications/`: `Dummy Candidate A`, `Dummy Candidate B`, `Dummy Candidate C`) into [dummy_data.zip](file:///home/ubuntu/candidates_screening/demo/dummy_data.zip) (`143,115` bytes, files: `data/job_advert.docx`, `data/applications/Dummy Candidate A/{cover_letter.docx,cv.pdf,email.eml}`, `data/applications/Dummy Candidate B/{cover_letter.txt,cv.docx,email.txt}`, `data/applications/Dummy Candidate C/{cover_letter.pdf,email.docx}`), wrote file sizes and SHA-256 digests to [MANIFEST.txt](file:///home/ubuntu/candidates_screening/demo/MANIFEST.txt), and updated [queue.json](file:///home/ubuntu/candidates_screening/queue.json).
+[2026-10-14T16:20:44Z] agy pass finished
+[2026-10-14T16:25:44Z] queue empty, idle
+[2026-10-14T16:30:44Z] queue empty, idle
+[2026-10-14T16:35:44Z] queue empty, idle
+[2026-10-14T16:40:44Z] queue empty, idle
+[2026-10-14T16:43:31Z] starting agy pass
+**T013 (done):** Fixed `adk web` empty-session `KeyError` (`job_advert_text`) by replacing `{...}` instruction templates with `ReadonlyContext` instruction providers that fall back to `tools.py`, updated default model to `gemini-2.5-pro` in code and `.env`, and verified with `pytest` (`4 passed`).
+
+---
+
+### Changes & Diff Summary
+1. **[agent.py](file:///home/ubuntu/candidates_screening/screening_agent/agent.py)**:
+   - Replaced static string instructions containing `{job_advert_text}`, `{candidate_id}`, `{rubric_json}`, and `{anonymised_application}` with instruction providers ([`provide_rubric_instruction`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L490-L501) and `provide_screening_instruction` inside [`build_screening_agent`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L517-L579)) taking `ReadonlyContext`. When `ctx.state` is empty (as in `adk web`), [`provide_rubric_instruction`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L490-L501) calls [`read_job_advert()`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L39-L66) directly.
+   - Updated [`get_model_name()`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L60-L62) default to `"gemini-2.5-pro"`.
+   - Added `EventActions(state_delta=...)` when [`ScreeningPipelineAgent`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L582-L708) yields its completion event so session state updates persist in `InMemorySessionService`.
+2. **[tools.py](file:///home/ubuntu/candidates_screening/screening_agent/tools.py)**:
+   - Updated fallback model name in [`write_results_excel()`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L348-L375) to `"gemini-2.5-pro"`.
+3. **[.env](file:///home/ubuntu/candidates_screening/screening_agent/.env)**:
+   - Set `MODEL_NAME=gemini-2.5-pro` (no keys or secrets stored).
+4. **[test_adk_web_entry.py](file:///home/ubuntu/candidates_screening/screening_agent/tests/test_adk_web_entry.py)**:
+   - Added pytest suite testing `root_agent` existence, ADK instruction resolution (`_process_agent_instruction`, `canonical_instruction`, `inject_session_state`) on an empty-state session (`state={}`), full `"hi"` first-message pipeline execution on an empty session, and `get_model_name() == "gemini-2.5-pro"` when `MODEL_NAME` is unset.
+5. **[queue.json](file:///home/ubuntu/candidates_screening/queue.json)**:
+   - Updated `T013` status from `"todo"` to `"done"`.
+
+```diff
+--- a/screening_agent/agent.py
++++ b/screening_agent/agent.py
+@@ -27,2 +27,3 @@
+ from google.adk.agents.invocation_context import InvocationContext
++from google.adk.agents.readonly_context import ReadonlyContext
+-from google.adk.events import Event
++from google.adk.events import Event, EventActions
+@@ -61,3 +62,3 @@
+ def get_model_name() -> str:
+     """Return the configured LLM model name from the environment."""
+-    return os.environ.get("MODEL_NAME", "gemini-2.5-flash")
++    return os.environ.get("MODEL_NAME") or "gemini-2.5-pro"
+@@ -489,11 +490,19 @@
++def provide_rubric_instruction(ctx: ReadonlyContext) -> str:
++    if "job_advert_text" in ctx.state and ctx.state["job_advert_text"]:
++        job_advert_text = ctx.state["job_advert_text"]
++    else:
++        job_advert_text = read_job_advert()
++    return _load_prompt("rubric_prompt.md") + f"\n\n## Job Advert Text\n{job_advert_text}"
++
+ def build_rubric_agent(model_name: str | None = None) -> LlmAgent:
+-    rubric_instruction = _load_prompt("rubric_prompt.md") + "\n\n## Job Advert Text\n{job_advert_text}"
+     return LlmAgent(
+         name="rubric_agent",
+         model=get_configured_llm(model_name),
+         description="Reads the job advert and outputs a structured JobRubric.",
+-        instruction=rubric_instruction,
++        instruction=provide_rubric_instruction,
+...
+```
+
+---
+
+### Pytest Output Summary
+Ran `.venv/bin/python -m pytest -v` from `~/candidates_screening/screening_agent`:
+```text
+tests/test_adk_web_entry.py::test_root_agent_exists PASSED                        [ 25%]
+tests/test_adk_web_entry.py::test_resolve_instructions_with_empty_session_state PASSED [ 50%]
+tests/test_adk_web_entry.py::test_adk_web_first_message_hi_with_empty_state PASSED [ 75%]
+tests/test_adk_web_entry.py::test_get_model_name_defaults_to_gemini_2_5_pro PASSED [100%]
+========================= 4 passed, 1 warning in 1.87s =========================
+```
+
+---
+
+### What Ran Here vs. What Needs Live Testing on the Laptop
+- **Verified on this server (offline):**
+  - Importing `screening_agent.agent` and verifying `root_agent` and its sub-agents exist.
+  - Resolving instructions for every `LlmAgent` with an empty session (`state={}`) via ADK's `_process_agent_instruction`, `canonical_instruction`, and `inject_session_state`, confirming no `KeyError` occurs, no unresolved `{placeholder}` remains, and `read_job_advert()` text is injected.
+  - Running a first user message `"hi"` on an empty session through `InMemoryRunner(agent=root_agent)` using the offline deterministic fallback evaluator and verifying `output/rubric.json` and `output/screening_results.xlsx` (`Model Used = gemini-2.5-pro`).
+  - Confirming `get_model_name()` returns `"gemini-2.5-pro"` when `MODEL_NAME` is unset and in `.env`.
+- **Could not run here (needs live test on the laptop with Google Cloud / Vertex AI credentials):**
+  - Live `gemini-2.5-pro` API calls via `adk web` in the browser (typing `"hi"` with `GOOGLE_GENAI_USE_VERTEXAI=TRUE` / Application Default Credentials configured on the laptop).
+[2026-10-14T16:48:53Z] agy pass finished
+[2026-10-14T16:53:53Z] starting agy pass
+root agent idle; waiting up to 55m0s for 1 background task(s)
+I have started the live screening pipeline (`screening_agent/.venv/bin/python -m screening_agent.agent`) and am waiting for the execution to complete.
+I have started `adk web` on `127.0.0.2:8000` (since `127.0.0.1:8000` is bound by another service on this host), created a new session via `POST /apps/screening_agent/users/user/sessions`, and sent `"hi"` via `POST /run_sse`. Waiting for the live `gemini-4-argon` response to finish.
+I have updated [`test_adk_web_entry.py`](file:///home/ubuntu/candidates_screening/screening_agent/tests/test_adk_web_entry.py) so offline pytest runs write to `tmp_path` instead of overwriting the live output files, and started re-running Step 1 (`screening_agent/.venv/bin/python -m screening_agent.agent`). Waiting for completion.
+Re-running Step 3 (`adk web` on port 8000 with `POST /apps/screening_agent/users/user/sessions` and `POST /run_sse` with `"hi"`). Waiting for the live run to finish.
+I am waiting for the pytest suite execution to complete.
+I am waiting for the live screening pipeline execution across the 4 dummy candidates (`C001`–`C004`) to finish.
+I am waiting for the live screening pipeline run to complete.
+Waiting for the live pipeline execution (`task-196`) to finish.
+### Task Summaries
+
+- **T014 (done):** Configured `gemini-4-argon` on Vertex AI, passed all unit tests and live CLI screening across the dummy candidate packages, verified live `adk web` session greeting (`"hi"`) and Excel/JSON outputs, and wrote [TEST_REPORT.md](file:///home/ubuntu/candidates_screening/demo/TEST_REPORT.md).
+- **T015 (done):** Implemented human-in-the-loop uncertainty detection (`confidence`, `review_reasons`, `needs_human_review`), `record_hr_decision` tool + ADK web chat support, `Review Queue` and updated `Results`/`Metadata` Excel sheets with the `40%` calibration guard, dummy candidate `C004` (`Dummy Candidate D`), unit tests (`11/11` passing), live Vertex AI (`gemini-4-argon`) verification, and [HITL_REPORT.md](file:///home/ubuntu/candidates_screening/demo/HITL_REPORT.md).
+
+---
+
+### Pytest Summary (`11 passed`)
+
+```text
+tests/test_adk_web_entry.py::test_root_agent_exists PASSED                                                      [  9%]
+tests/test_adk_web_entry.py::test_resolve_instructions_with_empty_session_state PASSED                          [ 18%]
+tests/test_adk_web_entry.py::test_adk_web_first_message_hi_with_empty_state PASSED                              [ 27%]
+tests/test_adk_web_entry.py::test_get_model_name_defaults_to_gemini_2_5_pro PASSED                              [ 36%]
+tests/test_human_in_loop.py::test_a_clear_candidate_gets_ai_decided_and_no_human_review PASSED                  [ 45%]
+tests/test_human_in_loop.py::test_b_borderline_score_gets_borderline_score_and_needs_hr_review PASSED           [ 54%]
+tests/test_human_in_loop.py::test_c_missing_evidence_for_must_have_gets_missing_evidence PASSED                 [ 63%]
+tests/test_human_in_loop.py::test_d_record_hr_decision_writes_json_regenerates_excel_and_sets_final_decision PASSED [ 72%]
+tests/test_human_in_loop.py::test_e_hr_decision_overrides_ai_recommendation_in_both_directions PASSED           [ 81%]
+tests/test_human_in_loop.py::test_f_review_rate_warning_appears_when_more_than_40_percent_need_review PASSED    [ 90%]
+tests/test_human_in_loop.py::test_adk_web_chat_invokes_record_hr_decision PASSED                                [100%]
+======================== 11 passed, 2 warnings in 2.44s ========================
+```
+
+---
+
+### Summary of Changes
+
+1. **Uncertainty Schema & Prompt ([schemas.py](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py), [screening_prompt.md](file:///home/ubuntu/candidates_screening/screening_agent/prompts/screening_prompt.md)):**
+   - Added `ReviewReason` (`"borderline_score"`, `"missing_evidence"`, `"conflicting_evidence"`, `"unreadable_document"`, `"low_confidence"`), [`CandidateEvaluation.confidence`](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py#L94-L98), [`CandidateEvaluation.review_reasons`](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py#L99-L102), and [`CandidateEvaluation.needs_human_review`](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py#L103-L106) with automatic validation in [`CandidateEvaluation._sync_uncertainty_fields`](file:///home/ubuntu/candidates_screening/screening_agent/schemas.py#L112-L125).
+   - Updated [screening_prompt.md](file:///home/ubuntu/candidates_screening/screening_agent/prompts/screening_prompt.md) (`v1.1`) to instruct the model to report confidence and review reasons honestly without guessing or inventing evidence.
+
+2. **Decision Status, HR Override Tool & Excel Output ([tools.py](file:///home/ubuntu/candidates_screening/screening_agent/tools.py)):**
+   - Added [`compute_candidate_status`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L540-L568), [`load_hr_decisions`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L571-L586), and [`record_hr_decision`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L589-L654), which persists HR overrides to `screening_agent/output/hr_decisions.json` (with UTC timestamp) and regenerates [screening_results.xlsx](file:///home/ubuntu/candidates_screening/screening_agent/output/screening_results.xlsx).
+   - Updated [`write_results_excel`](file:///home/ubuntu/candidates_screening/screening_agent/tools.py#L657-L841) with the required `Results` columns (`Candidate ID`, `Name`, `AI Recommendation`, `AI Confidence`, `Review Reasons`, `Status`, `HR Decision`, `HR Note`, `Final Decision`, `Overall Score`, `Top Strengths`, `Gaps`, `Reasoning`, `Source Folder`), sorted with `"Needs HR review"` first then by `Overall Score` descending.
+   - Added the `"Review Queue"` sheet listing only `"Needs HR review"` candidates, and expanded `"Metadata"` with `AI Decided`, `Needs HR Review`, `HR Decided`, `Flag Rate`, and the calibration guard (`"High review rate: the rubric or prompt may need tuning."` when `> 40%` need review).
+
+3. **Pipeline Calibration & ADK Web Integration ([agent.py](file:///home/ubuntu/candidates_screening/screening_agent/agent.py), [create_dummy_data.py](file:///home/ubuntu/candidates_screening/screening_agent/create_dummy_data.py)):**
+   - Added [`apply_uncertainty_rules`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L131-L216) to deterministically enforce `borderline_score`, `missing_evidence`, `unreadable_document`, and `low_confidence`, plus exact weighted score verification.
+   - Added [`HrDecisionAgent`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L755-L844) (`hr_decision_agent` registered with `tools=[record_hr_decision]`) and [`RubricLlmAgent`](file:///home/ubuntu/candidates_screening/screening_agent/agent.py#L728-L752) so HR can record decisions directly in ADK web chat while preserving the first-message `"hi"` greeting behavior.
+   - Added `Dummy Candidate D` (`C004`) in [create_dummy_data.py](file:///home/ubuntu/candidates_screening/screening_agent/create_dummy_data.py) with missing evidence on must-have `M3` (REST APIs & Google OAuth).
+   - Wrote [HITL_REPORT.md](file:///home/ubuntu/candidates_screening/demo/HITL_REPORT.md) and [test_human_in_loop.py](file:///home/ubuntu/candidates_screening/screening_agent/tests/test_human_in_loop.py).
+
+---
+
+### What to Check in ADK Web
+
+1. **Greeting / Status Check:** Send `"hi"` in `adk web` (`http://127.0.0.1:8000`) to confirm the agent greets you and summarizes the existing screening run (`3` AI decided, `1` needing HR review: `C004`).
+2. **HR Decision / Override via Chat:** Send a message such as:
+   - `"Shortlist C004, note: confirmed REST API and OAuth experience in phone screen"`
+   - Or override an AI decision, e.g. `"Shortlist C002, note: strong portfolio"`
+3. **Verify Outputs:** Check [hr_decisions.json](file:///home/ubuntu/candidates_screening/screening_agent/output/hr_decisions.json) (created once an HR decision is recorded) and [screening_results.xlsx](file:///home/ubuntu/candidates_screening/screening_agent/output/screening_results.xlsx) (`Results`, `Review Queue`, and `Metadata` tabs) as well as [HITL_REPORT.md](file:///home/ubuntu/candidates_screening/demo/HITL_REPORT.md).
+[2026-10-14T17:23:00Z] agy pass finished
+[2026-10-14T17:28:00Z] queue empty, idle
+[2026-10-14T17:33:00Z] queue empty, idle
+[2026-10-14T17:38:00Z] starting agy pass
+- **T016 (done)**: Built the FastAPI + vanilla HTML/CSS/JS HR web application in [screening_webapp/](file:///home/ubuntu/candidates_screening/screening_webapp) with Google Sign-In (`259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com`) and email allow-list enforcement, candidate folder/CV previewing, validated screening settings, background ADK pipeline runs with `409` concurrency guard, plain-language review explanations ([plain_language.py](file:///home/ubuntu/candidates_screening/screening_webapp/plain_language.py)), SQLite persistence across 4 tables in [app.db](file:///home/ubuntu/candidates_screening/screening_webapp/data/app.db) ([database.py](file:///home/ubuntu/candidates_screening/screening_webapp/database.py)), Excel regeneration on HR decisions, one-command startup ([run_demo.sh](file:///home/ubuntu/candidates_screening/screening_webapp/run_demo.sh)), documentation ([README.md](file:///home/ubuntu/candidates_screening/screening_webapp/README.md), [WEBAPP_REPORT.md](file:///home/ubuntu/candidates_screening/demo/WEBAPP_REPORT.md)), and 19/19 passing tests across [test_webapp.py](file:///home/ubuntu/candidates_screening/screening_webapp/tests/test_webapp.py) and `screening_agent/tests/`.
+[2026-10-14T17:52:36Z] agy pass finished
+[2026-10-14T17:57:36Z] queue empty, idle
+[2026-10-14T18:02:36Z] queue empty, idle
+[2026-10-14T18:07:36Z] queue empty, idle
+[2026-10-14T18:12:36Z] starting agy pass
+- **T017 (done)**: Explained why local Google sign-in returned `403` for `guruprem.saginadham@sybyl.com`, added the email to [demo_allowed_emails.json](file:///home/ubuntu/candidates_screening/screening_webapp/config/demo_allowed_emails.json), normalised Windows (`\`) and Linux (`/`) allow-list paths in [auth.py](file:///home/ubuntu/candidates_screening/screening_webapp/auth.py), and returned a clear `403` message without leaking other emails or internal paths.
+- **T018 (done)**: Implemented the database-backed Admin Access Portal (`allowed_users` and `allowed_domains` in [database.py](file:///home/ubuntu/candidates_screening/screening_webapp/database.py)), bootstrap root admin in [root_admins.json](file:///home/ubuntu/candidates_screening/screening_webapp/config/root_admins.json), one-time allow-list migration and access enforcement in [auth.py](file:///home/ubuntu/candidates_screening/screening_webapp/auth.py), admin API endpoints in [app.py](file:///home/ubuntu/candidates_screening/screening_webapp/app.py), the **4. Access** tab in [index.html](file:///home/ubuntu/candidates_screening/screening_webapp/static/index.html) and [app.js](file:///home/ubuntu/candidates_screening/screening_webapp/static/app.js), plain-language admin documentation in [ADMIN_REPORT.md](file:///home/ubuntu/candidates_screening/demo/ADMIN_REPORT.md), and 5 new pytest tests in [test_webapp.py](file:///home/ubuntu/candidates_screening/screening_webapp/tests/test_webapp.py) (`25 passed`).
+
+---
+
+### Summary of T017 & T018 Changes
+
+1. **Why `403` Happened on Local Google Sign-In (`T017`)**:
+   - Google OAuth verified `guruprem.saginadham@sybyl.com` (`200` from Google Identity Services), but step 2 of authentication checked whether the email was listed in the active allow-list ([demo_allowed_emails.json](file:///home/ubuntu/candidates_screening/screening_webapp/config/demo_allowed_emails.json) / [allowed_emails.json](file:///home/ubuntu/candidates_screening/screening_webapp/config/allowed_emails.json)), which originally only listed `hr.demo@example.com` (or `[]`).
+2. **Database Access Control & Root Admin Bootstrap (`T018`)**:
+   - **Root Admin**: Configured `guruprem.saginadham@sybyl.com` in [root_admins.json](file:///home/ubuntu/candidates_screening/screening_webapp/config/root_admins.json). Root admins can always sign in (`role=admin`), cannot be deactivated or removed (`409`), and can manage users and domains.
+   - **Data Model**: Added [`AllowedUser`](file:///home/ubuntu/candidates_screening/screening_webapp/database.py#L97-L110) (`allowed_users`) and [`AllowedDomain`](file:///home/ubuntu/candidates_screening/screening_webapp/database.py#L113-L126) (`allowed_domains`) in [database.py](file:///home/ubuntu/candidates_screening/screening_webapp/database.py), with all grants, revocations, role changes, and migrations logged in [`AuditLog`](file:///home/ubuntu/candidates_screening/screening_webapp/database.py#L84-L94).
+   - **One-Time Migration**: [`migrate_access_control`](file:///home/ubuntu/candidates_screening/screening_webapp/auth.py#L140-L220) imports `guruprem.saginadham@sybyl.com` (`admin`) and `hr.demo@example.com` (`hr`, clearly marked `[DEMO USER]` in the UI) into `allowed_users` once on first startup and writes a `migrate_allowlist` audit entry.
+   - **Access Rule & `403` Message**: [`require_hr_auth`](file:///home/ubuntu/candidates_screening/screening_webapp/auth.py#L261-L320) allows active root admins, active `allowed_users`, or users whose domain is active in `allowed_domains` (`role=hr`), and otherwise returns `403` with:
+     > `"Your Google account signed in, but it is not authorised to use this app. Ask an admin to add your email."`
+   - **Open Decision Preserved**: `allowed_domains` is left empty (`[]`) by default; [ADMIN_REPORT.md](file:///home/ubuntu/candidates_screening/demo/ADMIN_REPORT.md) notes that the owner must decide the exact domain(s) for *"civil employees, GC"* before they are added.
+   - **Test Suite**: All **25 tests** across `screening_agent/tests` and `screening_webapp/tests` pass (`pytest screening_agent/tests screening_webapp/tests -q`). All tasks in [queue.json](file:///home/ubuntu/candidates_screening/queue.json) are now `"done"`.
+[2026-10-14T18:30:43Z] agy pass finished
+[2026-10-14T18:35:43Z] starting agy pass
+I am running the full pytest suite across `screening_agent` and `screening_webapp` and waiting for completion.
+I have started the test and disk state verification task and will finalize `queue.json` once it finishes.
+Running pytest to verify that no database or demo files are created on disk during tests.
+T019: Removed all tech-biased examples (`grep` count = 0) and on-disk demo data (freed 480,370 bytes / 556 KB), added `1. Jobs` multi-job management (`JOB-2026-001` IDs, JD + CV folder uploads, per-job runs/results/decisions/Excel export), polished the Candidates and Results UI (document count badges, modal preview, Job ID selector, review-only filter, search, sorting, 25-per-page pagination, 2-line clamped reasons), documented everything in [UX_REPORT.md](file:///home/ubuntu/candidates_screening/demo/UX_REPORT.md), and verified all 26/26 pytest tests pass.
+[2026-10-14T19:08:01Z] agy pass finished
+[2026-10-14T19:13:01Z] queue empty, idle
+[2026-10-14T19:18:01Z] queue empty, idle
+[2026-10-14T19:23:02Z] queue empty, idle
+[2026-10-14T19:28:02Z] queue empty, idle
+[2026-10-14T19:33:02Z] queue empty, idle
+[2026-10-14T19:38:02Z] queue empty, idle
+[2026-10-14T19:43:02Z] queue empty, idle
+[2026-10-14T19:48:02Z] queue empty, idle
+[2026-10-14T19:53:02Z] queue empty, idle
+[2026-10-14T19:58:02Z] queue empty, idle
+[2026-10-14T20:03:02Z] queue empty, idle
+[2026-10-14T20:08:02Z] queue empty, idle
+[2026-10-14T20:13:02Z] queue empty, idle
+[2026-10-14T20:18:02Z] queue empty, idle
+[2026-10-14T20:23:02Z] queue empty, idle
+[2026-10-14T20:28:02Z] queue empty, idle
+[2026-10-14T20:33:02Z] queue empty, idle
+[2026-10-14T20:38:02Z] queue empty, idle
+[2026-10-14T20:43:02Z] queue empty, idle
+[2026-10-14T20:48:02Z] queue empty, idle
+[2026-10-14T20:53:02Z] queue empty, idle
+[2026-10-14T20:58:02Z] queue empty, idle
+[2026-10-14T21:03:02Z] queue empty, idle
+[2026-10-14T21:08:02Z] queue empty, idle
+[2026-10-14T21:13:02Z] queue empty, idle
+[2026-10-14T21:18:03Z] queue empty, idle
+[2026-10-14T21:23:03Z] queue empty, idle
+[2026-10-14T21:28:03Z] queue empty, idle
+[2026-10-14T21:33:03Z] queue empty, idle
+[2026-10-14T21:38:03Z] queue empty, idle
+[2026-10-14T21:43:03Z] queue empty, idle
+[2026-10-14T21:48:03Z] queue empty, idle
+[2026-10-14T21:53:03Z] queue empty, idle
+[2026-10-14T21:58:03Z] queue empty, idle
+[2026-10-14T22:03:03Z] queue empty, idle
+[2026-10-14T22:08:03Z] queue empty, idle
+[2026-10-14T22:13:03Z] queue empty, idle
+[2026-10-14T22:18:03Z] queue empty, idle
+[2026-10-14T22:23:03Z] queue empty, idle
+[2026-10-14T22:28:03Z] queue empty, idle
+[2026-10-14T22:33:03Z] queue empty, idle
+[2026-10-14T22:38:03Z] queue empty, idle
+[2026-10-14T22:43:03Z] queue empty, idle
+[2026-10-14T22:48:03Z] queue empty, idle
+[2026-10-14T22:53:03Z] queue empty, idle
+[2026-10-14T22:58:03Z] queue empty, idle
+[2026-10-14T23:03:03Z] queue empty, idle
+[2026-10-14T23:08:03Z] queue empty, idle
+[2026-10-14T23:13:03Z] queue empty, idle
+[2026-10-14T23:18:03Z] queue empty, idle
+[2026-10-14T23:23:03Z] queue empty, idle
+[2026-10-14T23:28:03Z] queue empty, idle
+[2026-10-14T23:33:03Z] queue empty, idle
+[2026-10-14T23:38:03Z] queue empty, idle
+[2026-10-14T23:43:03Z] queue empty, idle
+[2026-10-14T23:48:04Z] queue empty, idle
+[2026-10-14T23:53:04Z] queue empty, idle
+[2026-10-14T23:58:04Z] queue empty, idle
+[2026-10-15T00:03:04Z] queue empty, idle
+[2026-10-15T00:08:04Z] queue empty, idle
+[2026-10-15T00:13:04Z] queue empty, idle
+[2026-10-15T00:18:04Z] queue empty, idle
+[2026-10-15T00:23:04Z] queue empty, idle
+[2026-10-15T00:28:04Z] queue empty, idle
+[2026-10-15T00:33:04Z] queue empty, idle
+[2026-10-15T00:38:04Z] queue empty, idle
+[2026-10-15T00:43:04Z] queue empty, idle
+[2026-10-15T00:48:04Z] queue empty, idle
+[2026-10-15T00:53:04Z] queue empty, idle
+[2026-10-15T00:58:04Z] queue empty, idle
+[2026-10-15T01:03:04Z] queue empty, idle
+[2026-10-15T01:08:04Z] queue empty, idle
+[2026-10-15T01:13:04Z] queue empty, idle
+[2026-10-15T01:18:04Z] queue empty, idle
+[2026-10-15T01:23:04Z] queue empty, idle
+[2026-10-15T01:28:04Z] queue empty, idle
+[2026-10-15T01:33:04Z] queue empty, idle
+[2026-10-15T01:38:04Z] queue empty, idle
+[2026-10-15T01:43:04Z] queue empty, idle
+[2026-10-15T01:48:04Z] queue empty, idle
+[2026-10-15T01:53:04Z] queue empty, idle
+[2026-10-15T01:58:04Z] queue empty, idle
+[2026-10-15T02:03:04Z] queue empty, idle
+[2026-10-15T02:08:04Z] queue empty, idle
+[2026-10-15T02:13:04Z] queue empty, idle
+[2026-10-15T02:18:04Z] queue empty, idle
+[2026-10-15T02:23:04Z] queue empty, idle
+[2026-10-15T02:28:05Z] queue empty, idle
+[2026-10-15T02:33:05Z] queue empty, idle
+[2026-10-15T02:38:05Z] queue empty, idle
+[2026-10-15T02:43:05Z] queue empty, idle
+[2026-10-15T02:48:05Z] queue empty, idle
+[2026-10-15T02:53:05Z] queue empty, idle
+[2026-10-15T02:58:05Z] queue empty, idle
+[2026-10-15T03:03:05Z] queue empty, idle
+[2026-10-15T03:08:05Z] queue empty, idle
+[2026-10-15T03:13:05Z] queue empty, idle
+[2026-10-15T03:18:05Z] queue empty, idle
+[2026-10-15T03:23:05Z] queue empty, idle
+[2026-10-15T03:28:05Z] queue empty, idle
+[2026-10-15T03:33:05Z] queue empty, idle
+[2026-10-15T03:38:05Z] queue empty, idle
+[2026-10-15T03:43:05Z] queue empty, idle
+[2026-10-15T03:48:05Z] queue empty, idle
+[2026-10-15T03:53:05Z] queue empty, idle
+[2026-10-15T03:58:05Z] queue empty, idle
+[2026-10-15T04:03:05Z] queue empty, idle
+[2026-10-15T04:08:05Z] queue empty, idle
+[2026-10-15T04:13:05Z] queue empty, idle
+[2026-10-15T04:18:05Z] queue empty, idle
+[2026-10-15T04:23:05Z] queue empty, idle
+[2026-10-15T04:28:05Z] queue empty, idle
+[2026-10-15T04:33:05Z] queue empty, idle
+[2026-10-15T04:38:05Z] queue empty, idle
+[2026-10-15T04:43:05Z] queue empty, idle
+[2026-10-15T04:48:05Z] queue empty, idle
+[2026-10-15T04:53:05Z] queue empty, idle
+[2026-10-15T04:58:05Z] queue empty, idle
+[2026-10-15T05:03:06Z] queue empty, idle
+[2026-10-15T05:08:06Z] queue empty, idle
+[2026-10-15T05:13:06Z] queue empty, idle
+[2026-10-15T05:18:06Z] queue empty, idle
+[2026-10-15T05:23:06Z] queue empty, idle
+[2026-10-15T05:28:06Z] queue empty, idle
+[2026-10-15T05:33:06Z] queue empty, idle
+[2026-10-15T05:38:06Z] queue empty, idle
+[2026-10-15T05:43:06Z] queue empty, idle
+[2026-10-15T05:48:06Z] queue empty, idle
+[2026-10-15T05:53:06Z] queue empty, idle
+[2026-10-15T05:58:06Z] queue empty, idle
+[2026-10-15T06:03:06Z] queue empty, idle
+[2026-10-15T06:08:06Z] queue empty, idle
+[2026-10-15T06:13:06Z] queue empty, idle
+[2026-10-15T06:18:06Z] queue empty, idle
+[2026-10-15T06:23:06Z] queue empty, idle
+[2026-10-15T06:28:06Z] queue empty, idle
+[2026-10-15T06:33:06Z] queue empty, idle
+[2026-10-15T06:38:06Z] queue empty, idle
+[2026-10-15T06:43:06Z] queue empty, idle
+[2026-10-15T06:48:06Z] queue empty, idle
+[2026-10-15T06:53:06Z] queue empty, idle
+[2026-10-15T06:58:06Z] queue empty, idle
+[2026-10-15T07:03:06Z] queue empty, idle
+[2026-10-15T07:08:06Z] queue empty, idle
+[2026-10-15T07:13:06Z] queue empty, idle
+[2026-10-15T07:18:06Z] queue empty, idle
+[2026-10-15T07:23:06Z] queue empty, idle
+[2026-10-15T07:28:06Z] queue empty, idle
+[2026-10-15T07:33:07Z] queue empty, idle
+[2026-10-15T07:38:07Z] queue empty, idle
+[2026-10-15T07:43:07Z] queue empty, idle
+[2026-10-15T07:48:07Z] queue empty, idle
+[2026-10-15T07:53:07Z] queue empty, idle
+[2026-10-15T07:58:07Z] queue empty, idle
+[2026-10-15T08:03:07Z] queue empty, idle
+[2026-10-15T08:08:07Z] queue empty, idle
+[2026-10-15T08:13:07Z] queue empty, idle
+[2026-10-15T08:18:07Z] queue empty, idle
+[2026-10-15T08:23:07Z] queue empty, idle
+[2026-10-15T08:28:07Z] queue empty, idle
+[2026-10-15T08:33:07Z] queue empty, idle
+[2026-10-15T08:38:07Z] queue empty, idle
+[2026-10-15T08:43:07Z] queue empty, idle
+[2026-10-15T08:48:07Z] queue empty, idle
+[2026-10-15T08:53:07Z] queue empty, idle
+[2026-10-15T08:58:07Z] queue empty, idle
+[2026-10-15T09:03:07Z] queue empty, idle
+[2026-10-15T09:08:07Z] queue empty, idle
+[2026-10-15T09:13:07Z] queue empty, idle
+[2026-10-15T09:18:07Z] queue empty, idle
+[2026-10-15T09:23:07Z] queue empty, idle
+[2026-10-15T09:28:07Z] queue empty, idle
+[2026-10-15T09:33:07Z] queue empty, idle
+[2026-10-15T09:38:07Z] queue empty, idle
+[2026-10-15T09:43:07Z] queue empty, idle
+[2026-10-15T09:48:07Z] queue empty, idle
+[2026-10-15T09:53:07Z] queue empty, idle
+[2026-10-15T09:58:07Z] queue empty, idle
+[2026-10-15T10:03:08Z] queue empty, idle
+[2026-10-15T10:08:08Z] queue empty, idle
+[2026-10-15T10:13:08Z] queue empty, idle
+[2026-10-15T10:18:08Z] queue empty, idle
+[2026-10-15T10:23:08Z] queue empty, idle
+[2026-10-15T10:28:08Z] queue empty, idle
+[2026-10-15T10:33:08Z] queue empty, idle
+[2026-10-15T10:38:08Z] queue empty, idle
+[2026-10-15T10:43:08Z] queue empty, idle
+[2026-10-15T10:48:08Z] queue empty, idle
+[2026-10-15T10:53:08Z] queue empty, idle
+[2026-10-15T10:58:08Z] queue empty, idle
+[2026-10-15T11:03:08Z] queue empty, idle
+[2026-10-15T11:08:08Z] queue empty, idle
+[2026-10-15T11:13:08Z] queue empty, idle
+[2026-10-15T11:18:08Z] queue empty, idle
+[2026-10-15T11:23:08Z] queue empty, idle
+[2026-10-15T11:28:08Z] queue empty, idle
+[2026-10-15T11:33:08Z] queue empty, idle
+[2026-10-15T11:38:08Z] queue empty, idle
+[2026-10-15T11:43:08Z] queue empty, idle
+[2026-10-15T11:48:08Z] queue empty, idle
+[2026-10-15T11:53:08Z] queue empty, idle
+[2026-10-15T11:58:08Z] queue empty, idle
+[2026-10-15T12:03:08Z] queue empty, idle
+[2026-10-15T12:08:08Z] queue empty, idle
+[2026-10-15T12:13:08Z] queue empty, idle
+[2026-10-15T12:18:08Z] queue empty, idle
+[2026-10-15T12:23:08Z] queue empty, idle
+[2026-10-15T12:28:08Z] queue empty, idle
+[2026-10-15T12:33:08Z] queue empty, idle
+[2026-10-15T12:38:09Z] queue empty, idle
+[2026-10-15T12:43:09Z] queue empty, idle
+[2026-10-15T12:48:09Z] queue empty, idle
+[2026-10-15T12:53:09Z] queue empty, idle
+[2026-10-15T12:58:09Z] queue empty, idle
+[2026-10-15T13:03:09Z] queue empty, idle
+[2026-10-15T13:08:09Z] queue empty, idle
+[2026-10-15T13:13:09Z] queue empty, idle
+[2026-10-15T13:18:09Z] queue empty, idle
+[2026-10-15T13:23:09Z] queue empty, idle
+[2026-10-15T13:28:09Z] queue empty, idle
+[2026-10-15T13:33:09Z] queue empty, idle
+[2026-10-15T13:38:09Z] queue empty, idle
+[2026-10-15T13:43:09Z] queue empty, idle
+[2026-10-15T13:48:09Z] queue empty, idle
+[2026-10-15T13:53:09Z] queue empty, idle
+[2026-10-15T13:58:09Z] queue empty, idle
+[2026-10-15T14:03:09Z] queue empty, idle
+[2026-10-15T14:08:09Z] queue empty, idle
+[2026-10-15T14:13:09Z] queue empty, idle
+[2026-10-15T14:18:09Z] queue empty, idle
+[2026-10-15T14:23:09Z] queue empty, idle
+[2026-10-15T14:28:09Z] queue empty, idle
+[2026-10-15T14:33:09Z] queue empty, idle
+[2026-10-15T14:38:09Z] queue empty, idle
+[2026-10-15T14:43:09Z] queue empty, idle
+[2026-10-15T14:48:09Z] queue empty, idle
+[2026-10-15T14:53:09Z] queue empty, idle
+[2026-10-15T14:58:09Z] queue empty, idle
+[2026-10-15T15:03:10Z] queue empty, idle
+[2026-10-15T15:08:10Z] queue empty, idle
+[2026-10-15T15:13:10Z] queue empty, idle
+[2026-10-15T15:18:10Z] queue empty, idle
+[2026-10-15T15:23:10Z] queue empty, idle
+[2026-10-15T15:28:10Z] queue empty, idle
+[2026-10-15T15:33:10Z] queue empty, idle
+[2026-10-15T15:38:10Z] queue empty, idle
+[2026-10-15T15:43:10Z] queue empty, idle
+[2026-10-15T15:48:10Z] queue empty, idle
+[2026-10-15T15:53:10Z] queue empty, idle
+[2026-10-15T15:58:10Z] queue empty, idle
+[2026-10-15T16:03:10Z] queue empty, idle
+[2026-10-15T16:08:10Z] queue empty, idle
+[2026-10-15T16:13:10Z] queue empty, idle
+[2026-10-15T16:18:10Z] queue empty, idle
+[2026-10-15T16:23:10Z] queue empty, idle
+[2026-10-15T16:28:10Z] queue empty, idle
+[2026-10-15T16:33:10Z] queue empty, idle
+[2026-10-15T16:38:10Z] queue empty, idle
+[2026-10-15T16:43:10Z] queue empty, idle
+[2026-10-15T16:48:10Z] queue empty, idle
+[2026-10-15T16:53:10Z] queue empty, idle
+[2026-10-15T16:58:10Z] queue empty, idle
+[2026-10-15T17:03:10Z] queue empty, idle
+[2026-10-15T17:08:10Z] queue empty, idle
+[2026-10-15T17:13:10Z] queue empty, idle
+[2026-10-15T17:18:10Z] queue empty, idle
+[2026-10-15T17:23:10Z] queue empty, idle
+[2026-10-15T17:28:10Z] queue empty, idle
+[2026-10-15T17:33:11Z] queue empty, idle
+[2026-10-15T17:38:11Z] queue empty, idle
+[2026-10-15T17:43:11Z] queue empty, idle
+[2026-10-15T17:48:11Z] queue empty, idle
+[2026-10-15T17:53:11Z] queue empty, idle
+[2026-10-15T17:58:11Z] queue empty, idle
+[2026-10-15T18:03:11Z] queue empty, idle
+[2026-10-15T18:08:11Z] queue empty, idle
+[2026-10-15T18:13:11Z] queue empty, idle
+[2026-10-15T18:18:11Z] queue empty, idle
+[2026-10-15T18:23:11Z] queue empty, idle

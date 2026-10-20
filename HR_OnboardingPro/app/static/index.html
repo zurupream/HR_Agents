@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HR Onboarding Pro Agent — Offer E-Sign &amp; Day-1 Provisioning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --apple-bg: #F5F5F7;
+            --apple-card: #FFFFFF;
+            --apple-ink: #1D1D1F;
+            --apple-secondary: #6E6E73;
+            --apple-tertiary: #86868B;
+            --apple-blue: #0071E3;
+            --apple-blue-hover: #0077ED;
+            --apple-green: #34C759;
+            --apple-orange: #FF9500;
+            --apple-red: #FF3B30;
+            --apple-border: rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--apple-ink);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.011em;
+        }
+
+        h1, h2, h3, .apple-display {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            letter-spacing: -0.022em;
+        }
+
+        .apple-mono {
+            font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .apple-sidebar {
+            background: rgba(255, 255, 255, 0.84);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            border-right: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .apple-topbar {
+            background: rgba(245, 245, 247, 0.82);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .apple-card {
+            background: #FFFFFF;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.035);
+        }
+
+        .apple-card-subtle {
+            background: #F5F5F7;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .apple-btn-primary {
+            background-color: var(--apple-blue);
+            color: #FFFFFF;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .apple-btn-primary:hover {
+            background-color: var(--apple-blue-hover);
+            transform: translateY(-0.5px);
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.24);
+        }
+        .apple-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .apple-btn-secondary {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--apple-ink);
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.18s ease;
+        }
+        .apple-btn-secondary:hover {
+            background-color: rgba(0, 0, 0, 0.09);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #424245;
+            transition: all 0.16s ease;
+            text-align: left;
+        }
+        .nav-item:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+            color: #1D1D1F;
+        }
+        .nav-item-active {
+            background-color: var(--apple-blue) !important;
+            color: #FFFFFF !important;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 113, 227, 0.22);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+        }
+
+        .pulse-dot {
+            animation: pulseDot 2.2s infinite ease-in-out;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(1.15); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex bg-[#F5F5F7] text-[#1D1D1F]">
+
+    <!-- ======================================================================= -->
+    <!-- ENTERPRISE GOOGLE SSO & WORK EMAIL SIGN-IN GATE OVERLAY                 -->
+    <!-- ======================================================================= -->
+    <div id="sso-gate-overlay" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-6 overflow-y-auto">
+        <div class="w-full max-w-[1080px] grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto items-stretch">
+            <!-- Left Panel: 3-Step Visual Workflow Diagram -->
+            <div class="lg:col-span-7 rounded-[24px] bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white p-8 lg:p-10 flex flex-col justify-between shadow-2xl border border-white/10">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-[11px] font-bold tracking-wider uppercase mb-4">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Enterprise AI People Operations · Agent #03</span>
+                    </div>
+                    <h1 class="apple-display text-2xl lg:text-3xl font-bold tracking-tight text-white">
+                        HR Onboarding Pro Agent
+                    </h1>
+                    <p class="text-[13.5px] text-slate-300 mt-2 leading-relaxed">
+                        Autonomous offer letter generation, cryptographic candidate e-signature portals, and parallel Day-1 IT, Laptop, Mobility &amp; Insurance provisioning.
+                    </p>
+
+                    <div class="mt-6 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        3-Step Autonomous Onboarding Workflow
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                            <div class="w-7 h-7 rounded-lg bg-[#0071E3] text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</div>
+                            <div>
+                                <div class="text-[13.5px] font-semibold text-white">Generate Offer Letters &amp; Dispatch E-Sign Envelopes</div>
+                                <div class="text-[12px] text-slate-300 mt-0.5 leading-snug">
+                                    Renders role-specific PDF offers (Employee, Trainee, Intern) with 48-hour expiry timers and dispatches interactive candidate E-Sign portals.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                            <div class="w-7 h-7 rounded-lg bg-[#0071E3] text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</div>
+                            <div>
+                                <div class="text-[13.5px] font-semibold text-white">Orchestrate 4 Parallel Day-1 Setup Sub-Agents</div>
+                                <div class="text-[12px] text-slate-300 mt-0.5 leading-snug">
+                                    Upon signature, triggers <strong>IT Identity Agent</strong>, <strong>Laptop &amp; Asset Agent</strong>, <strong>Uber Corporate Mobility Agent</strong>, and <strong>Health Insurance Agent</strong>.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                            <div class="w-7 h-7 rounded-lg bg-[#0071E3] text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</div>
+                            <div>
+                                <div class="text-[13.5px] font-semibold text-white">Proactive Blocker Detection &amp; Day-1 Readiness Audit</div>
+                                <div class="text-[12px] text-slate-300 mt-0.5 leading-snug">
+                                    Tracks Amazon-style milestone progress, alerts HR to expiring offers or provisioning blockers, and archives countersigned PDFs.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-2 text-[11px] text-slate-300">
+                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10">Cryptographic E-Sign Portal</span>
+                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10">4 Autonomous Setup Sub-Agents</span>
+                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10">Live SMTP + PDF Archive</span>
+                </div>
+            </div>
+
+            <!-- Right Panel: Enterprise SSO & Instant Demo Login -->
+            <div class="lg:col-span-5 apple-card p-8 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-11 h-11 rounded-[14px] bg-[#0071E3] text-white flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                            S
+                        </div>
+                        <div>
+                            <div class="text-[10.5px] font-bold uppercase tracking-wider text-[#0071E3]">Enterprise Workspace SSO</div>
+                            <h2 class="apple-display text-lg font-semibold text-[#1D1D1F]">Sign in to HR Onboarding Pro Agent</h2>
+                        </div>
+                    </div>
+
+                    <div id="ssoErrorBanner" class="hidden mb-4 px-3.5 py-2.5 rounded-xl bg-[#FF3B30]/10 border border-[#FF3B30]/20 text-[12px] text-[#D70015] font-medium"></div>
+
+                    <!-- 1-Click Instant Demo Sign-In -->
+                    <div class="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200/80 mb-4">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-blue-800 mb-1.5">Instant Evaluation Access</div>
+                        <button id="btn-demo-sso" type="button" onclick="signInDemo()"
+                            class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#0071E3] to-[#1D4ED8] hover:opacity-95 text-white text-[12.5px] font-semibold flex items-center justify-between shadow-sm transition">
+                            <span>⚡ Instant Demo Sign-In (HR Director)</span>
+                            <span>→</span>
+                        </button>
+                        <div class="text-[11px] text-slate-600 mt-1.5">
+                            Signs in as <strong>guruprem.saginadham@sybyl.com</strong> (VP of People Operations) with live candidates &amp; e-sign links
+                        </div>
+                    </div>
+
+                    <!-- Google OAuth 2.0 Button -->
+                    <div class="mb-4">
+                        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] mb-2 text-center">Or Sign In with Google Workspace</div>
+                        <div class="flex justify-center">
+                            <div id="g_id_onload"
+                                 data-client_id="259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com"
+                                 data-callback="handleGoogleCredentialResponse"
+                                 data-auto_prompt="false">
+                            </div>
+                            <div class="g_id_signin"
+                                 data-type="standard"
+                                 data-size="large"
+                                 data-theme="outline"
+                                 data-text="sign_in_with"
+                                 data-shape="rectangular"
+                                 data-logo_alignment="left"
+                                 data-width="340">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Work Email 6-Digit OTP Verification -->
+                    <div class="pt-3 border-t border-black/[0.06] space-y-2.5">
+                        <label class="block text-[11.5px] font-medium text-[#6E6E73]">
+                            Or sign in with Work Email 6-Digit Verification Code:
+                        </label>
+                        <div class="flex gap-2">
+                            <input id="ssoEmailInput" type="email" value="guruprem.saginadham@sybyl.com" placeholder="name@company.com"
+                                class="flex-1 px-3 py-2 rounded-xl border border-black/10 bg-[#F5F5F7] text-[12.5px] focus:outline-none focus:border-[#0071E3]" />
+                            <button type="button" onclick="requestEmailOtp()" class="px-3.5 py-2 rounded-xl bg-[#1D1D1F] hover:bg-black/80 text-white text-[12px] font-semibold shrink-0 transition">
+                                Send Code
+                            </button>
+                        </div>
+                        <div id="ssoOtpVerifyRow" class="hidden space-y-2 pt-1">
+                            <div id="ssoOtpHint" class="text-[11px] text-[#0071E3] font-medium"></div>
+                            <div class="flex gap-2">
+                                <input id="ssoOtpInput" type="text" maxlength="6" placeholder="6-digit code (e.g. 246810)"
+                                    class="flex-1 px-3 py-2 rounded-xl border border-black/10 bg-white text-[12.5px] apple-mono tracking-widest" />
+                                <button type="button" onclick="verifyEmailOtp()" class="px-4 py-2 rounded-xl bg-[#0071E3] text-white text-[12px] font-semibold shrink-0">
+                                    Verify &amp; Sign In
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-black/[0.06] flex items-center justify-between text-[11px] text-[#86868B]">
+                    <span>Google OAuth 2.0 / OIDC</span>
+                    <span>Sybyl People Security</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- LEFT SIDEBAR NAVIGATION (Apple macOS Sidebar Layout)                    -->
+    <!-- ======================================================================= -->
+    <aside class="w-64 shrink-0 apple-sidebar min-h-screen sticky top-0 h-screen flex flex-col justify-between p-4 z-30 select-none">
+        <div class="space-y-6">
+            <!-- Brand Header -->
+            <div class="px-2 pt-2 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-[#0071E3] text-white flex items-center justify-center font-semibold text-base shadow-sm">
+                    S
+                </div>
+                <div>
+                    <div class="font-semibold text-[15px] text-[#1D1D1F] leading-tight">HR Onboarding Pro</div>
+                    <div class="text-[11.5px] text-[#6E6E73]">Autonomous Onboarding Agent</div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="space-y-1">
+                <div class="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">
+                    Workspace
+                </div>
+
+                <!-- 1. Onboarding Tracking -->
+                <button type="button" onclick="switchTab('tracker')" id="tabBtn-tracker" class="nav-item nav-item-active">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Onboarding Tracking</span>
+                    </span>
+                    <span id="navBadge-tracker" class="px-2 py-0.5 text-[11px] rounded-full bg-white/20 text-white font-semibold">0</span>
+                </button>
+
+                <!-- 2. HR Action Center -->
+                <button type="button" onclick="switchTab('intelligence')" id="tabBtn-intelligence" class="nav-item">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>HR Action Center</span>
+                    </span>
+                    <span id="navBadge-intelligence" class="px-2 py-0.5 text-[11px] rounded-full bg-[#FF3B30]/12 text-[#FF3B30] font-semibold">0</span>
+                </button>
+
+                <!-- 3. Offer Launchpad -->
+                <button type="button" onclick="switchTab('batch')" id="tabBtn-batch" class="nav-item">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        <span>Offer Launchpad</span>
+                    </span>
+                </button>
+
+                <!-- 4. Sub-Agent Studio (After Offer Launchpad & Before History/Settings) -->
+                <button type="button" onclick="switchTab('subagents')" id="tabBtn-subagents" class="nav-item">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                        <span>Sub-Agent Studio</span>
+                    </span>
+                </button>
+
+                <!-- 5. History (Letters & Communications Archive) -->
+                <button type="button" onclick="switchTab('history')" id="tabBtn-history" class="nav-item">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>History</span>
+                    </span>
+                    <span id="navBadge-history" class="px-2 py-0.5 text-[11px] rounded-full bg-black/[0.06] text-[#424245] font-semibold">0</span>
+                </button>
+
+                <!-- 6. Settings (Email Settings & Offer Letter Templates) -->
+                <button type="button" onclick="switchTab('settings')" id="tabBtn-settings" class="nav-item">
+                    <span class="flex items-center gap-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Settings</span>
+                    </span>
+                </button>
+            </nav>
+
+            <!-- Role Guide Summary Card in Sidebar -->
+            <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-black/[0.05] space-y-2.5">
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">Onboarding by Role</div>
+                <div class="space-y-2 text-[12px]">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="font-medium text-[#1D1D1F]">Intern</span>
+                        <span class="text-[#6E6E73] text-right">Work Email</span>
+                    </div>
+                    <div class="flex items-start justify-between gap-2 border-t border-black/[0.05] pt-1.5">
+                        <span class="font-medium text-[#1D1D1F]">Trainee</span>
+                        <span class="text-[#6E6E73] text-right">Email, Laptop, Uber</span>
+                    </div>
+                    <div class="flex items-start justify-between gap-2 border-t border-black/[0.05] pt-1.5">
+                        <span class="font-medium text-[#1D1D1F]">Employee</span>
+                        <span class="text-[#6E6E73] text-right">Email, Laptop, Uber, Insurance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Sidebar Status -->
+        <div class="space-y-2 pt-4 border-t border-black/[0.06]">
+            <div class="px-3 py-2.5 rounded-xl bg-[#F5F5F7] flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <div id="ssoUserName" class="text-[12px] font-semibold text-[#1D1D1F] truncate">HR Director</div>
+                    <div id="ssoUserEmail" class="text-[10.5px] text-[#6E6E73] truncate">guruprem.saginadham@sybyl.com</div>
+                </div>
+                <button type="button" onclick="signOutSession()" class="px-2.5 py-1 rounded-lg bg-white border border-black/10 hover:bg-black/[0.04] text-[11px] font-medium text-[#1D1D1F] shrink-0">
+                    Sign Out
+                </button>
+            </div>
+            <button type="button" onclick="switchTab('settings')" class="w-full px-3 py-2.5 rounded-xl bg-[#F5F5F7] hover:bg-black/[0.05] transition flex items-center gap-2.5 text-left">
+                <span id="smtpDot" class="w-2.5 h-2.5 rounded-full bg-[#34C759] shrink-0"></span>
+                <div class="min-w-0">
+                    <div class="text-[11.5px] font-medium text-[#1D1D1F] truncate" id="smtpHeaderText">Live Email Active</div>
+                    <div class="text-[10.5px] text-[#86868B] truncate" id="smtpSidebarSub">psrmreports@sybyl.com</div>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ======================================================================= -->
+    <!-- MAIN WORKSPACE CONTENT AREA                                             -->
+    <!-- ======================================================================= -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+        <!-- Sticky Translucent Top Header -->
+        <header class="apple-topbar sticky top-0 z-20 px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <h1 id="pageTitle" class="text-[22px] font-semibold text-[#1D1D1F] tracking-tight">Onboarding Tracking</h1>
+                <p id="pageSubtitle" class="text-[13px] text-[#6E6E73]">
+                    Follow every candidate from offer letter to first-day readiness.
+                </p>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <button type="button" id="topSendOfferBtn" onclick="handleTopOfferButtonClick()" class="apple-btn-primary px-4 py-2 text-[13px] flex items-center gap-1.5">
+                    <span id="topSendOfferBtnLabel">+ Send Offer Letters</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Toast Notification Container -->
+        <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm"></div>
+
+        <!-- Page Container -->
+        <main class="flex-1 px-8 py-7 max-w-[1280px] w-full mx-auto space-y-7">
+
+            <!-- =================================================================== -->
+            <!-- PAGE 1: ONBOARDING TRACKING (KPIs shown ONLY on this first page)    -->
+            <!-- =================================================================== -->
+            <section id="tab-tracker" class="space-y-6">
+
+                <!-- 4 Streamlined HR KPIs (Only on Page 1) -->
+                <div id="kpiStrip" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="apple-card px-5 py-4 flex flex-wrap items-center justify-between gap-4">
+                    <!-- Role Filter -->
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="text-[12px] font-medium text-[#86868B] mr-1.5">Role</span>
+                        <button type="button" onclick="setTrackerRoleFilter('ALL')" id="roleFilter-ALL"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#1D1D1F] text-white transition">All</button>
+                        <button type="button" onclick="setTrackerRoleFilter('EMPLOYEE')" id="roleFilter-EMPLOYEE"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Employee</button>
+                        <button type="button" onclick="setTrackerRoleFilter('TRAINEE')" id="roleFilter-TRAINEE"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Trainee</button>
+                        <button type="button" onclick="setTrackerRoleFilter('INTERN')" id="roleFilter-INTERN"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Intern</button>
+                    </div>
+
+                    <!-- Stage Filter -->
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="text-[12px] font-medium text-[#86868B] mr-1.5">Status</span>
+                        <button type="button" onclick="setTrackerStageFilter('ALL')" id="stageFilter-ALL"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#0071E3] text-white transition">All Candidates</button>
+                        <button type="button" onclick="setTrackerStageFilter('AWAITING_SIGN')" id="stageFilter-AWAITING_SIGN"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Awaiting Signature</button>
+                        <button type="button" onclick="setTrackerStageFilter('PROVISIONING')" id="stageFilter-PROVISIONING"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Setup in Progress</button>
+                        <button type="button" onclick="setTrackerStageFilter('COMPLETED')" id="stageFilter-COMPLETED"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Ready for Day 1</button>
+                        <button type="button" onclick="setTrackerStageFilter('EXCEPTIONS')" id="stageFilter-EXCEPTIONS"
+                            class="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition">Needs Attention</button>
+                    </div>
+                </div>
+
+                <!-- Onboarding Tracking Cards -->
+                <div id="candidateTrackerList" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- PAGE 2: HR ACTION CENTER ("WHAT HR SHOULD KNOW")                    -->
+            <!-- =================================================================== -->
+            <section id="tab-intelligence" class="hidden space-y-6">
+
+                <!-- 3 Priority Action Columns -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <!-- 1. Expiring Soon Offers -->
+                    <div class="apple-card overflow-hidden flex flex-col">
+                        <div class="px-5 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#FF9500]"></span>
+                                    <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Offers Expiring Soon</h3>
+                                </div>
+                                <p class="text-[12px] text-[#6E6E73] mt-0.5">Less than 24 hours left to sign</p>
+                            </div>
+                            <span id="intelCount-expiring" class="px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-[#FF9500]/15 text-[#B25000]">0</span>
+                        </div>
+                        <div id="intelList-expiring" class="p-5 space-y-3 flex-1"></div>
+                    </div>
+
+                    <!-- 2. Declined & Lapsed Offers -->
+                    <div class="apple-card overflow-hidden flex flex-col">
+                        <div class="px-5 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#FF3B30]"></span>
+                                    <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Declined or Expired Offers</h3>
+                                </div>
+                                <p class="text-[12px] text-[#6E6E73] mt-0.5">Positions needing replacement candidates</p>
+                            </div>
+                            <span id="intelCount-backfill" class="px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-[#FF3B30]/12 text-[#D70015]">0</span>
+                        </div>
+                        <div id="intelList-backfill" class="p-5 space-y-3 flex-1"></div>
+                    </div>
+
+                    <!-- 3. Delayed Onboarding Tasks -->
+                    <div class="apple-card overflow-hidden flex flex-col">
+                        <div class="px-5 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#FF9500]"></span>
+                                    <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Delayed Onboarding Steps</h3>
+                                </div>
+                                <p class="text-[12px] text-[#6E6E73] mt-0.5">Pending items before candidate start date</p>
+                            </div>
+                            <span id="intelCount-blockers" class="px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-[#FF9500]/15 text-[#B25000]">0</span>
+                        </div>
+                        <div id="intelList-blockers" class="p-5 space-y-3 flex-1"></div>
+                    </div>
+                </div>
+
+                <!-- Position Progress & Day-1 Readiness -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <div class="apple-card overflow-hidden">
+                        <div class="px-6 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                            <div>
+                                <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Open Positions &amp; Hiring Progress</h3>
+                                <p class="text-[12px] text-[#6E6E73]">Target openings vs. accepted and pending offers by department</p>
+                            </div>
+                        </div>
+                        <div id="intelPositionTable" class="divide-y divide-black/[0.05]"></div>
+                    </div>
+
+                    <div class="apple-card overflow-hidden">
+                        <div class="px-6 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                            <div>
+                                <h3 class="text-[15px] font-semibold text-[#1D1D1F]">First-Day Readiness</h3>
+                                <p class="text-[12px] text-[#6E6E73]">Onboarding completion status for accepted candidates</p>
+                            </div>
+                        </div>
+                        <div id="intelDay1List" class="divide-y divide-black/[0.05]"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- PAGE 3: OFFER LAUNCHPAD                                             -->
+            <!-- =================================================================== -->
+            <section id="tab-batch" class="hidden space-y-6">
+                <!-- Newly Sent Offers Feedback Banner (Hidden until offers are sent) -->
+                <div id="batchSuccessBanner" class="hidden apple-card p-5 border-l-4 border-[#34C759] bg-[#E8F8EE]/60 space-y-3"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left 2 Columns: Send Offer Letters Form -->
+                    <div class="lg:col-span-2 apple-card p-6 space-y-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] pb-4">
+                            <div>
+                                <h2 class="text-[17px] font-semibold text-[#1D1D1F]">Send Offer Letters</h2>
+                                <p class="text-[13px] text-[#6E6E73] mt-0.5">
+                                    Prepare and send official offer letters. All CC recipients and the department head will receive a copy.
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="addBatchCandidateRow()"
+                                    class="apple-btn-secondary px-3.5 py-1.5 text-[12.5px]">
+                                    + Add Another Candidate
+                                </button>
+                                <button type="button" onclick="submitBatchOffers()" id="submitBatchTopBtn"
+                                    class="apple-btn-primary px-4 py-1.5 text-[12.5px] shadow-sm">
+                                    Send Offer Letter
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Single CC Emails Block with ; Separator -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 apple-card-subtle p-4">
+                            <div class="sm:col-span-3">
+                                <label class="block text-[12px] font-semibold text-[#1D1D1F] mb-1">
+                                    CC Emails <span class="font-normal text-[#6E6E73]">(Separate multiple email addresses with <code class="px-1.5 py-0.5 rounded bg-black/[0.06] font-semibold text-[#1D1D1F]">;</code> )</span>
+                                </label>
+                                <input type="text" id="batchCcEmails" value="hr@sybyl.com; ceo@sybyl.com"
+                                    placeholder="hr@sybyl.com; hod@sybyl.com; ceo@sybyl.com"
+                                    class="w-full px-3.5 py-2 text-[13px] rounded-xl border border-black/[0.1] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                <p class="text-[11.5px] text-[#6E6E73] mt-1">
+                                    Example: <span class="apple-mono text-[#1D1D1F]">hr@sybyl.com; ceo@sybyl.com; finance@sybyl.com</span> &mdash; The position's Head of Department is also included automatically.
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-[12px] font-semibold text-[#1D1D1F] mb-1">Offer Validity (Hours)</label>
+                                <input type="number" id="batchExpiresHours" value="72" min="1" max="720"
+                                    class="w-full px-3.5 py-2 text-[13px] rounded-xl border border-black/[0.1] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                <p class="text-[11.5px] text-[#6E6E73] mt-1">Default: 72 hours</p>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Candidate Rows Container -->
+                        <div id="batchCandidateRows" class="space-y-4"></div>
+
+                        <div class="pt-4 border-t border-black/[0.06] flex flex-wrap items-center justify-between gap-4">
+                            <div class="text-[12.5px] text-[#6E6E73]">
+                                Each candidate receives a personalized PDF offer letter (using your Offer Letter Template in Settings) and an online acceptance link.
+                            </div>
+                            <button type="button" onclick="submitBatchOffers()" id="submitBatchBtn"
+                                class="apple-btn-primary px-6 py-2.5 text-[13.5px] shadow-sm">
+                                Send Offer Letter
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Add New Department Position & Role Summary -->
+                    <div class="space-y-5">
+                        <div class="apple-card p-6 space-y-4">
+                            <div>
+                                <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Add Open Position</h3>
+                                <p class="text-[12.5px] text-[#6E6E73] mt-0.5">Add a business role and link it to its Head of Department (HoD).</p>
+                            </div>
+                            <div class="space-y-3 text-[13px]">
+                                <div>
+                                    <label class="font-medium text-[#6E6E73] block mb-1 text-[12px]">Position Title</label>
+                                    <input type="text" id="newPosTitle" placeholder="e.g., Regional Sales Manager"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                </div>
+                                <div class="grid grid-cols-2 gap-2.5">
+                                    <div>
+                                        <label class="font-medium text-[#6E6E73] block mb-1 text-[12px]">Department</label>
+                                        <input type="text" id="newPosDept" placeholder="e.g., Commercial Sales"
+                                            class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                    </div>
+                                    <div>
+                                        <label class="font-medium text-[#6E6E73] block mb-1 text-[12px]">Openings</label>
+                                        <input type="number" id="newPosHeadcount" value="2" min="1"
+                                            class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2.5">
+                                    <div>
+                                        <label class="font-medium text-[#6E6E73] block mb-1 text-[12px]">HoD Name</label>
+                                        <input type="text" id="newPosHodName" placeholder="e.g., Rajesh Khanna"
+                                            class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                    </div>
+                                    <div>
+                                        <label class="font-medium text-[#6E6E73] block mb-1 text-[12px]">HoD Email</label>
+                                        <input type="email" id="newPosHodEmail" placeholder="hod@sybyl.com"
+                                            class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                    </div>
+                                </div>
+                                <button type="button" onclick="createNewPosition()"
+                                    class="w-full py-2.5 apple-btn-secondary text-[13px]">
+                                    + Save Position
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="apple-card p-6 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-[15px] font-semibold text-[#1D1D1F]">What Happens After Acceptance</h3>
+                                <button type="button" onclick="switchTab('settings')" class="text-[12px] font-medium text-[#0071E3] hover:underline">
+                                    Edit Templates &rarr;
+                                </button>
+                            </div>
+                            <p class="text-[12.5px] text-[#6E6E73]">
+                                Once a candidate signs their offer, the appropriate onboarding tasks start automatically based on their category:
+                            </p>
+                            <div class="space-y-2.5 text-[12.5px] pt-1">
+                                <div class="p-3.5 apple-card-subtle">
+                                    <div class="font-semibold text-[#1D1D1F]">Intern</div>
+                                    <div class="text-[#6E6E73] mt-0.5">Work Email setup only</div>
+                                </div>
+                                <div class="p-3.5 apple-card-subtle">
+                                    <div class="font-semibold text-[#1D1D1F]">Trainee</div>
+                                    <div class="text-[#6E6E73] mt-0.5">Work Email, Laptop request, and Uber commute pass</div>
+                                </div>
+                                <div class="p-3.5 apple-card-subtle">
+                                    <div class="font-semibold text-[#1D1D1F]">Employee</div>
+                                    <div class="text-[#6E6E73] mt-0.5">Work Email, Laptop request, Uber commute pass, and Health Insurance</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- PAGE 4: VISUAL SUB-AGENT STUDIO (After Offer Launchpad)             -->
+            <!-- =================================================================== -->
+            <section id="tab-subagents" class="hidden space-y-6">
+                <div class="apple-card p-6 space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-[17px] font-semibold text-[#1D1D1F]">Onboarding Sub-Agent Studio</h2>
+                            <p class="text-[13px] text-[#6E6E73] mt-0.5">
+                                Live view of the 4 automated assistants handling Work Email, Laptop, Uber Commute, and Health Insurance requests.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2 text-[12px] bg-[#F5F5F7] px-4 py-2 rounded-full border border-black/[0.05] text-[#424245]">
+                            <span>Order of Setup:</span>
+                            <span class="font-semibold text-[#0071E3]">1. Work Email</span>
+                            <span>&rarr;</span>
+                            <span class="font-semibold text-[#1D1D1F]">Laptop, Uber &amp; Health Insurance</span>
+                        </div>
+                    </div>
+
+                    <!-- 4 Sub-Agent Columns -->
+                    <div id="subagentsVisualGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- PAGE 5: HISTORY (OFFER LETTERS ARCHIVE & COMMUNICATIONS LOG)        -->
+            <!-- =================================================================== -->
+            <section id="tab-history" class="hidden space-y-6">
+
+                <!-- 1. Historical Offer Letters Archive -->
+                <div class="apple-card overflow-hidden">
+                    <div class="px-6 py-4 border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-[16px] font-semibold text-[#1D1D1F]">Offer Letters Archive</h2>
+                            <p class="text-[12.5px] text-[#6E6E73]">
+                                Complete record of all issued offer letters, candidate responses, PDF copies, and signature links.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="historySearchInput" oninput="renderHistoryPage()"
+                                placeholder="Search candidate, role, or email..."
+                                class="px-3.5 py-1.5 text-[12.5px] rounded-full border border-black/[0.1] bg-[#F5F5F7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-black/[0.06] bg-[#F5F5F7]/70 text-[11.5px] font-semibold uppercase tracking-wider text-[#6E6E73]">
+                                    <th class="py-3 px-5">Candidate</th>
+                                    <th class="py-3 px-4">Position &amp; Department</th>
+                                    <th class="py-3 px-4">Category</th>
+                                    <th class="py-3 px-4">CC Recipients</th>
+                                    <th class="py-3 px-4">Status</th>
+                                    <th class="py-3 px-4">Issued / Responded</th>
+                                    <th class="py-3 px-5 text-right">Documents &amp; Links</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyLettersTableBody" class="divide-y divide-black/[0.05] text-[13px]">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2. Sent Emails & Communications Log -->
+                <div class="apple-card overflow-hidden flex flex-col">
+                    <div class="px-6 py-4 border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h3 class="text-[16px] font-semibold text-[#1D1D1F]">Communications &amp; Sent Emails Log</h3>
+                            <p class="text-[12.5px] text-[#6E6E73]">All offer letters, reminders, and status updates sent to candidates and CC recipients</p>
+                        </div>
+                        <button type="button" onclick="loadNotifications()" class="apple-btn-secondary px-3.5 py-1.5 text-[12px]">
+                            Refresh Log
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-black/[0.06] min-h-[500px]">
+                        <div id="outboxEmailList" class="md:col-span-2 divide-y divide-black/[0.05] max-h-[560px] overflow-y-auto custom-scroll"></div>
+                        <div id="outboxEmailPreview" class="md:col-span-3 p-5 bg-[#F5F5F7]/60 overflow-y-auto max-h-[560px] custom-scroll">
+                            <div class="text-center text-[#86868B] py-20 text-[13px]">
+                                Select an email on the left to view its full message and download attachments.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Historical Activity Log -->
+                <div class="apple-card overflow-hidden">
+                    <div class="px-6 py-4 border-b border-black/[0.05] flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
+                            <h3 class="text-[15px] font-semibold text-[#1D1D1F]">Onboarding Activity History</h3>
+                        </div>
+                        <span class="text-[12px] text-[#86868B]">Timestamped audit trail</span>
+                    </div>
+                    <div id="agentAuditStream" class="p-5 max-h-80 overflow-y-auto custom-scroll space-y-2 text-[12.5px]">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================================== -->
+            <!-- PAGE 6: SETTINGS (EMAIL SETTINGS & OFFER LETTER TEMPLATES)          -->
+            <!-- =================================================================== -->
+            <section id="tab-settings" class="hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                    <!-- Left 5 Columns: Company Email Settings -->
+                    <div class="lg:col-span-5 apple-card p-6 space-y-4 h-fit">
+                        <div class="border-b border-black/[0.06] pb-3.5">
+                            <h2 class="text-[16px] font-semibold text-[#1D1D1F]">Company Email Settings</h2>
+                            <p class="text-[12.5px] text-[#6E6E73] mt-0.5">
+                                Connected to Google Workspace (<strong>psrmreports@sybyl.com</strong>) for sending offer letters and stakeholder notifications.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3.5 text-[13px]">
+                            <div>
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Sender Email Address</label>
+                                <input type="email" id="smtpSenderEmail" value="psrmreports@sybyl.com"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] apple-mono text-[12.5px]" />
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Google Workspace App Password</label>
+                                <input type="password" id="smtpAppPassword" placeholder="•••••••• (Saved)"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-[#F5F5F7] apple-mono text-[12.5px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div class="col-span-2">
+                                    <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Mail Server</label>
+                                    <input type="text" id="smtpHost" value="smtp.gmail.com"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] apple-mono text-[12.5px]" />
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Port</label>
+                                    <input type="number" id="smtpPort" value="587"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] apple-mono text-[12.5px]" />
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-black/[0.05]">
+                                <label class="block font-medium text-[#1D1D1F] mb-1 text-[12px]">
+                                    Default CC Emails <span class="font-normal text-[#6E6E73]">(Separate multiple with <code class="px-1 rounded bg-black/[0.06]">;</code>)</span>
+                                </label>
+                                <input type="text" id="smtpDefaultCc" value="hr@sybyl.com; ceo@sybyl.com"
+                                    placeholder="hr@sybyl.com; ceo@sybyl.com"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-[12.5px]" />
+                                <p class="text-[11px] text-[#86868B] mt-1">Used as the default CC list on the Offer Launchpad.</p>
+                            </div>
+
+                            <div class="pt-2 border-t border-black/[0.05]">
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Redirect All Outgoing Emails To (Optional)</label>
+                                <input type="text" id="smtpOverrideRecipient" placeholder="Optional: forward all emails to a specific inbox"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-[12.5px]" />
+                            </div>
+
+                            <div class="p-3.5 apple-card-subtle flex items-center justify-between">
+                                <div>
+                                    <div class="font-medium text-[#1D1D1F] text-[13px]">Send Live Emails</div>
+                                    <div class="text-[11.5px] text-[#6E6E73]">Deliver real emails via psrmreports@sybyl.com</div>
+                                </div>
+                                <input type="checkbox" id="smtpLiveMode" class="w-4 h-4 accent-[#0071E3] rounded cursor-pointer" />
+                            </div>
+
+                            <div class="flex flex-col gap-2 pt-1">
+                                <button type="button" onclick="saveSmtpSettings()"
+                                    class="w-full py-2.5 apple-btn-primary text-[13px]">
+                                    Save Email Settings
+                                </button>
+                                <button type="button" onclick="testSmtpConnection()"
+                                    class="w-full py-2.5 apple-btn-secondary text-[13px]">
+                                    Send Test Email
+                                </button>
+                            </div>
+
+                            <div id="smtpStatusResult" class="hidden p-3 rounded-xl text-[12px]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right 7 Columns: Offer Letter Templates Editor -->
+                    <div class="lg:col-span-7 apple-card p-6 space-y-5">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] pb-4">
+                            <div>
+                                <h2 class="text-[16px] font-semibold text-[#1D1D1F]">Offer Letter Templates</h2>
+                                <p class="text-[12.5px] text-[#6E6E73] mt-0.5">
+                                    Customize the official offer letter wording and email subject line for each onboarding category.
+                                </p>
+                            </div>
+                            <button type="button" onclick="resetOfferTemplates()"
+                                class="apple-btn-secondary px-3.5 py-1.5 text-[12px]">
+                                Restore Default Templates
+                            </button>
+                        </div>
+
+                        <!-- Template Role Category Selector -->
+                        <div class="flex items-center gap-2 bg-[#F5F5F7] p-1.5 rounded-2xl w-fit">
+                            <button type="button" onclick="selectTemplateRole('EMPLOYEE')" id="tplTab-EMPLOYEE"
+                                class="px-4 py-1.5 rounded-xl text-[12.5px] font-semibold bg-white text-[#1D1D1F] shadow-sm transition">
+                                Employee Template
+                            </button>
+                            <button type="button" onclick="selectTemplateRole('TRAINEE')" id="tplTab-TRAINEE"
+                                class="px-4 py-1.5 rounded-xl text-[12.5px] font-medium text-[#6E6E73] hover:text-[#1D1D1F] transition">
+                                Trainee Template
+                            </button>
+                            <button type="button" onclick="selectTemplateRole('INTERN')" id="tplTab-INTERN"
+                                class="px-4 py-1.5 rounded-xl text-[12.5px] font-medium text-[#6E6E73] hover:text-[#1D1D1F] transition">
+                                Intern Template
+                            </button>
+                        </div>
+
+                        <!-- Available Placeholders Chip Bar -->
+                        <div class="p-3.5 apple-card-subtle space-y-1.5">
+                            <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">
+                                Dynamic Fields (Automatically filled for each candidate)
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 text-[11.5px] apple-mono">
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{candidate_name}}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{position_title}}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{department}}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{hod_name}}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{compensation}}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white border border-black/[0.06] text-[#0071E3]">{{joining_date}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Template Editor Form -->
+                        <div class="space-y-4 text-[13px]">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                <div>
+                                    <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Document Header Title</label>
+                                    <input type="text" id="tplTitle" oninput="updateTemplatePreview()"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Offer Email Subject Line</label>
+                                    <input type="text" id="tplSubject" oninput="updateTemplatePreview()"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Opening &amp; Offer Paragraph</label>
+                                <textarea id="tplIntro" rows="3" oninput="updateTemplatePreview()"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3] leading-relaxed"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Terms &amp; Onboarding Clause</label>
+                                <textarea id="tplTerms" rows="3" oninput="updateTemplatePreview()"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3] leading-relaxed"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Closing Sign-Off</label>
+                                <input type="text" id="tplClosing" oninput="updateTemplatePreview()"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+                            </div>
+
+                            <!-- Live Sample Preview -->
+                            <div class="p-4 rounded-2xl bg-[#F5F5F7] border border-black/[0.06] space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B]">Live Letter Preview</span>
+                                    <span id="tplPreviewBadge" class="text-[11px] font-semibold text-[#0071E3]">EMPLOYEE</span>
+                                </div>
+                                <div class="p-4 rounded-xl bg-white border border-black/[0.05] space-y-2 text-[12.5px] leading-relaxed text-[#1D1D1F]">
+                                    <div id="tplPreviewTitle" class="font-semibold text-[14px] text-[#1D1D1F]"></div>
+                                    <div id="tplPreviewSubject" class="text-[11.5px] text-[#6E6E73] pb-2 border-b border-black/[0.05]"></div>
+                                    <p>Dear <strong>Nadia Al-Sabah</strong>,</p>
+                                    <p id="tplPreviewIntro" class="text-[#424245]"></p>
+                                    <p id="tplPreviewTerms" class="text-[#6E6E73] text-[12px]"></p>
+                                    <p id="tplPreviewClosing" class="font-medium text-[#1D1D1F] pt-1"></p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end pt-1">
+                                <button type="button" onclick="saveCurrentOfferTemplate()"
+                                    class="apple-btn-primary px-6 py-2.5 text-[13px] shadow-sm">
+                                    Save Offer Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- DELAY / BLOCKER MODAL (Replaces native browser prompt)                  -->
+    <!-- ======================================================================= -->
+    <div id="blockTaskModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="apple-card max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="text-[16px] font-semibold text-[#1D1D1F]">Flag Onboarding Step Delay</h3>
+            <p class="text-[12.5px] text-[#6E6E73]">
+                Enter the reason for the delay. This will highlight the step in the HR Action Center so the team can follow up.
+            </p>
+            <div>
+                <label class="block text-[12px] font-medium text-[#6E6E73] mb-1">Reason for Delay</label>
+                <input type="text" id="blockTaskReasonInput"
+                    value="Waiting on vendor confirmation before candidate start date"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/[0.12] text-[13px] focus:outline-none focus:ring-2 focus:ring-[#0071E3]" />
+            </div>
+            <div class="flex justify-end gap-2.5 pt-2">
+                <button type="button" onclick="closeBlockTaskModal()"
+                    class="px-4 py-2 rounded-full bg-[#F5F5F7] text-[#1D1D1F] text-[12.5px] font-medium">
+                    Cancel
+                </button>
+                <button type="button" onclick="confirmBlockTask()"
+                    class="px-4 py-2 rounded-full bg-[#FF9500] hover:bg-[#E08600] text-white text-[12.5px] font-medium">
+                    Flag Delay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let appState = {
+            overview: null,
+            subagentsBoard: null,
+            notifications: [],
+            offerTemplates: {},
+            activeTemplateRole: 'EMPLOYEE',
+            activeTab: 'tracker',
+            trackerRoleFilter: 'ALL',
+            trackerStageFilter: 'ALL',
+            selectedEmailId: null,
+            pendingBlockTaskId: null,
+        };
+
+        const PAGE_META = {
+            tracker: {
+                title: 'Onboarding Tracking',
+                subtitle: 'Follow every candidate from offer letter to first-day readiness.'
+            },
+            intelligence: {
+                title: 'HR Action Center',
+                subtitle: 'Offers expiring soon, positions needing replacement candidates, and delayed onboarding steps.'
+            },
+            batch: {
+                title: 'Offer Launchpad',
+                subtitle: 'Send personalized offer letters with multiple CC recipients separated by ;'
+            },
+            subagents: {
+                title: 'Sub-Agent Studio',
+                subtitle: 'Monitor automated setup for Work Email, Laptop, Uber commute, and Health Insurance.'
+            },
+            history: {
+                title: 'History',
+                subtitle: 'Historical archive of all issued offer letters, candidate signatures, and sent email communications.'
+            },
+            settings: {
+                title: 'Settings',
+                subtitle: 'Configure company email settings and customize offer letter templates.'
+            }
+        };
+
+        const STEP_FRIENDLY_NAME = {
+            EMAIL: 'Work Email',
+            LAPTOP: 'Laptop',
+            UBER: 'Uber Pass',
+            INSURANCE: 'Health Insurance'
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const styles = {
+                info: 'bg-[#1D1D1F] text-white',
+                success: 'bg-[#1D1D1F] text-white border-l-4 border-[#34C759]',
+                warning: 'bg-[#1D1D1F] text-white border-l-4 border-[#FF9500]',
+                error: 'bg-[#FF3B30] text-white',
+            };
+            const el = document.createElement('div');
+            el.className = `px-4 py-3 rounded-2xl shadow-lg text-[13px] font-medium flex items-center justify-between gap-3 transition-all ${styles[type] || styles.info}`;
+            el.innerHTML = `<span>${message}</span><button type="button" onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 font-bold text-base leading-none">&times;</button>`;
+            container.appendChild(el);
+            setTimeout(() => {
+                if (el.parentElement) el.remove();
+            }, 4500);
+        }
+
+        function handleTopOfferButtonClick() {
+            if (appState.activeTab === 'batch') {
+                submitBatchOffers();
+            } else {
+                switchTab('batch');
+            }
+        }
+
+        function switchTab(tabName) {
+            appState.activeTab = tabName;
+            ['tracker', 'intelligence', 'batch', 'subagents', 'history', 'settings'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tabBtn-${t}`);
+                if (!sec || !btn) return;
+                if (t === tabName) {
+                    sec.classList.remove('hidden');
+                    btn.classList.add('nav-item-active');
+                } else {
+                    sec.classList.add('hidden');
+                    btn.classList.remove('nav-item-active');
+                }
+            });
+
+            const meta = PAGE_META[tabName] || PAGE_META.tracker;
+            document.getElementById('pageTitle').textContent = meta.title;
+            document.getElementById('pageSubtitle').textContent = meta.subtitle;
+
+            const topBtnLabel = document.getElementById('topSendOfferBtnLabel');
+            if (topBtnLabel) {
+                topBtnLabel.textContent = tabName === 'batch' ? 'Send Offer Letter Now' : '+ Send Offer Letters';
+            }
+
+            renderHeaderAndKpis();
+
+            if (tabName === 'subagents') {
+                loadSubagentsBoard();
+            } else if (tabName === 'history') {
+                renderHistoryPage();
+                loadNotifications();
+            } else if (tabName === 'settings') {
+                loadSmtpSettings();
+                loadOfferTemplates();
+            }
+        }
+
+        async function refreshAllData() {
+            try {
+                const res = await fetch('/api/overview');
+                const data = await res.json();
+                appState.overview = data;
+                if (data.offer_templates) {
+                    appState.offerTemplates = data.offer_templates;
+                }
+                renderHeaderAndKpis();
+                renderCandidateTracker();
+                renderHrIntelligence();
+                renderHistoryPage();
+                renderAuditStream();
+                refreshBatchPositionDropdowns();
+                if (appState.activeTab === 'subagents') {
+                    await loadSubagentsBoard();
+                }
+                if (appState.activeTab === 'history') {
+                    await loadNotifications();
+                }
+            } catch (err) {
+                console.error('Error loading overview:', err);
+            }
+        }
+
+        function renderHeaderAndKpis() {
+            if (!appState.overview) return;
+            const { kpis, smtp_status, candidates } = appState.overview;
+
+            const trackerBadge = document.getElementById('navBadge-tracker');
+            if (trackerBadge) {
+                trackerBadge.textContent = kpis.total_candidates;
+                trackerBadge.className = appState.activeTab === 'tracker'
+                    ? 'px-2 py-0.5 text-[11px] rounded-full bg-white/25 text-white font-semibold'
+                    : 'px-2 py-0.5 text-[11px] rounded-full bg-black/[0.06] text-[#424245] font-semibold';
+            }
+
+            const totalAlerts = kpis.expiring_soon_count + kpis.declined_total + kpis.lapsed_total + kpis.active_blockers;
+            const intelBadge = document.getElementById('navBadge-intelligence');
+            if (intelBadge) {
+                intelBadge.textContent = totalAlerts;
+                intelBadge.className = appState.activeTab === 'intelligence'
+                    ? 'px-2 py-0.5 text-[11px] rounded-full bg-white/25 text-white font-semibold'
+                    : 'px-2 py-0.5 text-[11px] rounded-full bg-[#FF3B30]/12 text-[#D70015] font-semibold';
+            }
+
+            const historyBadge = document.getElementById('navBadge-history');
+            if (historyBadge) {
+                historyBadge.textContent = (candidates || []).length;
+                historyBadge.className = appState.activeTab === 'history'
+                    ? 'px-2 py-0.5 text-[11px] rounded-full bg-white/25 text-white font-semibold'
+                    : 'px-2 py-0.5 text-[11px] rounded-full bg-black/[0.06] text-[#424245] font-semibold';
+            }
+
+            // Update Email status in sidebar
+            const dot = document.getElementById('smtpDot');
+            const txt = document.getElementById('smtpHeaderText');
+            const sub = document.getElementById('smtpSidebarSub');
+            if (smtp_status.live_mode_enabled && smtp_status.has_app_password) {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-[#34C759] pulse-dot shrink-0';
+                txt.textContent = 'Live Email Active';
+            } else {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-[#FF9500] shrink-0';
+                txt.textContent = 'Preview Mode';
+            }
+            if (sub && smtp_status.sender_email) {
+                sub.textContent = smtp_status.sender_email;
+            }
+
+            // Sync default CC emails on Offer Launchpad if untouched
+            const ccInput = document.getElementById('batchCcEmails');
+            if (ccInput && !ccInput.dataset.userEdited && smtp_status.default_cc_emails) {
+                ccInput.value = smtp_status.default_cc_emails;
+            }
+
+            // 4 Streamlined HR KPIs — rendered ONLY inside Page 1 (Onboarding Tracking)
+            const kpiItems = [
+                {
+                    label: 'Total Candidates',
+                    value: kpis.total_candidates,
+                    sub: `Across ${(appState.overview.positions || []).length} open positions`,
+                    accent: 'text-[#1D1D1F]',
+                },
+                {
+                    label: 'Awaiting Signature',
+                    value: kpis.awaiting_signature,
+                    sub: kpis.expiring_soon_count > 0 ? `${kpis.expiring_soon_count} expiring within 24h` : 'Sent to candidates',
+                    accent: 'text-[#FF9500]',
+                },
+                {
+                    label: 'Onboarding in Progress',
+                    value: kpis.provisioning_in_progress,
+                    sub: kpis.active_blockers > 0 ? `${kpis.active_blockers} step needs attention` : 'Setting up accounts & equipment',
+                    accent: 'text-[#0071E3]',
+                },
+                {
+                    label: 'Ready for Day 1',
+                    value: kpis.day1_ready,
+                    sub: 'All onboarding steps complete',
+                    accent: 'text-[#34C759]',
+                },
+            ];
+
+            const kpiEl = document.getElementById('kpiStrip');
+            if (kpiEl) {
+                kpiEl.innerHTML = kpiItems.map((k, i) => `
+                    <div onclick="kpiClick(${i})" class="apple-card p-5 cursor-pointer hover:shadow-md transition">
+                        <div class="text-[12px] font-medium text-[#6E6E73]">${k.label}</div>
+                        <div class="text-[30px] font-semibold tracking-tight ${k.accent} mt-1 leading-none">${k.value}</div>
+                        <div class="text-[12px] text-[#86868B] mt-2">${k.sub}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function kpiClick(idx) {
+            const stages = ['ALL', 'AWAITING_SIGN', 'PROVISIONING', 'COMPLETED'];
+            setTrackerStageFilter(stages[idx] || 'ALL');
+        }
+
+        function setTrackerRoleFilter(role) {
+            appState.trackerRoleFilter = role;
+            ['ALL', 'EMPLOYEE', 'TRAINEE', 'INTERN'].forEach(r => {
+                const btn = document.getElementById(`roleFilter-${r}`);
+                btn.className = r === role
+                    ? 'px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#1D1D1F] text-white transition'
+                    : 'px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition';
+            });
+            renderCandidateTracker();
+        }
+
+        function setTrackerStageFilter(stage) {
+            appState.trackerStageFilter = stage;
+            ['ALL', 'AWAITING_SIGN', 'PROVISIONING', 'COMPLETED', 'EXCEPTIONS'].forEach(s => {
+                const btn = document.getElementById(`stageFilter-${s}`);
+                btn.className = s === stage
+                    ? 'px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#0071E3] text-white transition'
+                    : 'px-3.5 py-1.5 rounded-full text-[12.5px] font-medium bg-[#F5F5F7] text-[#1D1D1F] hover:bg-black/[0.07] transition';
+            });
+            renderCandidateTracker();
+        }
+
+        function roleBadgeHtml(role) {
+            const styles = {
+                INTERN: 'bg-[#0071E3]/10 text-[#0071E3]',
+                TRAINEE: 'bg-[#5856D6]/10 text-[#5856D6]',
+                EMPLOYEE: 'bg-[#1D1D1F]/8 text-[#1D1D1F]',
+            };
+            const labels = {
+                INTERN: 'Intern · Email Only',
+                TRAINEE: 'Trainee · Email, Laptop & Uber',
+                EMPLOYEE: 'Employee · Email, Laptop, Uber & Insurance',
+            };
+            return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium ${styles[role] || 'bg-black/5'}">${labels[role] || role}</span>`;
+        }
+
+        function offerStatusBadgeHtml(cand) {
+            const status = cand.offer ? cand.offer.status : 'SENT';
+            if (status === 'ACCEPTED') {
+                return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium bg-[#34C759]/12 text-[#248A3D]">Offer Accepted</span>`;
+            }
+            if (status === 'DECLINED') {
+                return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium bg-[#FF3B30]/12 text-[#D70015]">Offer Declined</span>`;
+            }
+            if (status === 'LAPSED') {
+                return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium bg-black/[0.07] text-[#6E6E73]">Offer Expired</span>`;
+            }
+            if (cand.is_expiring_soon) {
+                return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium bg-[#FF9500]/15 text-[#B25000]">Expires in ${cand.hours_until_expiry}h</span>`;
+            }
+            return `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-medium bg-[#0071E3]/10 text-[#0071E3]">Awaiting Signature</span>`;
+        }
+
+        function renderCandidateTracker() {
+            const container = document.getElementById('candidateTrackerList');
+            if (!appState.overview || !container) return;
+
+            let list = appState.overview.candidates || [];
+            if (appState.trackerRoleFilter !== 'ALL') {
+                list = list.filter(c => c.role_category === appState.trackerRoleFilter);
+            }
+            if (appState.trackerStageFilter !== 'ALL') {
+                list = list.filter(c => {
+                    const offerSt = c.offer ? c.offer.status : '';
+                    if (appState.trackerStageFilter === 'AWAITING_SIGN') return offerSt === 'SENT' || offerSt === 'VIEWED';
+                    if (appState.trackerStageFilter === 'PROVISIONING') return c.overall_stage === 'PROVISIONING';
+                    if (appState.trackerStageFilter === 'COMPLETED') return c.overall_stage === 'COMPLETED';
+                    if (appState.trackerStageFilter === 'EXCEPTIONS') return offerSt === 'DECLINED' || offerSt === 'LAPSED' || c.blocked_tasks > 0 || c.is_expiring_soon;
+                    return true;
+                });
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="apple-card p-12 text-center text-[#6E6E73] text-[14px]">No candidates match the selected filter.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(cand => renderSingleCandidateCard(cand)).join('');
+        }
+
+        function renderSingleCandidateCard(cand) {
+            const offer = cand.offer || {};
+            const pos = cand.position || {};
+            const isAccepted = offer.status === 'ACCEPTED';
+            const isDeclinedOrLapsed = offer.status === 'DECLINED' || offer.status === 'LAPSED';
+            const isPendingSign = offer.status === 'SENT' || offer.status === 'VIEWED';
+            const step3Done = cand.overall_stage === 'COMPLETED';
+            const step4Done = cand.overall_stage === 'COMPLETED';
+
+            const friendlySteps = (cand.role_required_steps || []).map(s => STEP_FRIENDLY_NAME[s] || s).join(', ');
+            const ccDisplay = cand.cc_emails_display || `${cand.hr_email}; ${cand.hod_email}; ${cand.ceo_email}`;
+
+            return `
+            <div class="apple-card overflow-hidden transition">
+                <!-- Candidate Summary Header -->
+                <div class="px-6 py-5 border-b border-black/[0.05] flex flex-wrap items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-[17px] font-semibold text-[#1D1D1F]">${cand.full_name}</span>
+                            ${roleBadgeHtml(cand.role_category)}
+                            ${offerStatusBadgeHtml(cand)}
+                            ${cand.overall_stage === 'COMPLETED' ? `<span class="px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-[#34C759] text-white">Ready for Day 1</span>` : ''}
+                        </div>
+                        <div class="text-[13px] text-[#6E6E73] flex flex-wrap items-center gap-x-4 gap-y-1">
+                            <span class="font-medium text-[#1D1D1F]">${pos.title || 'Position'}</span>
+                            <span>(${pos.department || ''})</span>
+                            <span>&bull;</span>
+                            <span>Starts ${cand.joining_date}</span>
+                            <span>&bull;</span>
+                            <span>${cand.compensation_package}</span>
+                            <span>&bull;</span>
+                            <span>${cand.personal_email}</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions & Stakeholders -->
+                    <div class="flex flex-col items-end gap-2">
+                        <div class="text-[11.5px] text-[#86868B]">
+                            CC: <span class="text-[#424245]">${ccDisplay}</span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            ${offer.id ? `
+                                <a href="/api/offers/${offer.id}/pdf?signed=${isAccepted}" target="_blank"
+                                    class="apple-btn-secondary px-3 py-1.5 text-[12px]">
+                                    ${isAccepted ? 'Signed Offer PDF' : 'Offer Letter PDF'}
+                                </a>
+                            ` : ''}
+                            ${cand.signing_url ? `
+                                <a href="${cand.signing_url}" target="_blank"
+                                    class="${isPendingSign ? 'apple-btn-primary' : 'apple-btn-secondary'} px-3.5 py-1.5 text-[12px]">
+                                    ${isPendingSign ? 'Open Signature Page' : 'View Signed Offer'}
+                                </a>
+                            ` : ''}
+                            ${isPendingSign ? `
+                                <button type="button" onclick="quickAcceptCandidate('${offer.signing_token}', '${cand.full_name.replace(/'/g, "\\'")}')"
+                                    class="px-3 py-1.5 rounded-full text-[12px] font-medium bg-[#34C759]/15 text-[#248A3D] hover:bg-[#34C759]/25 transition">
+                                    Mark Accepted
+                                </button>
+                                <button type="button" onclick="nudgeCandidate('${cand.id}')"
+                                    class="px-3 py-1.5 rounded-full text-[12px] font-medium bg-[#FF9500]/15 text-[#B25000] hover:bg-[#FF9500]/25 transition">
+                                    Send Reminder
+                                </button>
+                                <button type="button" onclick="simulateLapseCandidate('${cand.id}')"
+                                    class="px-3 py-1.5 rounded-full text-[12px] font-medium bg-[#FF3B30]/10 text-[#D70015] hover:bg-[#FF3B30]/20 transition">
+                                    Mark Expired
+                                </button>
+                            ` : ''}
+                            ${isAccepted && cand.overall_stage !== 'COMPLETED' ? `
+                                <button type="button" onclick="runAllCandidateSubagents('${cand.id}')"
+                                    class="apple-btn-primary px-3.5 py-1.5 text-[12px]">
+                                    Complete All Steps
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4-Step Onboarding Progress Bar -->
+                <div class="px-6 py-4 bg-[#F5F5F7]/50 border-b border-black/[0.04]">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <!-- Step 1 -->
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white border border-black/[0.05]">
+                            <div class="w-6 h-6 rounded-full bg-[#34C759] text-white flex items-center justify-center text-[11px] font-bold shrink-0">✓</div>
+                            <div class="min-w-0">
+                                <div class="text-[12px] font-semibold text-[#1D1D1F]">1. Offer Sent</div>
+                                <div class="text-[11px] text-[#6E6E73] truncate">Stakeholders copied</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white border border-black/[0.05]">
+                            <div class="w-6 h-6 rounded-full ${isAccepted ? 'bg-[#34C759] text-white' : isDeclinedOrLapsed ? 'bg-[#FF3B30] text-white' : 'bg-[#FF9500] text-white'} flex items-center justify-center text-[11px] font-bold shrink-0">
+                                ${isAccepted ? '✓' : isDeclinedOrLapsed ? '✕' : '2'}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-[12px] font-semibold text-[#1D1D1F]">
+                                    2. ${isAccepted ? 'Offer Signed' : isDeclinedOrLapsed ? (offer.status === 'DECLINED' ? 'Offer Declined' : 'Offer Expired') : 'Awaiting Signature'}
+                                </div>
+                                <div class="text-[11px] text-[#6E6E73] truncate">
+                                    ${isAccepted ? 'Signed online' : isDeclinedOrLapsed ? 'HR, HoD & CEO notified' : 'Waiting for candidate'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white border border-black/[0.05] ${!isAccepted ? 'opacity-50' : ''}">
+                            <div class="w-6 h-6 rounded-full ${step3Done ? 'bg-[#34C759] text-white' : isAccepted ? 'bg-[#0071E3] text-white' : 'bg-black/10 text-[#6E6E73]'} flex items-center justify-center text-[11px] font-bold shrink-0">
+                                ${step3Done ? '✓' : '3'}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-[12px] font-semibold text-[#1D1D1F]">
+                                    3. Onboarding Setup (${cand.completed_tasks}/${cand.total_role_steps})
+                                </div>
+                                <div class="text-[11px] text-[#6E6E73] truncate">
+                                    ${friendlySteps}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white border border-black/[0.05] ${!step4Done ? 'opacity-50' : ''}">
+                            <div class="w-6 h-6 rounded-full ${step4Done ? 'bg-[#34C759] text-white' : 'bg-black/10 text-[#6E6E73]'} flex items-center justify-center text-[11px] font-bold shrink-0">
+                                ${step4Done ? '✓' : '4'}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-[12px] font-semibold text-[#1D1D1F]">4. Ready for Day 1</div>
+                                <div class="text-[11px] text-[#6E6E73] truncate">
+                                    ${step4Done ? 'All items ready' : `Start date: ${cand.joining_date}`}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role-Specific Onboarding Tasks -->
+                <div class="p-6 bg-white">
+                    ${isDeclinedOrLapsed ? `
+                        <div class="p-4 rounded-2xl bg-[#FF3B30]/[0.05] border border-[#FF3B30]/20 flex flex-wrap items-center justify-between gap-4">
+                            <div class="space-y-1">
+                                <div class="text-[13px] font-semibold text-[#D70015]">
+                                    ${offer.status === 'DECLINED' ? 'Candidate Declined the Offer' : 'Offer Expired Before Signature'}
+                                </div>
+                                <div class="text-[12.5px] text-[#1D1D1F]">
+                                    Note: ${offer.decline_reason || 'Offer validity window ended without a response.'}
+                                </div>
+                                <div class="text-[12px] text-[#6E6E73]">
+                                    Copied stakeholders (${ccDisplay}) have been notified.
+                                </div>
+                            </div>
+                            <button type="button" onclick="switchTab('batch')" class="apple-btn-primary px-4 py-2 text-[12.5px]">
+                                Send Replacement Offer
+                            </button>
+                        </div>
+                    ` : !isAccepted ? `
+                        <div class="p-4 apple-card-subtle flex flex-wrap items-center justify-between gap-4">
+                            <div class="space-y-0.5">
+                                <div class="text-[13px] font-semibold text-[#1D1D1F]">
+                                    Onboarding Setup Waiting for Signature
+                                </div>
+                                <div class="text-[12.5px] text-[#6E6E73]">
+                                    Once <strong>${cand.full_name}</strong> signs the offer letter, ${cand.total_role_steps} setup step(s) will begin automatically: <strong>${friendlySteps}</strong>.
+                                </div>
+                            </div>
+                            <a href="${cand.signing_url}" target="_blank" class="apple-btn-primary px-4 py-2 text-[12.5px]">
+                                Open Signature Page
+                            </a>
+                        </div>
+                    ` : `
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div class="text-[12.5px] font-semibold text-[#6E6E73]">
+                                    Onboarding Checklist (${cand.completed_tasks} of ${cand.total_role_steps} completed)
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${Math.min(cand.tasks.length, 4)} gap-4">
+                                ${cand.tasks.map(t => renderSubagentTaskCard(t)).join('')}
+                            </div>
+                        </div>
+                    `}
+                </div>
+            </div>
+            `;
+        }
+
+        function renderSubagentTaskCard(task) {
+            const icons = { EMAIL: '✉️', LAPTOP: '💻', UBER: '🚗', INSURANCE: '🛡️' };
+            const titles = {
+                EMAIL: 'Work Email Setup',
+                LAPTOP: 'Laptop Request',
+                UBER: 'Uber Commute Pass',
+                INSURANCE: 'Health Insurance'
+            };
+            const isCompleted = task.status === 'COMPLETED';
+            const isBlocked = task.status === 'BLOCKED';
+
+            const statusLabel = isCompleted
+                ? 'Completed'
+                : isBlocked
+                ? 'Needs Attention'
+                : task.status === 'PENDING'
+                ? 'Waiting for Email'
+                : 'In Progress';
+
+            const statusColor = isCompleted
+                ? 'bg-[#34C759]/15 text-[#248A3D]'
+                : isBlocked
+                ? 'bg-[#FF9500]/15 text-[#B25000]'
+                : 'bg-[#0071E3]/10 text-[#0071E3]';
+
+            const artifactEntries = Object.entries(task.artifacts || {});
+
+            return `
+            <div class="rounded-2xl border ${isBlocked ? 'border-[#FF9500]/50 bg-[#FF9500]/[0.03]' : isCompleted ? 'border-[#34C759]/30 bg-[#34C759]/[0.02]' : 'border-black/[0.06] bg-[#F5F5F7]/60'} p-4 flex flex-col justify-between gap-3.5">
+                <div class="space-y-2.5">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-lg">${icons[task.task_type] || '•'}</span>
+                            <div>
+                                <div class="text-[13.5px] font-semibold text-[#1D1D1F]">${titles[task.task_type] || task.agent_name}</div>
+                                <div class="text-[11.5px] text-[#86868B]">${task.agent_name}</div>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium ${statusColor}">
+                            ${statusLabel}
+                        </span>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between text-[12px]">
+                            <span class="text-[#424245] truncate">${task.current_stage_label}</span>
+                            <span class="font-medium text-[#6E6E73]">${task.progress_pct}%</span>
+                        </div>
+                        <div class="w-full h-1.5 rounded-full bg-black/[0.07] overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-300 ${isCompleted ? 'bg-[#34C759]' : isBlocked ? 'bg-[#FF9500]' : 'bg-[#0071E3]'}"
+                                style="width: ${Math.max(task.progress_pct, 8)}%"></div>
+                        </div>
+                    </div>
+
+                    ${isBlocked ? `
+                        <div class="p-2.5 rounded-xl bg-[#FF9500]/10 text-[11.5px] text-[#B25000]">
+                            <strong>Delay:</strong> ${task.blocker_reason}
+                        </div>
+                    ` : ''}
+
+                    ${artifactEntries.length > 0 ? `
+                        <div class="p-2.5 rounded-xl bg-white border border-black/[0.05] space-y-1 text-[11.5px]">
+                            ${artifactEntries.slice(0, 3).map(([k, v]) => `
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[#86868B] capitalize">${k.replace(/_/g, ' ')}</span>
+                                    <span class="apple-mono font-medium text-[#1D1D1F] truncate">${v}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+
+                ${!isCompleted ? `
+                    <div class="pt-2.5 border-t border-black/[0.05] flex items-center gap-1.5">
+                        <button type="button" onclick="advanceTask('${task.id}', false)"
+                            class="flex-1 py-1.5 rounded-full text-[11.5px] font-medium bg-[#0071E3] hover:bg-[#0077ED] text-white transition">
+                            ${isBlocked ? 'Resolve & Next Step' : 'Next Step'}
+                        </button>
+                        <button type="button" onclick="advanceTask('${task.id}', true)"
+                            class="px-3 py-1.5 rounded-full text-[11.5px] font-medium bg-[#34C759]/15 text-[#248A3D] hover:bg-[#34C759]/25 transition">
+                            Complete
+                        </button>
+                        ${!isBlocked ? `
+                            <button type="button" onclick="openBlockTaskModal('${task.id}')"
+                                class="px-2.5 py-1.5 rounded-full text-[11.5px] font-medium bg-black/[0.05] text-[#6E6E73] hover:bg-black/[0.1] transition"
+                                title="Flag a delay on this step">
+                                Delay
+                            </button>
+                        ` : ''}
+                    </div>
+                ` : `
+                    <div class="pt-2 border-t border-black/[0.05] text-[11.5px] font-medium text-[#248A3D] flex items-center justify-between">
+                        <span>✓ Ready for Day 1</span>
+                        <span>Done</span>
+                    </div>
+                `}
+            </div>
+            `;
+        }
+
+        function renderHrIntelligence() {
+            if (!appState.overview) return;
+            const { hr_intelligence, positions } = appState.overview;
+
+            // 1. Expiring Soon
+            const expList = hr_intelligence.expiring_soon_offers || [];
+            document.getElementById('intelCount-expiring').textContent = expList.length;
+            document.getElementById('intelList-expiring').innerHTML = expList.length === 0
+                ? `<div class="text-[13px] text-[#86868B] py-8 text-center">No offers expiring within 24 hours.</div>`
+                : expList.map(c => `
+                    <div class="p-4 rounded-2xl bg-[#F5F5F7] space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-[14px] text-[#1D1D1F]">${c.full_name}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-[#FF9500]/15 text-[#B25000] font-semibold text-[11.5px]">${c.hours_until_expiry}h left</span>
+                        </div>
+                        <div class="text-[12.5px] text-[#6E6E73]">
+                            ${c.position ? c.position.title : ''} &bull; HoD: ${c.hod_email}
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <button type="button" onclick="nudgeCandidate('${c.id}')" class="apple-btn-primary px-3.5 py-1.5 text-[12px]">
+                                Send Reminder
+                            </button>
+                            <a href="${c.signing_url}" target="_blank" class="apple-btn-secondary px-3.5 py-1.5 text-[12px]">
+                                View Offer
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+
+            // 2. Declined & Expired
+            const bfList = hr_intelligence.backfill_alerts || [];
+            document.getElementById('intelCount-backfill').textContent = bfList.length;
+            document.getElementById('intelList-backfill').innerHTML = bfList.length === 0
+                ? `<div class="text-[13px] text-[#86868B] py-8 text-center">No declined or expired offers.</div>`
+                : bfList.map(c => `
+                    <div class="p-4 rounded-2xl bg-[#F5F5F7] space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-[14px] text-[#1D1D1F]">${c.full_name}</span>
+                            <span class="px-2.5 py-0.5 rounded-full ${c.offer.status === 'DECLINED' ? 'bg-[#FF3B30]/12 text-[#D70015]' : 'bg-black/[0.07] text-[#6E6E73]'} font-semibold text-[11.5px]">
+                                ${c.offer.status === 'DECLINED' ? 'Declined' : 'Expired'}
+                            </span>
+                        </div>
+                        <div class="text-[12.5px] text-[#424245]">
+                            ${c.position ? c.position.title : ''}
+                        </div>
+                        <div class="text-[12px] text-[#6E6E73] bg-white p-2.5 rounded-xl border border-black/[0.04]">
+                            ${c.offer.decline_reason || 'Offer expired before signature'}
+                        </div>
+                        <div class="pt-1 flex items-center justify-between">
+                            <span class="text-[11px] text-[#86868B]">HR, HoD &amp; CEO notified</span>
+                            <button type="button" onclick="switchTab('batch')" class="text-[12px] font-medium text-[#0071E3] hover:underline">
+                                Send New Offer &rarr;
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+            // 3. Delayed Onboarding Tasks
+            const blkList = hr_intelligence.sla_blockers || [];
+            document.getElementById('intelCount-blockers').textContent = blkList.length;
+            document.getElementById('intelList-blockers').innerHTML = blkList.length === 0
+                ? `<div class="text-[13px] text-[#248A3D] bg-[#34C759]/10 p-5 rounded-2xl text-center font-medium">All onboarding tasks are on schedule.</div>`
+                : blkList.map(b => `
+                    <div class="p-4 rounded-2xl bg-[#F5F5F7] space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-[14px] text-[#1D1D1F]">${b.candidate_name}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-[#FF9500]/15 text-[#B25000] font-medium text-[11px]">${b.agent_name}</span>
+                        </div>
+                        <div class="text-[12.5px] text-[#424245]">
+                            ${b.blocker_reason}
+                        </div>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-[11.5px] text-[#86868B]">Starts ${b.joining_date}</span>
+                            <button type="button" onclick="advanceTask('${b.task_id}', true)"
+                                class="apple-btn-primary px-3.5 py-1.5 text-[12px]">
+                                Resolve &amp; Complete
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+            // 4. Open Positions Table
+            document.getElementById('intelPositionTable').innerHTML = (positions || []).map(p => `
+                <div class="px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[14px] font-semibold text-[#1D1D1F]">${p.title}</span>
+                            <span class="text-[11.5px] px-2.5 py-0.5 rounded-full bg-[#F5F5F7] text-[#6E6E73]">${p.department}</span>
+                        </div>
+                        <div class="text-[12px] text-[#86868B] mt-0.5">
+                            HoD: ${p.hod_name} (${p.hod_email})
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[12px]">
+                        <span class="px-3 py-1 rounded-full bg-[#F5F5F7] text-[#424245]">Target: <strong>${p.headcount_target}</strong></span>
+                        <span class="px-3 py-1 rounded-full bg-[#34C759]/12 text-[#248A3D]">Accepted: <strong>${p.accepted}</strong></span>
+                        <span class="px-3 py-1 rounded-full bg-[#0071E3]/10 text-[#0071E3]">Pending: <strong>${p.awaiting_signature}</strong></span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 5. First-Day Readiness
+            const d1List = hr_intelligence.day1_readiness || [];
+            document.getElementById('intelDay1List').innerHTML = d1List.map(c => {
+                const pct = Math.round((c.completed_tasks / Math.max(c.total_role_steps, 1)) * 100);
+                return `
+                <div class="px-6 py-4 flex items-center justify-between gap-4">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[14px] font-semibold text-[#1D1D1F]">${c.full_name}</span>
+                            ${roleBadgeHtml(c.role_category)}
+                        </div>
+                        <div class="text-[12px] text-[#86868B] mt-0.5">
+                            Starts ${c.joining_date} &bull; ${c.completed_tasks} of ${c.total_role_steps} steps complete
+                        </div>
+                    </div>
+                    <div class="w-36 text-right">
+                        <div class="text-[12.5px] font-semibold ${c.overall_stage === 'COMPLETED' ? 'text-[#248A3D]' : 'text-[#0071E3]'}">
+                            ${c.overall_stage === 'COMPLETED' ? 'Ready for Day 1' : `${pct}% Complete`}
+                        </div>
+                        <div class="w-full h-1.5 bg-[#F5F5F7] rounded-full overflow-hidden mt-1.5">
+                            <div class="h-full ${c.overall_stage === 'COMPLETED' ? 'bg-[#34C759]' : 'bg-[#0071E3]'}"
+                                style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function loadSubagentsBoard() {
+            try {
+                const res = await fetch('/api/agents/board');
+                const data = await res.json();
+                appState.subagentsBoard = data.subagents || [];
+                renderSubagentsStudio();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderSubagentsStudio() {
+            const grid = document.getElementById('subagentsVisualGrid');
+            if (!appState.subagentsBoard || !grid) return;
+
+            const icons = { EMAIL: '✉️', LAPTOP: '💻', UBER: '🚗', INSURANCE: '🛡️' };
+            const friendlyTitle = {
+                EMAIL: 'IT Email Sub-Agent',
+                LAPTOP: 'Laptop Sub-Agent',
+                UBER: 'Uber Sub-Agent',
+                INSURANCE: 'Insurance Sub-Agent',
+            };
+            const roleScope = {
+                EMAIL: 'Interns, Trainees & Employees',
+                LAPTOP: 'Trainees & Employees',
+                UBER: 'Trainees & Employees',
+                INSURANCE: 'Employees Only',
+            };
+
+            grid.innerHTML = appState.subagentsBoard.map(agent => `
+                <div class="rounded-2xl border border-black/[0.06] bg-[#F5F5F7]/60 flex flex-col overflow-hidden">
+                    <div class="p-4 bg-white border-b border-black/[0.05] space-y-2.5">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-2xl">${icons[agent.task_type] || '•'}</span>
+                            <div>
+                                <h3 class="text-[14.5px] font-semibold text-[#1D1D1F]">${friendlyTitle[agent.task_type] || agent.agent_name}</h3>
+                                <p class="text-[11.5px] text-[#6E6E73]">${roleScope[agent.task_type]}</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-black/[0.04]">
+                            <div class="text-[11px] font-medium text-[#86868B] mb-1.5">Checklist Steps</div>
+                            <ol class="space-y-1 text-[11.5px] text-[#424245]">
+                                ${(agent.stages || []).map((st, idx) => `
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-4 h-4 rounded-full bg-[#F5F5F7] text-[#6E6E73] font-semibold text-[10px] flex items-center justify-center shrink-0">${idx + 1}</span>
+                                        <span class="truncate">${st}</span>
+                                    </li>
+                                `).join('')}
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="p-4 space-y-2.5 flex-1">
+                        <div class="flex items-center justify-between text-[12px] font-medium text-[#6E6E73]">
+                            <span>Candidates (${agent.total_tasks})</span>
+                            <span class="text-[#248A3D]">${agent.completed_count} Completed</span>
+                        </div>
+                        ${(agent.tasks || []).map(t => `
+                            <div class="p-3.5 rounded-2xl bg-white border border-black/[0.05] space-y-2 shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[13px] font-semibold text-[#1D1D1F]">${t.full_name}</span>
+                                    <span class="text-[10.5px] font-medium px-2 py-0.5 rounded-full ${t.status === 'COMPLETED' ? 'bg-[#34C759]/12 text-[#248A3D]' : t.status === 'BLOCKED' ? 'bg-[#FF9500]/15 text-[#B25000]' : 'bg-[#0071E3]/10 text-[#0071E3]'}">
+                                        ${t.status === 'COMPLETED' ? 'Done' : t.status === 'BLOCKED' ? 'Delayed' : 'Active'}
+                                    </span>
+                                </div>
+                                <div class="text-[11.5px] text-[#6E6E73]">${t.current_stage_label}</div>
+                                <div class="w-full h-1.5 bg-[#F5F5F7] rounded-full overflow-hidden">
+                                    <div class="h-full ${t.status === 'COMPLETED' ? 'bg-[#34C759]' : t.status === 'BLOCKED' ? 'bg-[#FF9500]' : 'bg-[#0071E3]'}" style="width: ${Math.max(t.progress_pct, 10)}%"></div>
+                                </div>
+                                ${t.status !== 'COMPLETED' ? `
+                                    <div class="flex items-center gap-1.5 pt-1">
+                                        <button type="button" onclick="advanceTask('${t.id}', false)" class="flex-1 py-1 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-[11.5px] font-medium">Next Step</button>
+                                        <button type="button" onclick="advanceTask('${t.id}', true)" class="px-2.5 py-1 rounded-full bg-[#34C759]/15 text-[#248A3D] text-[11.5px] font-medium">Complete</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderHistoryPage() {
+            const tbody = document.getElementById('historyLettersTableBody');
+            if (!appState.overview || !tbody) return;
+
+            const query = (document.getElementById('historySearchInput')?.value || '').trim().toLowerCase();
+            let list = appState.overview.candidates || [];
+
+            if (query) {
+                list = list.filter(c => {
+                    const posTitle = c.position?.title || '';
+                    const dept = c.position?.department || '';
+                    return (
+                        c.full_name.toLowerCase().includes(query) ||
+                        c.personal_email.toLowerCase().includes(query) ||
+                        posTitle.toLowerCase().includes(query) ||
+                        dept.toLowerCase().includes(query) ||
+                        c.role_category.toLowerCase().includes(query)
+                    );
+                });
+            }
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-[#86868B]">No historical offer letters match your search.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map(cand => {
+                const offer = cand.offer || {};
+                const pos = cand.position || {};
+                const isAccepted = offer.status === 'ACCEPTED';
+                const ccDisplay = cand.cc_emails_display || `${cand.hr_email}; ${cand.hod_email}; ${cand.ceo_email}`;
+                const dateInfo = offer.responded_at
+                    ? `Responded: ${offer.responded_at}`
+                    : `Sent: ${offer.sent_at || cand.created_at}`;
+
+                return `
+                <tr class="hover:bg-[#F5F5F7]/60 transition">
+                    <td class="py-3.5 px-5">
+                        <div class="font-semibold text-[#1D1D1F]">${cand.full_name}</div>
+                        <div class="text-[11.5px] text-[#6E6E73]">${cand.personal_email}</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <div class="font-medium text-[#1D1D1F]">${pos.title || 'Position'}</div>
+                        <div class="text-[11.5px] text-[#6E6E73]">${pos.department || ''} &bull; ${cand.compensation_package}</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#F5F5F7] text-[#1D1D1F]">${cand.role_category}</span>
+                    </td>
+                    <td class="py-3.5 px-4 max-w-[220px]">
+                        <div class="text-[11.5px] text-[#424245] truncate" title="${ccDisplay}">${ccDisplay}</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        ${offerStatusBadgeHtml(cand)}
+                    </td>
+                    <td class="py-3.5 px-4 text-[11.5px] text-[#6E6E73]">
+                        <div>${dateInfo}</div>
+                        <div class="text-[#86868B]">Joining: ${cand.joining_date}</div>
+                    </td>
+                    <td class="py-3.5 px-5 text-right">
+                        <div class="inline-flex items-center gap-2">
+                            ${offer.id ? `
+                                <a href="/api/offers/${offer.id}/pdf?signed=${isAccepted}" target="_blank"
+                                    class="apple-btn-secondary px-3 py-1.5 text-[11.5px]">
+                                    📄 ${isAccepted ? 'Signed PDF' : 'Offer PDF'}
+                                </a>
+                            ` : ''}
+                            ${cand.signing_url ? `
+                                <a href="${cand.signing_url}" target="_blank"
+                                    class="apple-btn-primary px-3 py-1.5 text-[11.5px]">
+                                    Open Offer
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAuditStream() {
+            const container = document.getElementById('agentAuditStream');
+            if (!appState.overview || !container) return;
+            const events = appState.overview.recent_agent_events || [];
+            container.innerHTML = events.map(ev => `
+                <div class="p-3 rounded-xl bg-[#F5F5F7] flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <span class="px-2.5 py-0.5 rounded-full bg-white border border-black/[0.05] text-[#1D1D1F] font-medium text-[11px]">${ev.agent_name}</span>
+                        <span class="text-[#424245] text-[12.5px]">${ev.message}</span>
+                    </div>
+                    <span class="text-[#86868B] text-[11px]">${ev.created_at}</span>
+                </div>
+            `).join('');
+        }
+
+        async function advanceTask(taskId, completeImmediately = false) {
+            try {
+                const res = await fetch(`/api/tasks/${taskId}/advance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ complete_immediately: completeImmediately }),
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Could not update step');
+                }
+                showToast(completeImmediately ? 'Onboarding step completed!' : 'Moved to next step.', 'success');
+                await refreshAllData();
+            } catch (err) {
+                showToast(err.message, 'warning');
+            }
+        }
+
+        function openBlockTaskModal(taskId) {
+            appState.pendingBlockTaskId = taskId;
+            document.getElementById('blockTaskModal').classList.remove('hidden');
+        }
+
+        function closeBlockTaskModal() {
+            appState.pendingBlockTaskId = null;
+            document.getElementById('blockTaskModal').classList.add('hidden');
+        }
+
+        async function confirmBlockTask() {
+            const taskId = appState.pendingBlockTaskId;
+            const reason = document.getElementById('blockTaskReasonInput').value.trim();
+            if (!taskId || !reason) return;
+            closeBlockTaskModal();
+            try {
+                const res = await fetch(`/api/tasks/${taskId}/block`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ blocker_reason: reason }),
+                });
+                if (!res.ok) throw new Error(await res.text());
+                showToast('Delay flagged and added to HR Action Center.', 'warning');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function runAllCandidateSubagents(candidateId) {
+            try {
+                const res = await fetch(`/api/candidates/${candidateId}/run-subagents`, { method: 'POST' });
+                if (!res.ok) throw new Error(await res.text());
+                showToast('All onboarding steps completed! Candidate is Ready for Day 1.', 'success');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function quickAcceptCandidate(signingToken, fullName) {
+            try {
+                const res = await fetch(`/api/sign/${signingToken}/accept`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        signer_name: fullName,
+                        signature_data: `Signed by ${fullName}`,
+                        signature_type: 'typed',
+                        comments: 'Accepted offer letter',
+                    }),
+                });
+                if (!res.ok) throw new Error(await res.text());
+                showToast(`${fullName} accepted the offer! Onboarding setup has started.`, 'success');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error accepting offer: ${err.message}`, 'error');
+            }
+        }
+
+        async function nudgeCandidate(candidateId) {
+            try {
+                const res = await fetch(`/api/candidates/${candidateId}/nudge`, { method: 'POST' });
+                if (!res.ok) throw new Error(await res.text());
+                showToast('Friendly reminder email sent to candidate.', 'info');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error sending reminder: ${err.message}`, 'error');
+            }
+        }
+
+        async function simulateLapseCandidate(candidateId) {
+            try {
+                const res = await fetch(`/api/candidates/${candidateId}/lapse`, { method: 'POST' });
+                if (!res.ok) throw new Error(await res.text());
+                showToast('Offer marked as expired. All CC recipients notified.', 'warning');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        function getPositionOptionsHtml(selectedId = 'pos-sales-mgr') {
+            const positions = (appState.overview && appState.overview.positions && appState.overview.positions.length > 0)
+                ? appState.overview.positions
+                : [
+                    { id: 'pos-sales-mgr', title: 'Sales Manager', department: 'Commercial & Enterprise Sales', hod_email: 'rajesh.khanna@sybyl.com' },
+                    { id: 'pos-merch', title: 'Merchandiser', department: 'Retail & Brand Merchandising', hod_email: 'anita.desai@sybyl.com' },
+                    { id: 'pos-proc-off', title: 'Procurement Officer', department: 'Supply Chain & Procurement', hod_email: 'tariq.mansoor@sybyl.com' },
+                    { id: 'pos-fin-off', title: 'Finance Officer', department: 'Corporate Finance & Treasury', hod_email: 'grace.wanjiku@sybyl.com' },
+                ];
+            return positions.map(p => `
+                <option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>
+                    ${p.title} (${p.department} — HoD: ${p.hod_email})
+                </option>
+            `).join('');
+        }
+
+        function refreshBatchPositionDropdowns() {
+            const selects = document.querySelectorAll('.cand-pos');
+            selects.forEach(sel => {
+                const currentVal = sel.value || 'pos-sales-mgr';
+                sel.innerHTML = getPositionOptionsHtml(currentVal);
+            });
+        }
+
+        function addBatchCandidateRow(prefill = null) {
+            const container = document.getElementById('batchCandidateRows');
+            const idx = container.children.length + 1;
+            const d = prefill || {
+                full_name: '',
+                personal_email: '',
+                phone: '+1-555-0199',
+                role_category: 'EMPLOYEE',
+                position_id: 'pos-sales-mgr',
+                compensation_package: '$95,000/yr + Sales Commission + Benefits',
+                joining_date: '2025-07-01',
+            };
+
+            const row = document.createElement('div');
+            row.className = 'batch-row p-5 apple-card-subtle space-y-3.5';
+            row.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-[12.5px] font-semibold text-[#1D1D1F]">Candidate #${idx}</span>
+                    ${idx > 1 ? `<button type="button" onclick="this.closest('.batch-row').remove()" class="text-[12px] text-[#FF3B30] hover:underline font-medium">Remove</button>` : `<span class="text-[11.5px] text-[#6E6E73]">Ready to send</span>`}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[13px]">
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Full Name</label>
+                        <input type="text" class="cand-name w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white" value="${d.full_name}" placeholder="e.g., Omar Al-Futtaim" required />
+                    </div>
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Candidate Email</label>
+                        <input type="email" class="cand-email w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white" value="${d.personal_email}" placeholder="candidate@example.com" required />
+                    </div>
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Onboarding Category</label>
+                        <select class="cand-role w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white font-medium text-[#1D1D1F]">
+                            <option value="EMPLOYEE" ${d.role_category === 'EMPLOYEE' ? 'selected' : ''}>Employee (Email, Laptop, Uber, Insurance)</option>
+                            <option value="TRAINEE" ${d.role_category === 'TRAINEE' ? 'selected' : ''}>Trainee (Email, Laptop, Uber)</option>
+                            <option value="INTERN" ${d.role_category === 'INTERN' ? 'selected' : ''}>Intern (Work Email Only)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[13px]">
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Position &amp; Department HoD</label>
+                        <select class="cand-pos w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white">
+                            ${getPositionOptionsHtml(d.position_id)}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Compensation Package</label>
+                        <input type="text" class="cand-comp w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white" value="${d.compensation_package}" />
+                    </div>
+                    <div>
+                        <label class="block font-medium text-[#6E6E73] mb-1 text-[12px]">Start Date</label>
+                        <input type="date" class="cand-join w-full px-3.5 py-2 rounded-xl border border-black/[0.1] bg-white" value="${d.joining_date}" />
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function initDefaultCandidateRow() {
+            const container = document.getElementById('batchCandidateRows');
+            if (!container) return;
+            container.innerHTML = '';
+            addBatchCandidateRow({
+                full_name: 'Omar Al-Futtaim',
+                personal_email: 'omar.alfuttaim@outlook.com',
+                role_category: 'EMPLOYEE',
+                position_id: 'pos-sales-mgr',
+                compensation_package: '$98,000/yr + Sales Commission + Benefits',
+                joining_date: '2025-07-01',
+            });
+        }
+
+        async function submitBatchOffers() {
+            const rows = Array.from(document.querySelectorAll('.batch-row'));
+            if (rows.length === 0) {
+                addBatchCandidateRow();
+                showToast('Please enter candidate details to send an offer letter.', 'warning');
+                return;
+            }
+            const candidates = [];
+            for (const r of rows) {
+                const nameInput = r.querySelector('.cand-name');
+                const emailInput = r.querySelector('.cand-email');
+                const full_name = nameInput.value.trim();
+                const personal_email = emailInput.value.trim();
+                const role_category = r.querySelector('.cand-role').value;
+                const position_id = r.querySelector('.cand-pos').value;
+                const compensation_package = r.querySelector('.cand-comp').value.trim() || '$90,000/yr + Benefits';
+                const joining_date = r.querySelector('.cand-join').value || '2025-07-01';
+                if (!full_name || !personal_email) {
+                    if (!full_name) nameInput.focus();
+                    else emailInput.focus();
+                    showToast('Please enter both Full Name and Candidate Email.', 'warning');
+                    return;
+                }
+                candidates.push({
+                    full_name,
+                    personal_email,
+                    phone: '+1-555-0199',
+                    role_category,
+                    position_id,
+                    compensation_package,
+                    joining_date,
+                });
+            }
+
+            const ccEmailsRaw = document.getElementById('batchCcEmails').value.trim() || 'hr@sybyl.com; ceo@sybyl.com';
+            const payload = {
+                candidates,
+                cc_emails: ccEmailsRaw,
+                offer_expires_in_hours: parseInt(document.getElementById('batchExpiresHours').value || '72', 10),
+            };
+
+            const btn = document.getElementById('submitBatchBtn');
+            const topActionBtn = document.getElementById('submitBatchTopBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Sending Offer Letter...';
+            }
+            if (topActionBtn) {
+                topActionBtn.disabled = true;
+                topActionBtn.textContent = 'Sending...';
+            }
+
+            try {
+                const res = await fetch('/api/offers/batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(errText);
+                }
+                const data = await res.json();
+                const dispatched = data.dispatched || [];
+                showToast(`Successfully sent ${data.count} offer letter(s)! CC: ${ccEmailsRaw}`, 'success');
+
+                await refreshAllData();
+
+                // Show immediate confirmation card on Offer Launchpad with working links
+                const banner = document.getElementById('batchSuccessBanner');
+                if (banner && dispatched.length > 0) {
+                    banner.classList.remove('hidden');
+                    banner.innerHTML = `
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <div class="text-[14px] font-semibold text-[#1D7A3B]">
+                                    ✓ ${dispatched.length} Offer Letter(s) Sent Successfully
+                                </div>
+                                <div class="text-[12px] text-[#424245] mt-0.5">
+                                    Copied (CC): <strong>${ccEmailsRaw}</strong> (plus Department Head)
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="switchTab('tracker')" class="apple-btn-primary px-3.5 py-1.5 text-[12px]">
+                                    View in Onboarding Tracking &rarr;
+                                </button>
+                                <button type="button" onclick="switchTab('history')" class="apple-btn-secondary px-3.5 py-1.5 text-[12px]">
+                                    View in History
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                            ${dispatched.map(d => `
+                                <div class="p-3 rounded-xl bg-white border border-black/[0.06] flex items-center justify-between gap-2 text-[12.5px]">
+                                    <div>
+                                        <div class="font-semibold text-[#1D1D1F]">${d.full_name}</div>
+                                        <div class="text-[11px] text-[#6E6E73]">CC: ${d.cc_emails || ccEmailsRaw}</div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <a href="/api/offers/${d.offer.id}/pdf" target="_blank" class="apple-btn-secondary px-2.5 py-1 text-[11.5px]">
+                                            📄 PDF
+                                        </a>
+                                        <a href="${d.signing_url}" target="_blank" class="apple-btn-primary px-3 py-1 text-[11.5px]">
+                                            Open Offer Link
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                showToast(`Failed to send offer letter: ${err.message}`, 'error');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Send Offer Letter';
+                }
+                if (topActionBtn) {
+                    topActionBtn.disabled = false;
+                    topActionBtn.textContent = 'Send Offer Letter';
+                }
+            }
+        }
+
+        async function createNewPosition() {
+            const title = document.getElementById('newPosTitle').value.trim();
+            const department = document.getElementById('newPosDept').value.trim();
+            const headcount_target = parseInt(document.getElementById('newPosHeadcount').value || '1', 10);
+            const hod_name = document.getElementById('newPosHodName').value.trim();
+            const hod_email = document.getElementById('newPosHodEmail').value.trim();
+            if (!title || !department || !hod_name || !hod_email) {
+                showToast('Please fill in all position details.', 'warning');
+                return;
+            }
+            try {
+                const res = await fetch('/api/positions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, department, headcount_target, hod_name, hod_email, location: 'Corporate HQ' }),
+                });
+                if (!res.ok) throw new Error(await res.text());
+                showToast(`Added position "${title}".`, 'success');
+                document.getElementById('newPosTitle').value = '';
+                document.getElementById('newPosDept').value = '';
+                document.getElementById('newPosHodName').value = '';
+                document.getElementById('newPosHodEmail').value = '';
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function loadSmtpSettings() {
+            try {
+                const res = await fetch('/api/settings/smtp');
+                const data = await res.json();
+                document.getElementById('smtpSenderEmail').value = data.sender_email || 'psrmreports@sybyl.com';
+                document.getElementById('smtpHost').value = data.smtp_host || 'smtp.gmail.com';
+                document.getElementById('smtpPort').value = data.smtp_port || 587;
+                document.getElementById('smtpDefaultCc').value = data.default_cc_emails || 'hr@sybyl.com; ceo@sybyl.com';
+                document.getElementById('smtpOverrideRecipient').value = data.override_recipient_for_demo || '';
+                document.getElementById('smtpLiveMode').checked = Boolean(data.live_mode_enabled);
+                if (data.has_app_password) {
+                    document.getElementById('smtpAppPassword').placeholder = '•••••••• (Saved)';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function saveSmtpSettings() {
+            const defaultCc = document.getElementById('smtpDefaultCc').value.trim() || 'hr@sybyl.com; ceo@sybyl.com';
+            const payload = {
+                sender_email: document.getElementById('smtpSenderEmail').value.trim(),
+                app_password: document.getElementById('smtpAppPassword').value,
+                smtp_host: document.getElementById('smtpHost').value.trim(),
+                smtp_port: parseInt(document.getElementById('smtpPort').value || '587', 10),
+                use_tls: true,
+                live_mode_enabled: document.getElementById('smtpLiveMode').checked,
+                default_hr_email: 'hr@sybyl.com',
+                default_ceo_email: 'ceo@sybyl.com',
+                default_cc_emails: defaultCc,
+                override_recipient_for_demo: document.getElementById('smtpOverrideRecipient').value.trim(),
+            };
+            try {
+                const res = await fetch('/api/settings/smtp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error(await res.text());
+                document.getElementById('batchCcEmails').value = defaultCc;
+                showToast('Email settings saved.', 'success');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Failed to save settings: ${err.message}`, 'error');
+            }
+        }
+
+        async function testSmtpConnection() {
+            await saveSmtpSettings();
+            const statusBox = document.getElementById('smtpStatusResult');
+            statusBox.className = 'p-3 rounded-xl text-[12px] bg-[#F5F5F7] text-[#424245] block';
+            statusBox.textContent = 'Sending test email...';
+            const testRecipient = document.getElementById('smtpOverrideRecipient').value.trim() || document.getElementById('smtpSenderEmail').value.trim();
+
+            try {
+                const res = await fetch('/api/settings/smtp/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test_recipient: testRecipient }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    statusBox.className = 'p-3 rounded-xl text-[12px] bg-[#34C759]/12 text-[#248A3D] block font-medium';
+                    statusBox.textContent = `✓ ${data.message}`;
+                    showToast('Test email sent!', 'success');
+                } else {
+                    statusBox.className = 'p-3 rounded-xl text-[12px] bg-[#FF3B30]/12 text-[#D70015] block font-medium';
+                    statusBox.textContent = `✕ ${data.message}`;
+                }
+            } catch (err) {
+                statusBox.className = 'p-3 rounded-xl text-[12px] bg-[#FF3B30]/12 text-[#D70015] block';
+                statusBox.textContent = `Error: ${err.message}`;
+            }
+        }
+
+        // =====================================================================
+        // OFFER LETTER TEMPLATES MANAGEMENT (Settings Page)
+        // =====================================================================
+        async function loadOfferTemplates() {
+            try {
+                const res = await fetch('/api/settings/templates');
+                const data = await res.json();
+                appState.offerTemplates = data.templates || {};
+                selectTemplateRole(appState.activeTemplateRole || 'EMPLOYEE');
+            } catch (err) {
+                console.error('Error loading templates:', err);
+            }
+        }
+
+        function selectTemplateRole(role) {
+            appState.activeTemplateRole = role;
+            ['EMPLOYEE', 'TRAINEE', 'INTERN'].forEach(r => {
+                const btn = document.getElementById(`tplTab-${r}`);
+                if (!btn) return;
+                btn.className = r === role
+                    ? 'px-4 py-1.5 rounded-xl text-[12.5px] font-semibold bg-white text-[#1D1D1F] shadow-sm transition'
+                    : 'px-4 py-1.5 rounded-xl text-[12.5px] font-medium text-[#6E6E73] hover:text-[#1D1D1F] transition';
+            });
+
+            const tpl = (appState.offerTemplates && appState.offerTemplates[role]) || {
+                title: 'Official Offer of Appointment',
+                subject_line: 'Official Offer of Appointment — {{position_title}} ({{role_category}}) | Sybyl',
+                intro_text: 'We are delighted to offer you the position of {{position_title}} in the {{department}} department at Sybyl, reporting to {{hod_name}}.',
+                terms_text: 'Your compensation package will be {{compensation}}, with a start date of {{joining_date}}.',
+                closing_text: 'Warm regards, Sybyl People & Culture Team',
+            };
+
+            document.getElementById('tplTitle').value = tpl.title || '';
+            document.getElementById('tplSubject').value = tpl.subject_line || '';
+            document.getElementById('tplIntro').value = tpl.intro_text || '';
+            document.getElementById('tplTerms').value = tpl.terms_text || '';
+            document.getElementById('tplClosing').value = tpl.closing_text || '';
+            document.getElementById('tplPreviewBadge').textContent = role;
+
+            updateTemplatePreview();
+        }
+
+        function replacePreviewVars(str) {
+            const sample = {
+                candidate_name: 'Nadia Al-Sabah',
+                position_title: 'Sales Manager',
+                department: 'Commercial & Enterprise Sales',
+                hod_name: 'Rajesh Khanna',
+                compensation: '$95,000/yr + Sales Commission + Benefits',
+                joining_date: '2025-07-01',
+                role_category: appState.activeTemplateRole,
+            };
+            let out = str || '';
+            Object.entries(sample).forEach(([k, v]) => {
+                out = out.replaceAll(`{{${k}}}`, v);
+            });
+            return out;
+        }
+
+        function updateTemplatePreview() {
+            const title = document.getElementById('tplTitle').value;
+            const subject = document.getElementById('tplSubject').value;
+            const intro = document.getElementById('tplIntro').value;
+            const terms = document.getElementById('tplTerms').value;
+            const closing = document.getElementById('tplClosing').value;
+
+            document.getElementById('tplPreviewTitle').textContent = replacePreviewVars(title);
+            document.getElementById('tplPreviewSubject').textContent = `Subject: ${replacePreviewVars(subject)}`;
+            document.getElementById('tplPreviewIntro').textContent = replacePreviewVars(intro);
+            document.getElementById('tplPreviewTerms').textContent = replacePreviewVars(terms);
+            document.getElementById('tplPreviewClosing').textContent = replacePreviewVars(closing);
+        }
+
+        async function saveCurrentOfferTemplate() {
+            const payload = {
+                role_category: appState.activeTemplateRole,
+                title: document.getElementById('tplTitle').value.trim(),
+                subject_line: document.getElementById('tplSubject').value.trim(),
+                intro_text: document.getElementById('tplIntro').value.trim(),
+                terms_text: document.getElementById('tplTerms').value.trim(),
+                closing_text: document.getElementById('tplClosing').value.trim(),
+            };
+            try {
+                const res = await fetch('/api/settings/templates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error(await res.text());
+                const data = await res.json();
+                appState.offerTemplates = data.templates || appState.offerTemplates;
+                showToast(`Saved ${appState.activeTemplateRole} offer letter template!`, 'success');
+                await refreshAllData();
+            } catch (err) {
+                showToast(`Failed to save template: ${err.message}`, 'error');
+            }
+        }
+
+        async function resetOfferTemplates() {
+            try {
+                const res = await fetch('/api/settings/templates/reset', { method: 'POST' });
+                if (!res.ok) throw new Error(await res.text());
+                const data = await res.json();
+                appState.offerTemplates = data.templates || {};
+                selectTemplateRole(appState.activeTemplateRole);
+                showToast('Offer letter templates restored to defaults.', 'info');
+            } catch (err) {
+                showToast(`Error resetting templates: ${err.message}`, 'error');
+            }
+        }
+
+        // =====================================================================
+        // COMMUNICATIONS & SENT EMAILS LOG (History Page)
+        // =====================================================================
+        async function loadNotifications() {
+            try {
+                const res = await fetch('/api/notifications');
+                appState.notifications = await res.json();
+                renderOutboxList();
+                if (appState.notifications.length > 0 && !appState.selectedEmailId) {
+                    selectOutboxEmail(appState.notifications[0].id);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderOutboxList() {
+            const listEl = document.getElementById('outboxEmailList');
+            if (!listEl) return;
+            if (!appState.notifications || appState.notifications.length === 0) {
+                listEl.innerHTML = `<div class="p-6 text-center text-[13px] text-[#86868B]">No emails sent yet.</div>`;
+                return;
+            }
+            listEl.innerHTML = appState.notifications.map(n => {
+                const isSelected = n.id === appState.selectedEmailId;
+                return `
+                    <div onclick="selectOutboxEmail('${n.id}')"
+                        class="p-4 cursor-pointer transition ${isSelected ? 'bg-[#0071E3]/[0.08] border-l-4 border-[#0071E3]' : 'hover:bg-[#F5F5F7]'}">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-black/[0.05] text-[#424245]">${n.event_type.replace(/_/g, ' ')}</span>
+                            <span class="text-[11px] text-[#86868B]">${n.created_at}</span>
+                        </div>
+                        <div class="text-[13px] font-semibold text-[#1D1D1F] mt-1.5 line-clamp-1">${n.subject}</div>
+                        <div class="text-[12px] text-[#6E6E73] mt-0.5 truncate">To: ${n.recipient_to}</div>
+                        <div class="text-[11px] text-[#86868B] truncate">CC: ${n.recipients_cc}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectOutboxEmail(id) {
+            appState.selectedEmailId = id;
+            renderOutboxList();
+            const mail = appState.notifications.find(n => n.id === id);
+            const previewEl = document.getElementById('outboxEmailPreview');
+            if (!mail || !previewEl) return;
+
+            const pdfHref = mail.offer_id
+                ? `/api/offers/${mail.offer_id}/pdf?signed=${mail.event_type === 'OFFER_ACCEPTED'}`
+                : null;
+
+            previewEl.innerHTML = `
+                <div class="apple-card p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.06] pb-3">
+                        <span class="px-3 py-0.5 rounded-full text-[11.5px] font-medium bg-[#0071E3]/10 text-[#0071E3]">${mail.event_type.replace(/_/g, ' ')}</span>
+                        <span class="text-[11.5px] text-[#86868B]">${mail.created_at}</span>
+                    </div>
+                    <h4 class="text-[15px] font-semibold text-[#1D1D1F]">${mail.subject}</h4>
+                    <div class="text-[12.5px] space-y-1.5 apple-card-subtle p-3.5">
+                        <div><span class="text-[#6E6E73]">To:</span> <span class="font-medium text-[#1D1D1F]">${mail.recipient_to}</span></div>
+                        <div><span class="text-[#6E6E73]">CC:</span> <span class="font-medium text-[#1D1D1F]">${mail.recipients_cc}</span></div>
+                        ${mail.attachment_path && pdfHref ? `
+                            <div class="pt-1">
+                                <span class="text-[#6E6E73]">Attachment:</span>
+                                <a href="${pdfHref}" target="_blank" class="inline-flex items-center gap-1 font-medium text-[#0071E3] hover:underline ml-1">
+                                    📄 ${mail.attachment_path.split('/').pop()} (Download PDF)
+                                </a>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="pt-1">
+                        <div class="p-4 rounded-2xl border border-black/[0.06] bg-white overflow-x-auto">
+                            ${mail.body_html}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------
+        // Enterprise Google SSO, Work Email OTP & Instant Demo Session Logic
+        // -------------------------------------------------------------------
+        function showSsoError(msg) {
+            const el = document.getElementById('ssoErrorBanner');
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.remove('hidden');
+        }
+
+        function completeSsoLogin(authData) {
+            const overlay = document.getElementById('sso-gate-overlay');
+            if (overlay) overlay.classList.add('hidden');
+            const user = (authData && authData.user) || {
+                name: 'HR Director',
+                email: 'guruprem.saginadham@sybyl.com',
+            };
+            const nameEl = document.getElementById('ssoUserName');
+            const emailEl = document.getElementById('ssoUserEmail');
+            if (nameEl) nameEl.textContent = user.name || 'HR Director';
+            if (emailEl) emailEl.textContent = user.email || 'guruprem.saginadham@sybyl.com';
+            try {
+                sessionStorage.setItem('hr_onboarding_sso_session', JSON.stringify(user));
+            } catch (_) {}
+            showToast(`Signed in as ${user.name} (${user.email})`, 'success');
+        }
+
+        window.handleGoogleCredentialResponse = async function (response) {
+            if (!response || !response.credential) return;
+            try {
+                const res = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Google SSO failed');
+                completeSsoLogin(data);
+            } catch (err) {
+                showSsoError(err.message || 'Google SSO verification failed.');
+            }
+        };
+
+        async function signInDemo() {
+            try {
+                const res = await fetch('/api/auth/demo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ persona: 'HR Director' }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Demo sign-in failed');
+                completeSsoLogin(data);
+            } catch (err) {
+                showSsoError(err.message || 'Demo sign-in failed.');
+            }
+        }
+
+        async function requestEmailOtp() {
+            const emailInput = document.getElementById('ssoEmailInput');
+            const email = emailInput ? emailInput.value.trim() : '';
+            if (!email) {
+                showSsoError('Please enter your work email address.');
+                return;
+            }
+            try {
+                const res = await fetch('/api/auth/otp/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Could not send verification code');
+                const row = document.getElementById('ssoOtpVerifyRow');
+                const hint = document.getElementById('ssoOtpHint');
+                const otpInput = document.getElementById('ssoOtpInput');
+                if (row) row.classList.remove('hidden');
+                if (hint) hint.textContent = `Code sent to ${email} (Demo code: ${data.demo_code || '246810'})`;
+                if (otpInput && data.demo_code) otpInput.value = data.demo_code;
+            } catch (err) {
+                showSsoError(err.message || 'Failed to send verification code.');
+            }
+        }
+
+        async function verifyEmailOtp() {
+            const emailInput = document.getElementById('ssoEmailInput');
+            const otpInput = document.getElementById('ssoOtpInput');
+            const email = emailInput ? emailInput.value.trim() : '';
+            const code = otpInput ? otpInput.value.trim() : '';
+            try {
+                const res = await fetch('/api/auth/otp/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Invalid verification code');
+                completeSsoLogin(data);
+            } catch (err) {
+                showSsoError(err.message || 'Verification failed.');
+            }
+        }
+
+        function signOutSession() {
+            try {
+                sessionStorage.removeItem('hr_onboarding_sso_session');
+            } catch (_) {}
+            const overlay = document.getElementById('sso-gate-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const saved = sessionStorage.getItem('hr_onboarding_sso_session');
+                if (saved) {
+                    const user = JSON.parse(saved);
+                    if (user && user.email) {
+                        const overlay = document.getElementById('sso-gate-overlay');
+                        if (overlay) overlay.classList.add('hidden');
+                        const nameEl = document.getElementById('ssoUserName');
+                        const emailEl = document.getElementById('ssoUserEmail');
+                        if (nameEl) nameEl.textContent = user.name || 'HR Director';
+                        if (emailEl) emailEl.textContent = user.email;
+                    }
+                }
+            } catch (_) {}
+            const ccInput = document.getElementById('batchCcEmails');
+            if (ccInput) {
+                ccInput.addEventListener('input', () => {
+                    ccInput.dataset.userEdited = 'true';
+                });
+            }
+            await refreshAllData();
+            initDefaultCandidateRow();
+        });
+    </script>
+</body>
+</html>

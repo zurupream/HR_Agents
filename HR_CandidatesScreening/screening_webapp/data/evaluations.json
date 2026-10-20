@@ -1,0 +1,248 @@
+[
+  {
+    "candidate_id": "C001",
+    "criterion_scores": [
+      {
+        "criterion_id": "M1",
+        "criterion_name": "Python Software Engineering & Testing",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 5,
+        "evidence": "Senior Python & AI Engineer with 7 years of production Python 3, asyncio, and pytest experience."
+      },
+      {
+        "criterion_id": "M2",
+        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 5,
+        "evidence": "Built production multi-agent systems using Google ADK (SequentialAgent, LlmAgent) and Gemini with Pydantic output_schema."
+      },
+      {
+        "criterion_id": "M3",
+        "criterion_name": "REST APIs & Google OAuth Security",
+        "category": "must_have",
+        "weight": 20.0,
+        "score": 5,
+        "evidence": "Implemented FastAPI REST APIs with OAuth 2.0 / OIDC Google ID token audience verification and bearer authentication."
+      },
+      {
+        "criterion_id": "N1",
+        "criterion_name": "Document & Spreadsheet Processing",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 5,
+        "evidence": "Automated document ingestion and Excel reporting using python-docx, pypdf, and openpyxl."
+      },
+      {
+        "criterion_id": "N2",
+        "criterion_name": "Cloud Deployment & CI/CD",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 5,
+        "evidence": "Deployed Docker containers to Google Cloud (Cloud Run and Vertex AI) using GitHub Actions CI/CD pipelines."
+      }
+    ],
+    "overall_score": 100.0,
+    "decision": "Shortlisted",
+    "confidence": 0.98,
+    "review_reasons": [],
+    "strengths": [
+      "7 years of production Python 3, asyncio, and pytest experience",
+      "Direct production experience with Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema",
+      "FastAPI with Google OAuth 2.0 / OIDC ID token audience verification",
+      "Document processing (python-docx, pypdf, openpyxl) and Cloud Run / Vertex AI CI/CD deployments"
+    ],
+    "gaps": [
+      "None noted"
+    ],
+    "reasoning": "Candidate C001 demonstrates strong, direct production experience across all must-have and nice-to-have criteria, including 7 years of Python/asyncio/pytest, Google ADK multi-agent systems with Pydantic validation, and FastAPI with Google OAuth 2.0 audience verification. With an overall score of 100.0 exceeding the 70.0 threshold and consistent evidence across the CV, cover letter, and email, the candidate is a clear match for shortlisting.",
+    "needs_human_review": false
+  },
+  {
+    "candidate_id": "C002",
+    "criterion_scores": [
+      {
+        "criterion_id": "M1",
+        "criterion_name": "Python Software Engineering & Testing",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 3,
+        "evidence": "CV: \"Python Backend Developer (4 years): Built production Python async services with pytest automated test suites.\" (Slightly below the 5+ years requirement, but solid async and pytest production experience)."
+      },
+      {
+        "criterion_id": "M2",
+        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 2,
+        "evidence": "CV: \"Built internal prototypes with Gemini LLM and Pydantic structured output validation (no Google ADK yet).\""
+      },
+      {
+        "criterion_id": "M3",
+        "criterion_name": "REST APIs & Google OAuth Security",
+        "category": "must_have",
+        "weight": 20.0,
+        "score": 3,
+        "evidence": "CV: \"Developed FastAPI REST API endpoints with OAuth2 token validation and JWT audience checks.\""
+      },
+      {
+        "criterion_id": "N1",
+        "criterion_name": "Document & Spreadsheet Processing",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 4,
+        "evidence": "CV: \"Built document pipelines with python-docx, pypdf, and openpyxl for Excel reporting.\""
+      },
+      {
+        "criterion_id": "N2",
+        "criterion_name": "Cloud Deployment & CI/CD",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 0,
+        "evidence": "CV: \"Basic familiarity with Linux VMs; no production Docker, Google Cloud Run, or Vertex AI CI/CD experience yet.\""
+      }
+    ],
+    "overall_score": 49.0,
+    "decision": "Not Shortlisted",
+    "confidence": 0.85,
+    "review_reasons": [],
+    "strengths": [
+      "4 years of production Python experience with async services and pytest",
+      "FastAPI REST API development with OAuth2 token validation and JWT audience checks",
+      "Strong document and spreadsheet processing using python-docx, pypdf, and openpyxl",
+      "Prototyping experience with Gemini LLM and Pydantic structured output validation"
+    ],
+    "gaps": [
+      "1 year short of the 5+ years Python requirement",
+      "No experience with Google ADK multi-agent frameworks",
+      "No production experience with Docker, Google Cloud Run, Vertex AI, or CI/CD pipelines"
+    ],
+    "reasoning": "Candidate C002 demonstrates solid backend skills in Python (4 years), FastAPI with OAuth2/JWT audience checks, and document processing using python-docx, pypdf, and openpyxl. However, they explicitly lack experience with Google ADK multi-agent frameworks and Google Cloud/Docker deployment, and have only prototype-level Gemini experience. With an overall score of 49.0 (well below the 70.0 threshold), the candidate is not shortlisted.",
+    "needs_human_review": false
+  },
+  {
+    "candidate_id": "C003",
+    "criterion_scores": [
+      {
+        "criterion_id": "M1",
+        "criterion_name": "Python Software Engineering & Testing",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 0,
+        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+      },
+      {
+        "criterion_id": "M2",
+        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 0,
+        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+      },
+      {
+        "criterion_id": "M3",
+        "criterion_name": "REST APIs & Google OAuth Security",
+        "category": "must_have",
+        "weight": 20.0,
+        "score": 0,
+        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+      },
+      {
+        "criterion_id": "N1",
+        "criterion_name": "Document & Spreadsheet Processing",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 0,
+        "evidence": "No evidence of programmatic document or spreadsheet processing in the application; email states: \"I do not have a technical CV yet as my background is in print graphic design and typography.\""
+      },
+      {
+        "criterion_id": "N2",
+        "criterion_name": "Cloud Deployment & CI/CD",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 0,
+        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+      }
+    ],
+    "overall_score": 0.0,
+    "decision": "Not Shortlisted",
+    "confidence": 0.98,
+    "review_reasons": [],
+    "strengths": [
+      "None noted"
+    ],
+    "gaps": [
+      "No experience with Python software engineering, asyncio, or pytest",
+      "No experience with LLM or multi-agent frameworks (Google ADK, Gemini, Pydantic)",
+      "No experience with FastAPI or Google OAuth 2.0 / OIDC security",
+      "No experience with Python document/spreadsheet processing libraries",
+      "No experience with Docker, Google Cloud deployment, or CI/CD"
+    ],
+    "reasoning": "The candidate is a print graphic designer seeking a career transition and explicitly states in their cover letter that they have no experience with Python, LLM frameworks, FastAPI, OAuth, or cloud infrastructure. Consequently, the application scores 0/100 against the rubric and is a clear non-match with high confidence.",
+    "needs_human_review": false
+  },
+  {
+    "candidate_id": "C004",
+    "criterion_scores": [
+      {
+        "criterion_id": "M1",
+        "criterion_name": "Python Software Engineering & Testing",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 4,
+        "evidence": "Cover Letter & CV: \"I have 6 years of production Python 3 software engineering experience, with deep expertise in asyncio concurrency and automated pytest test suites.\""
+      },
+      {
+        "criterion_id": "M2",
+        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 4,
+        "evidence": "CV: \"Architected multi-agent pipelines using Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema.\""
+      },
+      {
+        "criterion_id": "M3",
+        "criterion_name": "REST APIs & Google OAuth Security",
+        "category": "must_have",
+        "weight": 20.0,
+        "score": 0,
+        "evidence": "No mention of FastAPI, REST APIs, or Google OAuth 2.0 / OIDC token verification in the cover letter, CV, or email."
+      },
+      {
+        "criterion_id": "N1",
+        "criterion_name": "Document & Spreadsheet Processing",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 4,
+        "evidence": "CV: \"Built automated document and report pipelines using python-docx, pypdf, and openpyxl.\""
+      },
+      {
+        "criterion_id": "N2",
+        "criterion_name": "Cloud Deployment & CI/CD",
+        "category": "nice_to_have",
+        "weight": 15.0,
+        "score": 4,
+        "evidence": "Cover Letter & CV: \"deployed containerized batch pipelines with Docker and GitHub Actions CI/CD to Google Cloud Run and Vertex AI.\""
+      }
+    ],
+    "overall_score": 64.0,
+    "decision": "Not Shortlisted",
+    "confidence": 0.65,
+    "review_reasons": [
+      "borderline_score",
+      "missing_evidence"
+    ],
+    "strengths": [
+      "6 years of production Python 3, asyncio, and pytest experience",
+      "Hands-on experience with Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema",
+      "Experience with python-docx, pypdf, and openpyxl document processing",
+      "Docker containerization and CI/CD deployment to Google Cloud Run and Vertex AI"
+    ],
+    "gaps": [
+      "No evidence of FastAPI or Google OAuth 2.0 / OIDC ID token verification (Must-Have M3)"
+    ],
+    "reasoning": "Candidate C004 demonstrates strong experience across Python 3 (M1), Google ADK multi-agent workflows (M2), document processing (N1), and Cloud Run/Vertex AI deployments (N2). However, the application completely omits any mention of FastAPI or Google OAuth 2.0 / OIDC token verification (must-have criterion M3), resulting in a borderline overall score of 64.0. The application is flagged for human review so HR can decide whether to verify M3 experience with the candidate.",
+    "needs_human_review": true
+  }
+]

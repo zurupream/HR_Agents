@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sybyl Offer Portal — Official Offer of Appointment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --apple-bg: #F5F5F7;
+      --apple-text: #1D1D1F;
+      --apple-subtext: #86868B;
+      --apple-blue: #0071E3;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: var(--apple-bg);
+      color: var(--apple-text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .apple-header {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    .apple-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    .cursive-sig { font-family: 'Caveat', cursive; font-size: 2.2rem; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Top Header -->
+  <header class="apple-header sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-[#0071E3] flex items-center justify-center font-semibold text-white text-base shadow-sm">
+          S
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="font-semibold text-[#1D1D1F] tracking-tight text-[15px]">Sybyl People</span>
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-[#E8F8EE] text-[#1D7A3B] font-medium">
+              Official Offer Portal
+            </span>
+          </div>
+          <p class="text-[12px] text-[#86868B]">Candidate Offer Review &amp; Acceptance</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/" class="text-[13px] px-4 py-2 rounded-full bg-[#F5F5F7] hover:bg-[#E8E8ED] text-[#1D1D1F] font-medium transition">
+          &larr; Back to Onboarding Tracking
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-8">
+    <div id="loadingState" class="text-center py-20 text-[#86868B] text-sm">
+      Loading your official offer letter...
+    </div>
+
+    <div id="offerContainer" class="hidden space-y-6">
+      <!-- Status Banner -->
+      <div id="statusBanner" class="rounded-2xl p-5 border flex flex-wrap items-center justify-between gap-4"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left 2 Cols: Formal Offer Document -->
+        <div class="lg:col-span-2 apple-card overflow-hidden">
+          <div class="bg-[#1D1D1F] text-white px-8 py-6 flex items-center justify-between">
+            <div>
+              <p id="docTemplateHeader" class="text-[11px] uppercase tracking-widest text-[#64B5F6] font-semibold">Official Employment Offer</p>
+              <h1 id="docPositionTitle" class="text-xl font-semibold mt-1 tracking-tight"></h1>
+              <p id="docDeptLocation" class="text-xs text-[#A1A1A6] mt-0.5"></p>
+            </div>
+            <div class="text-right">
+              <span id="docRoleBadge" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#0071E3] text-white"></span>
+              <p id="docOfferId" class="text-[11px] text-[#A1A1A6] mt-2"></p>
+            </div>
+          </div>
+
+          <div class="p-8 space-y-6 text-[14px] leading-relaxed text-[#1D1D1F]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#F5F5F7] p-5 rounded-2xl text-[13px]">
+              <div><span class="text-[#86868B]">Candidate:</span> <strong id="docCandName" class="text-[#1D1D1F]"></strong></div>
+              <div><span class="text-[#86868B]">Email:</span> <strong id="docCandEmail" class="text-[#1D1D1F]"></strong></div>
+              <div><span class="text-[#86868B]">Reporting Manager:</span> <strong id="docHodName" class="text-[#1D1D1F]"></strong></div>
+              <div><span class="text-[#86868B]">Joining Date:</span> <strong id="docJoiningDate" class="text-[#1D1D1F]"></strong></div>
+              <div><span class="text-[#86868B]">Compensation:</span> <strong id="docCompensation" class="text-[#1D7A3B]"></strong></div>
+              <div><span class="text-[#86868B]">Offer Valid Until:</span> <strong id="docExpiresAt" class="text-[#D93025]"></strong></div>
+              <div class="sm:col-span-2 pt-2 border-t border-black/5 text-[#515154] text-xs">
+                <span class="font-semibold text-[#1D1D1F]">Copied on Offer (CC):</span>
+                <span id="docCcList"></span>
+              </div>
+            </div>
+
+            <div class="space-y-3 text-[#424245]">
+              <p>Dear <strong id="docSalutationName" class="text-[#1D1D1F]"></strong>,</p>
+              <p id="docIntroParagraph">
+                We are delighted to offer you the position of <strong id="docBodyPos" class="text-[#1D1D1F]"></strong> in the
+                <strong id="docBodyDept" class="text-[#1D1D1F]"></strong> department at <strong>Sybyl</strong>, reporting directly to
+                <strong id="docBodyHod" class="text-[#1D1D1F]"></strong>.
+              </p>
+              <p>
+                Your onboarding category is <strong id="docBodyRole" class="text-[#0071E3]"></strong>. As soon as you sign and accept below,
+                HR, your Head of Department, and the CEO will be notified, and our onboarding assistants will prepare your Day-1 setup:
+              </p>
+            </div>
+
+            <!-- Role-Based Provisioning Preview -->
+            <div class="bg-[#F5F5F7] rounded-2xl p-5">
+              <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] mb-3">
+                Included Day-1 Onboarding Setup
+              </h3>
+              <div id="docRoleStepsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+            </div>
+
+            <div id="docTermsBlock" class="text-xs text-[#86868B] space-y-1.5 border-t border-black/5 pt-4">
+              <p><strong>1. Digital Acceptance:</strong> By signing below, you accept this offer of appointment and authorize our People team to begin your Day-1 onboarding preparations.</p>
+              <p><strong>2. Confirmation Copy:</strong> A signed PDF copy is automatically shared with you, HR, your Head of Department, and the CEO.</p>
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-3">
+              <a id="downloadPdfBtn" href="#" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#F5F5F7] hover:bg-[#E8E8ED] text-[#1D1D1F] text-xs font-medium transition">
+                &#128196; Download Official PDF Offer Letter
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Col: Interactive Signature Capture / Status Card -->
+        <div class="space-y-5">
+          <div id="signActionCard" class="apple-card p-6 space-y-5">
+            <div>
+              <h2 class="text-base font-semibold text-[#1D1D1F]">Sign &amp; Accept Offer</h2>
+              <p class="text-xs text-[#86868B] mt-1">Complete your signature below to accept your offer and begin onboarding.</p>
+            </div>
+
+            <!-- Mode Tabs: Type vs Draw -->
+            <div class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] p-1 rounded-xl text-xs font-medium">
+              <button id="tabTypedBtn" onclick="switchSigMode('typed')" class="py-2 rounded-lg bg-white text-[#1D1D1F] shadow-sm transition">
+                Type Signature
+              </button>
+              <button id="tabDrawnBtn" onclick="switchSigMode('drawn')" class="py-2 rounded-lg text-[#86868B] hover:text-[#1D1D1F] transition">
+                Draw Signature
+              </button>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-[#515154] mb-1.5">Full Legal Name</label>
+              <input id="signerNameInput" type="text" class="w-full px-3.5 py-2.5 rounded-xl bg-[#F5F5F7] border border-transparent focus:bg-white focus:border-[#0071E3] text-[#1D1D1F] text-sm focus:outline-none transition" oninput="updateTypedPreview()" />
+            </div>
+
+            <!-- Typed Signature Preview -->
+            <div id="typedSigBox" class="bg-[#FBFBFD] text-[#1D1D1F] rounded-2xl p-4 border border-dashed border-[#D2D2D7] text-center min-h-[96px] flex flex-col items-center justify-center">
+              <div id="typedSigPreview" class="cursive-sig text-[#0071E3]"></div>
+              <span class="text-[10px] uppercase tracking-widest text-[#86868B] mt-1">Signature Preview</span>
+            </div>
+
+            <!-- Drawn Signature Canvas -->
+            <div id="drawnSigBox" class="hidden space-y-2">
+              <div class="bg-[#FBFBFD] rounded-2xl overflow-hidden border border-[#D2D2D7]">
+                <canvas id="sigCanvas" width="320" height="120" class="w-full h-[120px] cursor-crosshair touch-none"></canvas>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-[#86868B]">Sign inside the box above</span>
+                <button type="button" onclick="clearCanvas()" class="text-[#0071E3] hover:underline font-medium">Clear</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-[#515154] mb-1.5">Note to HR &amp; Manager (Optional)</label>
+              <textarea id="signerComments" rows="2" placeholder="Looking forward to joining the team!" class="w-full px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-transparent focus:bg-white focus:border-[#0071E3] text-[#1D1D1F] text-xs focus:outline-none transition"></textarea>
+            </div>
+
+            <button id="acceptSubmitBtn" onclick="submitAcceptOffer()" class="w-full py-3 px-4 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white font-medium text-sm shadow-sm transition flex items-center justify-center gap-2">
+              <span>&#10003; Accept &amp; Sign Offer</span>
+            </button>
+
+            <div class="border-t border-black/5 pt-4">
+              <button onclick="toggleDeclineModal(true)" class="w-full py-2.5 px-4 rounded-full bg-[#FFF2F2] hover:bg-[#FFE5E5] text-[#D93025] text-xs font-medium transition">
+                Decline Offer...
+              </button>
+            </div>
+          </div>
+
+          <!-- Completed / Responded Card -->
+          <div id="respondedCard" class="hidden apple-card p-6 space-y-4"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Decline Modal -->
+  <div id="declineModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="apple-card max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <h3 class="text-lg font-semibold text-[#1D1D1F]">Decline Offer of Appointment</h3>
+      <p class="text-xs text-[#86868B]">
+        Declining will notify HR, the Head of Department, and the CEO.
+      </p>
+      <div>
+        <label class="block text-xs font-medium text-[#515154] mb-1">Reason for Declining</label>
+        <select id="declineReasonSelect" class="w-full px-3 py-2.5 rounded-xl bg-[#F5F5F7] text-[#1D1D1F] text-xs focus:outline-none">
+          <option value="Accepted another competing offer">Accepted another offer</option>
+          <option value="Accepted counter-offer at current company">Staying with current employer</option>
+          <option value="Compensation or role expectations mismatch">Role or compensation expectations</option>
+          <option value="Relocation / commute constraints">Location or commute constraints</option>
+          <option value="Personal reasons">Personal reasons</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-[#515154] mb-1">Additional Comments</label>
+        <textarea id="declineComments" rows="2" class="w-full px-3 py-2 rounded-xl bg-[#F5F5F7] text-[#1D1D1F] text-xs focus:outline-none" placeholder="Optional note to HR..."></textarea>
+      </div>
+      <div class="flex justify-end gap-2.5 pt-2">
+        <button onclick="toggleDeclineModal(false)" class="px-4 py-2 rounded-full bg-[#F5F5F7] text-[#1D1D1F] text-xs font-medium">Cancel</button>
+        <button onclick="submitDeclineOffer()" class="px-4 py-2 rounded-full bg-[#FF3B30] hover:bg-[#E0352B] text-white text-xs font-medium">Confirm Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const token = window.location.pathname.split('/sign/')[1];
+    let currentCandidate = null;
+    let sigMode = 'typed';
+    let canvas, ctx, drawing = false;
+
+    const ALL_STEPS_INFO = [
+      { key: 'EMAIL', label: 'Company Email (@sybyl.com)', agent: 'IT & Workplace Support' },
+      { key: 'LAPTOP', label: 'Work Laptop Setup', agent: 'Facilities & Workplace' },
+      { key: 'UBER', label: 'Uber Commute Pass', agent: 'Workplace Services' },
+      { key: 'INSURANCE', label: 'Medical Insurance', agent: 'People & Benefits' }
+    ];
+
+    function initCanvas() {
+      canvas = document.getElementById('sigCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#0071E3';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      };
+
+      canvas.addEventListener('mousedown', (e) => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+      canvas.addEventListener('mousemove', (e) => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+      window.addEventListener('mouseup', () => { drawing = false; });
+
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+      canvas.addEventListener('touchend', () => { drawing = false; });
+    }
+
+    function clearCanvas() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function switchSigMode(mode) {
+      sigMode = mode;
+      document.getElementById('tabTypedBtn').className = mode === 'typed'
+        ? 'py-2 rounded-lg bg-white text-[#1D1D1F] shadow-sm transition'
+        : 'py-2 rounded-lg text-[#86868B] hover:text-[#1D1D1F] transition';
+      document.getElementById('tabDrawnBtn').className = mode === 'drawn'
+        ? 'py-2 rounded-lg bg-white text-[#1D1D1F] shadow-sm transition'
+        : 'py-2 rounded-lg text-[#86868B] hover:text-[#1D1D1F] transition';
+      document.getElementById('typedSigBox').classList.toggle('hidden', mode !== 'typed');
+      document.getElementById('drawnSigBox').classList.toggle('hidden', mode !== 'drawn');
+    }
+
+    function updateTypedPreview() {
+      const val = document.getElementById('signerNameInput').value || '';
+      document.getElementById('typedSigPreview').textContent = val;
+    }
+
+    function toggleDeclineModal(show) {
+      document.getElementById('declineModal').classList.toggle('hidden', !show);
+    }
+
+    async function loadOffer() {
+      const res = await fetch(`/api/sign/${token}`);
+      if (!res.ok) {
+        document.getElementById('loadingState').innerHTML = `<div class="text-[#D93025] font-medium">This offer link is invalid or no longer active.</div>`;
+        return;
+      }
+      const data = await res.json();
+      currentCandidate = data;
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('offerContainer').classList.remove('hidden');
+
+      const pos = data.position || {};
+      const offer = data.offer || {};
+      const tpl = data.offer_template || {};
+
+      if (tpl.title) {
+        document.getElementById('docTemplateHeader').textContent = tpl.title;
+      }
+      document.getElementById('docPositionTitle').textContent = pos.title || 'Position';
+      document.getElementById('docDeptLocation').textContent = `${pos.department || ''} • ${pos.location || ''}`;
+      document.getElementById('docRoleBadge').textContent = `${data.role_category}`;
+      document.getElementById('docOfferId').textContent = `Ref: ${offer.id}`;
+
+      document.getElementById('docCandName').textContent = data.full_name;
+      document.getElementById('docCandEmail').textContent = data.personal_email;
+      document.getElementById('docHodName').textContent = `${pos.hod_name} (${pos.hod_email})`;
+      document.getElementById('docJoiningDate').textContent = data.joining_date;
+      document.getElementById('docCompensation').textContent = data.compensation;
+      document.getElementById('docExpiresAt').textContent = offer.expires_at;
+      document.getElementById('docCcList').textContent = data.cc_emails_display || `${data.hr_email}; ${data.hod_email}; ${data.ceo_email}`;
+
+      document.getElementById('docSalutationName').textContent = data.full_name;
+      if (tpl.intro_text) {
+        document.getElementById('docIntroParagraph').textContent = tpl.intro_text;
+      } else {
+        document.getElementById('docBodyPos').textContent = pos.title;
+        document.getElementById('docBodyDept').textContent = pos.department;
+        document.getElementById('docBodyHod').textContent = pos.hod_name;
+      }
+      document.getElementById('docBodyRole').textContent = data.role_category;
+
+      if (tpl.terms_text) {
+        document.getElementById('docTermsBlock').innerHTML = `<p>${tpl.terms_text}</p>`;
+      }
+
+      document.getElementById('signerNameInput').value = data.full_name;
+      updateTypedPreview();
+
+      const isSigned = offer.status === 'ACCEPTED';
+      document.getElementById('downloadPdfBtn').href = `/api/offers/${offer.id}/pdf?signed=${isSigned}`;
+
+      // Render role steps matrix
+      const reqSteps = data.role_required_steps || [];
+      const stepsHtml = ALL_STEPS_INFO.map(s => {
+        const active = reqSteps.includes(s.key);
+        return `
+          <div class="flex items-center gap-2.5 p-3 rounded-xl border ${active ? 'bg-white border-black/5 text-[#1D1D1F] shadow-sm' : 'bg-transparent border-black/5 text-[#86868B] opacity-50 line-through'} text-xs">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center font-semibold text-[11px] ${active ? 'bg-[#34C759] text-white' : 'bg-[#E5E5EA] text-[#86868B]'}">
+              ${active ? '✓' : '–'}
+            </span>
+            <div>
+              <div class="font-medium">${s.label}</div>
+              <div class="text-[11px] text-[#86868B]">${s.agent}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('docRoleStepsList').innerHTML = stepsHtml;
+
+      // Render status banner & right panel
+      const banner = document.getElementById('statusBanner');
+      const signCard = document.getElementById('signActionCard');
+      const respondedCard = document.getElementById('respondedCard');
+
+      if (offer.status === 'ACCEPTED') {
+        banner.className = 'rounded-2xl p-5 border bg-[#E8F8EE] border-[#34C759]/30 text-[#1D7A3B] flex flex-wrap items-center justify-between gap-4';
+        banner.innerHTML = `
+          <div>
+            <div class="font-semibold text-sm">&#10003; Offer Signed &amp; Accepted</div>
+            <div class="text-xs text-[#1D7A3B]/80 mt-0.5">Confirmation sent to HR, Head of Department, and CEO.</div>
+          </div>
+          <a href="/?candidate=${data.id}" class="px-4 py-2 rounded-full bg-[#34C759] hover:bg-[#2DB84D] text-white text-xs font-medium transition">
+            View Onboarding Tracking &rarr;
+          </a>
+        `;
+        signCard.classList.add('hidden');
+        respondedCard.classList.remove('hidden');
+        respondedCard.innerHTML = `
+          <div class="text-[#1D7A3B] font-semibold text-sm">Signed by ${offer.signer_name}</div>
+          <p class="text-xs text-[#86868B]">Accepted on ${offer.responded_at}</p>
+          <p class="text-xs text-[#515154]">Your ${data.role_category} onboarding setup (${reqSteps.join(', ')}) is now underway.</p>
+          <a href="/?candidate=${data.id}" class="block text-center w-full py-2.5 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-medium transition">
+            Open Onboarding Tracking &rarr;
+          </a>
+        `;
+      } else if (offer.status === 'DECLINED' || offer.status === 'LAPSED') {
+        banner.className = 'rounded-2xl p-5 border bg-[#FFF2F2] border-[#FF3B30]/30 text-[#D93025] flex flex-wrap items-center justify-between gap-4';
+        banner.innerHTML = `
+          <div>
+            <div class="font-semibold text-sm">Offer ${offer.status === 'DECLINED' ? 'Declined' : 'Expired'}</div>
+            <div class="text-xs text-[#D93025]/80 mt-0.5">Reason: ${offer.decline_reason || 'Offer validity period ended'} &bull; HR, Head of Department, and CEO have been notified.</div>
+          </div>
+        `;
+        signCard.classList.add('hidden');
+        respondedCard.classList.remove('hidden');
+        respondedCard.innerHTML = `
+          <div class="text-[#D93025] font-semibold text-sm">Offer ${offer.status === 'DECLINED' ? 'Declined' : 'Expired'}</div>
+          <p class="text-xs text-[#86868B]">${offer.decline_reason || ''}</p>
+          <a href="/" class="block text-center w-full py-2.5 rounded-full bg-[#F5F5F7] hover:bg-[#E8E8ED] text-[#1D1D1F] text-xs font-medium transition">
+            Back to Onboarding Tracking
+          </a>
+        `;
+      } else {
+        banner.className = 'rounded-2xl p-5 border bg-[#F0F7FF] border-[#0071E3]/20 text-[#0071E3] flex flex-wrap items-center justify-between gap-4';
+        banner.innerHTML = `
+          <div>
+            <div class="font-semibold text-sm">Awaiting Your Signature</div>
+            <div class="text-xs text-[#0071E3]/80 mt-0.5">Valid until ${offer.expires_at}. Signing notifies HR, your Head of Department, and the CEO and starts your Day-1 setup.</div>
+          </div>
+        `;
+        signCard.classList.remove('hidden');
+        respondedCard.classList.add('hidden');
+      }
+    }
+
+    async function submitAcceptOffer() {
+      const signerName = document.getElementById('signerNameInput').value.trim();
+      if (!signerName) {
+        alert('Please enter your full name to sign.');
+        return;
+      }
+      const sigData = sigMode === 'drawn' ? canvas.toDataURL('image/png') : signerName;
+      const comments = document.getElementById('signerComments').value.trim();
+
+      const btn = document.getElementById('acceptSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting Signature...';
+
+      const res = await fetch(`/api/sign/${token}/accept`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          signer_name: signerName,
+          signature_data: sigData,
+          signature_type: sigMode,
+          comments
+        })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.detail || 'Error signing offer');
+        btn.disabled = false;
+        btn.textContent = '✓ Accept & Sign Offer';
+        return;
+      }
+      await loadOffer();
+    }
+
+    async function submitDeclineOffer() {
+      const reason = document.getElementById('declineReasonSelect').value;
+      const comments = document.getElementById('declineComments').value.trim();
+      const res = await fetch(`/api/sign/${token}/decline`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decline_reason: reason, comments })
+      });
+      toggleDeclineModal(false);
+      if (res.ok) {
+        await loadOffer();
+      }
+    }
+
+    initCanvas();
+    loadOffer();
+  </script>
+</body>
+</html>

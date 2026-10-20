@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+tunnel.log
+hr_onboarding.db
+hr_onboarding.db-shm
+hr_onboarding.db-wal
+generated_offers/

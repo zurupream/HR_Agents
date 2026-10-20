@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+*.db
+*.sqlite
+*.sqlite3
+.env
+*.key
+*.pem
+tunnel.log
+generated_offers/
+.DS_Store
