@@ -1,161 +1,211 @@
-# Enterprise HR AI Agent Portfolio & Executive Catalog
+# Enterprise HR AI Agents — Live Portfolio & Executive Demo Catalog
 
-This repository serves as the central catalog, full source code monorepo, and visual E2E verification showcase for the **9-Agent Enterprise Human Resources (HR) & People Operations AI Portfolio** (`#01`–`#09`).
+> **📸 Browser E2E & Enterprise SSO Verification Gallery (22 Screenshots):** **[`E2E_SSO_SCREENSHOTS.md`](./E2E_SSO_SCREENSHOTS.md)**  
+> **Companion Industry Portfolios:** [`Banking_Agents`](https://github.com/zurupream/Banking_Agents) · [`Insurance_Agents`](https://github.com/zurupream/Insurance_Agents) · [`Retail_Distribution_Manufacturing_Agents`](https://github.com/zurupream/Retail_Distribution_Manufacturing_Agents)
 
-> **📸 Full E2E SSO Screenshot Gallery:** Open **[`E2E_SSO_SCREENSHOTS.md`](./E2E_SSO_SCREENSHOTS.md)** (or scroll to [Section 5 below](#5-end-to-end-sso--visual-verification-gallery-all-9-agents)) to inspect all 22 captured screenshots of the Sign-In Pages (with 3-Step High-Level Diagrams + SSO) and Authenticated Workspaces across all 9 agents.
+A portfolio of **9 Live Enterprise Human Resources (HR) & People Operations AI Agents** (`#01`–`#09`) built for **Chief Human Resources Officers (CHROs), Heads of Talent Acquisition, HR Operations Teams, Payroll Leaders, and Employees**. Every live application is built around five core rules:
 
-Built specifically for **Chief Human Resources Officers (CHROs), Heads of Talent Acquisition, HR Operations Teams, Payroll Leaders, and Employees**, every agent in this portfolio is built around five core principles:
 1. **One Focused Job Per Agent** — Each agent solves one high-impact HR workflow exceptionally well without mixing unrelated tasks.
-2. **Apple Design Principles & Business Simplicity** — Clean `#F5F5F7` surfaces, high-contrast `#FFFFFF` cards, `#0071E3` primary actions, SF Pro typography, and plain business English with zero technical jargon.
-3. **Sign-In Page with High-Level Workflow Diagram + Single Sign-On (SSO)** — Every agent opens with an executive sign-in page illustrating its 3-step visual workflow diagram alongside Google Single Sign-On (SSO), Work Email OTP, and a 1-click Demo Sign-In button.
-4. **Deterministic Python Math + Focused AI Reasoning** — Hours worked, leave balances, payroll tax formulas (PAYE, NSSF, SHIF/NHIF, Housing Levy), certificate expiry countdowns, and final settlement math are calculated 100% deterministically in Python, while AI handles document reading, policy answers, and plain-English summaries.
-5. **100% Human-in-the-Loop (HITL) Control & "Agent" Naming** — Every assistant uses the explicit **Agent** naming standard (never "Copilot"), keeping HR leaders in full control of every final decision.
+2. **Apple Design Principles & Business Simplicity** — Clean `#F5F5F7` canvas, high-contrast `#FFFFFF` cards, `#0071E3` primary actions, SF Pro typography, and plain business HR English with zero technical jargon.
+3. **Sign-In Page with High-Level Workflow Diagram + Single Sign-On (SSO)** — Every agent opens with a split-screen executive sign-in page illustrating its 3-step visual workflow diagram alongside Google Single Sign-On (SSO), Work Email verification code, and a 1-click Demo Sign-In button.
+4. **Deterministic Python Math + Focused AI Reasoning** — Daily clock-in/clock-out hours, leave balances, payroll statutory deductions (PAYE, NSSF, SHIF/NHIF, Housing Levy), certificate expiry countdowns, and final settlement figures are calculated 100% deterministically in Python, while AI handles resume reading, handbook answers, and plain-English summaries.
+5. **100% Human-in-the-Loop (HITL) Control & "Agent" Naming** — Every application uses the explicit **Agent** naming standard (never "Copilot"), keeping HR leaders in full control of every final decision.
 
 ---
 
-## 1. Master Portfolio Table (All 9 Approved & Verified HR Agents)
+## 1. Live HR AI Agents (#01–#09)
 
-| # | HR Agent | Focused Capability & HR Workflow | Business Value for HR & People Teams | Build & E2E SSO Status | Folder & Repository Link |
+| # | HR Agent | Capabilities & HR Workflow | Business Value for HR & People Teams | Live Demonstrable Link | GitHub Repository |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **#01** | **Candidates Screening Agent**<br>(`HR_CandidatesScreening`) | Generates a structured evaluation rubric from a Job Description, reads bulk candidate CVs (PDF/DOCX), checks mandatory criteria, scores each applicant, and exports a ranked Excel shortlist (`screening_results.xlsx`). | Cuts first-round CV screening time by **85%+** and evaluates every applicant against the same objective standard. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-01-candidates-screening-agent-hr_candidatesscreening) • [Cloud Run](https://candidates-screening-agent-z2hhdear5q-uc.a.run.app) | [`HR_CandidatesScreening`](./HR_CandidatesScreening)<br>([zurupream/Candidates-Screening](https://github.com/zurupream/Candidates-Screening)) |
-| **#02** | **Interview Scheduler Agent**<br>(`HR_InterviewScheduler`) | Coordinates multi-stage interview panels (`Screening → Technical → Final`) by checking interviewer availability on Google Calendar, sending time-slot options to candidates via Gmail, and booking Google Meet links automatically. | Eliminates **5–10 scheduling emails per candidate** and prevents double-booked interview panels. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-02-interview-scheduler-agent-hr_interviewscheduler) | [`HR_InterviewScheduler`](./HR_InterviewScheduler)<br>([zurupream/interview-scheduler](https://github.com/zurupream/interview-scheduler)) |
-| **#03** | **HR Onboarding Pro Agent**<br>(`HR_OnboardingPro`) | Automates the post-offer onboarding journey: generates Offer Letter PDFs, captures online e-signatures (`/sign`), and coordinates 4 role-based setup agents: `1. IT Email Setup` → `2. Laptop Request` → `3. Uber Commute Pass` → `4. Health Insurance`. | Prevents pre-Day-One candidate drop-off and ensures every new hire has their email, laptop, transport pass, and medical cover ready on Day 1. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-03-hr-onboarding-pro-agent-hr_onboardingpro) • [Cloud Run](https://hr-onboarding-z2hhdear5q-uc.a.run.app) | [`HR_OnboardingPro`](./HR_OnboardingPro)<br>([zurupream/hr_onboarding](https://github.com/zurupream/hr_onboarding)) |
-| **#04** | **HR Offboarding Pro Agent**<br>(`HR_OffboardingPro`) | Executes the **exact reverse steps of Onboarding**: logs the exit notice, runs reverse clearance agents (`1. Health Insurance Cancellation` → `2. Uber Pass Revocation` → `3. Laptop Return & Inspection` → `4. IT Email & SSO Deactivation`), calculates Final Dues, captures employee clearance sign-off (`/sign/{token}`), and issues the Certificate of Service PDF. | Closes security gaps from active accounts after exit, ensures company laptops are returned before final payout, and produces instant exit documentation. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-04-hr-offboarding-pro-agent-hr_offboardingpro--exact-reverse-of-onboarding) | [`HR_OffboardingPro`](./HR_OffboardingPro) |
-| **#05** | **Payroll Variance, Statutory Compliance & Payslip Recon Agent**<br>(`HR_PayrollReconAgent`) | Compares current-month draft payroll against last month's payroll and HR master records; flags headcount changes, unexplained pay jumps, bank-account swaps, and ghost-worker risks; verifies statutory deductions (PAYE, NSSF, SHIF, Housing Levy). | Catches payroll calculation errors and unauthorized bank account changes **before** salaries are paid out. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-05-payroll-variance-statutory-compliance--payslip-recon-agent-hr_payrollreconagent) | [`HR_PayrollReconAgent`](./HR_PayrollReconAgent) |
-| **#06** | **Attendance Clock-In/Out & Leave Notification Agent**<br>(`HR_AttendanceLeaveAgent`) | Checks the attendance system clock-in and clock-out times against approved leave applications, calculates exact hours worked vs. required shift hours, and notifies HR for each employee who missed hours or was absent with no leave application. | Gives HR an instant daily exception list of employees with missing hours or unapproved absences without manually cross-checking spreadsheets. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-06-attendance-clock-inout--leave-notification-agent-hr_attendanceleaveagent) | [`HR_AttendanceLeaveAgent`](./HR_AttendanceLeaveAgent) |
-| **#07** | **Employee HR Helpdesk Agent**<br>(`HR_HelpdeskAgent`) | A simple, focused employee self-service HR Helpdesk Agent that answers everyday staff questions (annual/sick leave rules, medical cover benefits, payroll dates, expense claims, office guidelines) using the official Employee Handbook and creates an HR support ticket when human follow-up is needed. | Resolves **70%+ of routine employee HR questions** immediately so HR teams can focus on high-priority people matters. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-07-employee-hr-helpdesk-agent-hr_helpdeskagent) | [`HR_HelpdeskAgent`](./HR_HelpdeskAgent) |
-| **#08** | **Learning, Certification Expiry & Skills Matrix Agent**<br>(`HR_SkillsComplianceAgent`) | Tracks mandatory professional licenses, safety certifications, regulatory training hours, and staff training bonds; alerts HR and line managers 30, 60, and 90 days before any employee certificate expires. | Prevents compliance breaches from expired staff licenses and gives HR a clear view of team certifications. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-08-learning-certification-expiry--skills-matrix-agent-hr_skillscomplianceagent) | [`HR_SkillsComplianceAgent`](./HR_SkillsComplianceAgent) |
-| **#09** | **Executive "Talk-to-Your-Workforce" & Attrition Stress-Test Agent**<br>(`HR_WorkforceAnalyticsAgent`) | Plain-English workforce analytics workspace for the CHRO and CEO covering headcount, department turnover, hiring speed, and interactive sliders to test the budget impact of salary reviews or attrition changes. | Replaces static monthly HR spreadsheets with instant answers and live wage-bill scenario planning. | **🟢 Built & E2E SSO Verified**<br>[Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-09-executive-talk-to-your-workforce--attrition-stress-test-agent-hr_workforceanalyticsagent) | [`HR_WorkforceAnalyticsAgent`](./HR_WorkforceAnalyticsAgent) |
+| **01** | **Candidates Screening Agent (`HR_CandidatesScreening`)** | Generates a weighted evaluation rubric from a Job Description, reads bulk candidate CVs (PDF and Word), checks mandatory knockout criteria, scores each applicant objectively, and exports a ranked Excel shortlist (`screening_results.xlsx`). | Cuts first-round CV screening time by **85%+** and evaluates every applicant against the same transparent standard. | [Launch App](https://candidates-screening-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-01-candidates-screening-agent-hr_candidatesscreening) | [Candidates-Screening](https://github.com/zurupream/Candidates-Screening)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_CandidatesScreening)) |
+| **02** | **Interview Scheduler Agent (`HR_InterviewScheduler`)** | Coordinates multi-stage interview panels (`Screening → Technical → Final`) by checking real-time interviewer availability on Google Calendar, emailing conflict-free time-slot options to candidates via Gmail, and booking Google Meet invitations automatically. | Eliminates **5–10 back-and-forth scheduling emails per candidate** and prevents double-booked interview panels. | [Launch App](https://interview-scheduler-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-02-interview-scheduler-agent-hr_interviewscheduler) | [interview-scheduler](https://github.com/zurupream/interview-scheduler)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_InterviewScheduler)) |
+| **03** | **HR Onboarding Pro Agent (`HR_OnboardingPro`)** | Automates the post-offer onboarding journey: generates Offer Letter PDFs, captures online candidate e-signatures (`/sign/{token}`), and coordinates 4 role-based setup agents in sequence: `1. IT Email Setup` → `2. Laptop Request` → `3. Uber Commute Pass` → `4. Health Insurance`. | Prevents pre-Day-One candidate drop-off and ensures every new hire (`Employee`, `Trainee`, or `Intern`) has their email, laptop, transport pass, and medical cover ready on Day 1. | [Launch App](https://hr-onboarding-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-03-hr-onboarding-pro-agent-hr_onboardingpro) | [hr_onboarding](https://github.com/zurupream/hr_onboarding)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_OnboardingPro)) |
+| **04** | **HR Offboarding Pro Agent (`HR_OffboardingPro`)** | Executes the **exact reverse steps of Onboarding**: logs the exit notice, runs reverse clearance agents (`1. Health Insurance Cancellation` → `2. Uber Pass Revocation` → `3. Laptop Return & Inspection` → `4. IT Email & SSO Deactivation`), calculates Final Dues, captures employee clearance e-signature (`/sign/{token}`), and issues the Certificate of Service PDF. | Closes security gaps from active accounts after exit, ensures company laptops are returned before final payout, and produces instant Final Settlement and Certificate of Service PDFs. | [Launch App](https://hr-offboarding-pro-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-04-hr-offboarding-pro-agent-hr_offboardingpro--exact-reverse-of-onboarding) | [HR_OffboardingPro](https://github.com/zurupream/HR_OffboardingPro)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_OffboardingPro)) |
+| **05** | **Payroll Variance, Statutory Compliance & Payslip Recon Agent (`HR_PayrollReconAgent`)** | Compares current-month draft payroll against last month's payroll and HR master records; flags headcount changes, unexplained salary jumps, unauthorized bank-account changes, and exited employees still on draft payroll; verifies statutory deductions (PAYE, NSSF, SHIF, Housing Levy); and prints a **1-Page CFO/CHRO Payroll Sign-Off Sheet**. | Catches payroll calculation errors, ghost-worker payouts, and unauthorized bank account changes **before** salaries are disbursed. | [Launch App](https://hr-payroll-recon-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-05-payroll-variance-statutory-compliance--payslip-recon-agent-hr_payrollreconagent) | [HR_PayrollReconAgent](https://github.com/zurupream/HR_PayrollReconAgent)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_PayrollReconAgent)) |
+| **06** | **Attendance Clock-In/Out & Leave Notification Agent (`HR_AttendanceLeaveAgent`)** | Checks attendance system clock-in and clock-out times against required daily shift hours (`8.0h`) and approved leave applications; flags every employee who missed hours or was absent with no approved leave; and sends one-click notifications to HR and the employee. | Gives HR an instant daily exception list of employees with missing hours or unapproved absences without manually cross-checking clock-in logs against leave spreadsheets. | [Launch App](https://hr-attendance-leave-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-06-attendance-clock-inout--leave-notification-agent-hr_attendanceleaveagent) | [HR_AttendanceLeaveAgent](https://github.com/zurupream/HR_AttendanceLeaveAgent)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_AttendanceLeaveAgent)) |
+| **07** | **Employee HR Helpdesk Agent (`HR_HelpdeskAgent`)** | A simple, focused employee self-service HR Helpdesk Agent that answers everyday staff questions (annual/sick/parental leave rules, medical & dental cover benefits, payroll dates, expense claims, working hours) using the official Employee Handbook and creates a tracked HR support ticket (`HR-2026-XXXX`) when human follow-up is needed. | Resolves **70%+ of routine employee HR questions** immediately in plain English so HR teams can focus on high-priority people matters. | [Launch App](https://hr-helpdesk-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-07-employee-hr-helpdesk-agent-hr_helpdeskagent) | [HR_HelpdeskAgent](https://github.com/zurupream/HR_HelpdeskAgent)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_HelpdeskAgent)) |
+| **08** | **Learning, Certification Expiry & Skills Matrix Agent (`HR_SkillsComplianceAgent`)** | Tracks mandatory professional licenses, safety certifications, regulatory training hours, and staff training bonds across departments; alerts HR and line managers 30, 60, and 90 days before any employee certificate expires; and generates a **1-Page Certification Compliance Audit Report**. | Prevents regulatory compliance breaches from expired staff licenses and gives HR a clear view of role-required certifications across every department. | [Launch App](https://hr-skills-compliance-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-08-learning-certification-expiry--skills-matrix-agent-hr_skillscomplianceagent) | [HR_SkillsComplianceAgent](https://github.com/zurupream/HR_SkillsComplianceAgent)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_SkillsComplianceAgent)) |
+| **09** | **Executive "Talk-to-Your-Workforce" & Attrition Stress-Test Agent (`HR_WorkforceAnalyticsAgent`)** | Plain-English workforce analytics workspace for the CHRO, CEO, and CFO covering active headcount (`480`), department turnover (`13.8%`), hiring speed (`32 Days`), and interactive sliders to test the budget impact of annual salary increments, turnover changes, and planned new hires. | Replaces static monthly HR spreadsheets with instant answers and live wage-bill scenario planning for boardroom reviews. | [Launch App](https://hr-workforce-analytics-agent-259388273008.us-central1.run.app/)<br>[E2E Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-09-executive-talk-to-your-workforce--attrition-stress-test-agent-hr_workforceanalyticsagent) | [HR_WorkforceAnalyticsAgent](https://github.com/zurupream/HR_WorkforceAnalyticsAgent)<br>([Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_WorkforceAnalyticsAgent)) |
 
 ---
 
 ## 2. Which Agent to Demo by HR & Executive Role
 
+Tailor your 3-minute live walkthrough to the role of the HR or business leader in front of you:
+
 ```mermaid
 flowchart LR
-    classDef persona fill:#1e293b,stroke:#0f172a,color:#ffffff,font-weight:bold
-    classDef verified fill:#dcfce7,stroke:#16a34a,color:#14532d,font-weight:bold
+    Visitor["HR / Business Executive"] --> TA["Head of Talent Acquisition & Recruitment"]
+    Visitor --> HROps["Head of HR Operations & People Services"]
+    Visitor --> Payroll["Head of Payroll & Finance"]
+    Visitor -->LD["Head of Learning, Development & Compliance"]
+    Visitor --> CHRO["CHRO / CEO / Chief People Officer"]
 
-    CHRO["CHRO / Chief People Officer"]:::persona
-    TA["Head of Talent Acquisition"]:::persona
-    HROPS["HR Operations & People Services"]:::persona
-    PAY["Head of Payroll & Finance"]:::persona
-    EMP["All Employees & Line Managers"]:::persona
-
-    A01["#01 Candidates Screening Agent"]:::verified
-    A02["#02 Interview Scheduler Agent"]:::verified
-    A03["#03 HR Onboarding Pro Agent"]:::verified
-    A04["#04 HR Offboarding Pro Agent"]:::verified
-    A05["#05 Payroll Variance & Statutory Recon Agent"]:::verified
-    A06["#06 Attendance Clock-In/Out & Leave Agent"]:::verified
-    A07["#07 Employee HR Helpdesk Agent"]:::verified
-    A08["#08 Certification Expiry & Skills Matrix Agent"]:::verified
-    A09["#09 Executive Workforce Analytics Agent"]:::verified
-
-    TA --> A01
-    TA --> A02
-    TA --> A03
-
-    HROPS --> A03
-    HROPS --> A04
-    HROPS --> A06
-    HROPS --> A08
-
-    PAY --> A04
-    PAY --> A05
-    PAY --> A06
-
-    EMP --> A07
-
-    CHRO --> A01
-    CHRO --> A04
-    CHRO --> A08
-    CHRO --> A09
+    TA --> TA_Demos["#01 Candidates Screening Agent<br/>#02 Interview Scheduler Agent<br/>#03 HR Onboarding Pro Agent"]
+    HROps --> Ops_Demos["#03 HR Onboarding Pro Agent<br/>#04 HR Offboarding Pro Agent<br/>#06 Attendance Clock-In/Out & Leave Agent<br/>#07 Employee HR Helpdesk Agent"]
+    Payroll --> Pay_Demos["#04 HR Offboarding Pro Agent (Final Dues)<br/>#05 Payroll Variance & Statutory Recon Agent<br/>#06 Attendance Clock-In/Out & Leave Agent"]
+    LD --> LD_Demos["#08 Certification Expiry & Skills Matrix Agent<br/>#07 Employee HR Helpdesk Agent"]
+    CHRO --> C_Demos["#09 Executive Talk-to-Your-Workforce Agent<br/>#05 Payroll Variance & Statutory Recon Agent<br/>#04 HR Offboarding Pro Agent"]
 ```
 
 ---
 
-## 3. Connected Multi-Agent Spotlight: End-to-End Hire-to-Retire Pipeline (`#01` → `#02` → `#03` → `#04`)
+## 3. Connected Multi-Agent Spotlight: End-to-End Hire-to-Retire Pipeline (`#01` → `#02` → `#03` ↔ `#04`)
 
-The first four agents connect seamlessly across the employee journey—and `#04 HR Offboarding Pro Agent` executes the exact reverse provisioning steps of `#03 HR Onboarding Pro Agent`:
+The first four agents connect seamlessly across the employee lifecycle—and **Agent `#04` (`HR_OffboardingPro`)** is engineered as the exact mirror-reverse of **Agent `#03` (`HR_OnboardingPro`)**:
 
 ```mermaid
 flowchart LR
     classDef stage fill:#ffffff,stroke:#0071e3,color:#1d1d1f,font-weight:bold
 
-    S1["#01 Candidates Screening Agent<br>1. Build Rubric from JD<br>2. Score Candidate CVs<br>3. Export Ranked Shortlist"]:::stage
-    S2["#02 Interview Scheduler Agent<br>1. Check Panel Google Calendar<br>2. Email Slot Options<br>3. Book Google Meet"]:::stage
-    S3["#03 HR Onboarding Pro Agent<br>1. Offer Letter E-Sign<br>2. IT Email → Laptop → Uber → Insurance<br>3. Day-One Ready"]:::stage
-    S4["#04 HR Offboarding Pro Agent<br>1. Cancel Insurance → Revoke Uber → Return Laptop → Deactivate Email<br>2. Final Dues & Clearance E-Sign<br>3. Certificate of Service PDF"]:::stage
+    S1["#01 Candidates Screening Agent<br/>1. Build Rubric from Job Description<br/>2. Score Bulk Candidate CVs<br/>3. Export Ranked Shortlist (.xlsx)"]:::stage
+    S2["#02 Interview Scheduler Agent<br/>1. Check Panel Google Calendar<br/>2. Email Conflict-Free Slots via Gmail<br/>3. Book Google Meet Invite"]:::stage
+    S3["#03 HR Onboarding Pro Agent<br/>1. Offer Letter PDF & Online E-Sign<br/>2. Forward Setup: Email → Laptop → Uber → Insurance<br/>3. Day-One Readiness Complete"]:::stage
+    S4["#04 HR Offboarding Pro Agent (Reverse Steps)<br/>1. Reverse Clearance: Insurance → Uber → Laptop → Email<br/>2. Final Dues & Clearance E-Sign<br/>3. Certificate of Service PDF"]:::stage
 
     S1 -->|"Shortlisted Candidates"| S2
     S2 -->|"Selected Hire"| S3
-    S3 -->|"Active Employee"| S4
+    S3 -->|"Active Employee Lifecycle"| S4
 ```
 
 ---
 
-## 4. 90-Second Demo Walkthroughs (All 9 Agents)
+## 4. 90-Second Live Demo Scripts for All 9 HR Agents
 
-### `#01` Candidates Screening Agent (`HR_CandidatesScreening`)
-1. **Sign In & Select Role:** Sign in via Google SSO (or 1-click Demo SSO) and paste a Job Description to generate a weighted evaluation rubric.
-2. **Upload Candidate CVs:** Drop a batch of PDF/DOCX resumes for instant scoring and mandatory criteria checks.
-3. **Export Ranked Shortlist:** Review plain-English candidate strengths/gaps and download the ranked Excel sheet (`screening_results.xlsx`).
+### Demo Script #01: Candidates Screening Agent (`HR_CandidatesScreening`)
+* **Live URL:** [https://candidates-screening-agent-259388273008.us-central1.run.app/](https://candidates-screening-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/Candidates-Screening](https://github.com/zurupream/Candidates-Screening) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_CandidatesScreening)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-01-candidates-screening-agent-hr_candidatesscreening)
+* **90-Second Flow:**
+  1. **Sign In (15s):** Open the split-screen Sign-In page showing the 3-step CV screening workflow diagram and sign in via Google SSO or **Instant Demo SSO Sign-In**.
+  2. **Build Weighted Rubric (30s):** Paste or upload a Job Description to generate a structured evaluation rubric with weighted skills and mandatory criteria.
+  3. **Screen CVs & Export Ranked Shortlist (45s):** Upload a batch of PDF/Word resumes, inspect each candidate's score and plain-English summary, and download the ranked Excel shortlist (`screening_results.xlsx`).
 
-### `#02` Interview Scheduler Agent (`HR_InterviewScheduler`)
-1. **Select Candidate & Interview Stage:** Sign in via Google SSO and pick a shortlisted candidate and interview stage (`Screening`, `Technical`, or `Executive`).
-2. **Automatic Calendar Check:** The agent checks real-time free/busy slots across all panel members on Google Calendar and emails conflict-free time windows to the candidate.
-3. **Instant Google Meet Booking:** When the candidate replies, the agent books the Google Meet invite and updates the interview tracker.
+### Demo Script #02: Interview Scheduler Agent (`HR_InterviewScheduler`)
+* **Live URL:** [https://interview-scheduler-259388273008.us-central1.run.app/](https://interview-scheduler-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/interview-scheduler](https://github.com/zurupream/interview-scheduler) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_InterviewScheduler)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-02-interview-scheduler-agent-hr_interviewscheduler)
+* **90-Second Flow:**
+  1. **Sign In (15s):** Review the 3-step interview scheduling diagram on the Sign-In page and sign in via Google SSO or **Instant Demo SSO Sign-In**.
+  2. **Check Panel Availability (30s):** Select a candidate and interview stage (`Screening`, `Technical`, or `Final`); the agent checks real-time free/busy windows across all panel members on Google Calendar.
+  3. **Send Slots & Auto-Book Google Meet (45s):** Dispatch conflict-free slot options to the candidate via Gmail and watch the agent auto-book the Google Meet invitation upon confirmation.
 
-### `#03` HR Onboarding Pro Agent (`HR_OnboardingPro`)
-1. **Launch Offer:** Sign in via Google SSO, select a candidate (`Employee`, `Trainee`, or `Intern`), generate the branded Offer Letter PDF, and send the online signing link (`/sign/{token}`).
-2. **Role-Based Setup Agents:** Once accepted, the agent triggers `IT Email Setup Agent` → `Laptop Request Agent` → `Uber Commute Pass Agent` → `Health Insurance Agent`.
-3. **Track Day-One Readiness:** Monitor real-time progress and resolve any blocked step from the HR Action Center.
+### Demo Script #03: HR Onboarding Pro Agent (`HR_OnboardingPro`)
+* **Live URL:** [https://hr-onboarding-259388273008.us-central1.run.app/](https://hr-onboarding-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/hr_onboarding](https://github.com/zurupream/hr_onboarding) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_OnboardingPro)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-03-hr-onboarding-pro-agent-hr_onboardingpro)
+* **90-Second Flow:**
+  1. **Sign In & Launch Offer (15s):** Sign in via SSO, select a candidate role (`Employee`, `Trainee`, or `Intern`), generate the branded Offer Letter PDF, and open the candidate e-signature portal (`/sign/{token}`).
+  2. **Role-Based Setup Agents (30s):** Watch the 4 setup agents run in forward dependency order: `1. IT Email Setup Agent` → `2. Laptop Request Agent` → `3. Uber Commute Pass Agent` → `4. Health Insurance Agent`.
+  3. **Day-One Readiness & Action Center (45s):** Track live milestone completion across departments and resolve any blocked item in one click.
 
-### `#04` HR Offboarding Pro Agent (`HR_OffboardingPro`)
-1. **Log Exit Notice:** Sign in via Google SSO, select an exiting employee (`Employee`, `Trainee`, or `Intern`), and record their Last Working Day.
-2. **Reverse Clearance Agents:** Watch the 4 clearance agents execute in reverse order: `Health Insurance Cancellation Agent` → `Uber Pass Revocation Agent` → `Laptop Return Agent` → `IT Email Deactivation Agent` (email stays active until benefits and laptop handover are completed).
-3. **Final Dues E-Sign & Certificate of Service:** The employee signs their Final Clearance & Settlement Statement at `/sign/{token}`, and HR downloads the **Final Settlement PDF** and **Certificate of Service PDF**.
+### Demo Script #04: HR Offboarding Pro Agent (`HR_OffboardingPro`)
+* **Live URL:** [https://hr-offboarding-pro-259388273008.us-central1.run.app/](https://hr-offboarding-pro-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_OffboardingPro](https://github.com/zurupream/HR_OffboardingPro) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_OffboardingPro)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-04-hr-offboarding-pro-agent-hr_offboardingpro--exact-reverse-of-onboarding)
+* **90-Second Flow:**
+  1. **Sign In & Log Exit Notice (15s):** Sign in via SSO on the reverse-workflow login page and select an exiting employee (`Employee`, `Trainee`, or `Intern`).
+  2. **Reverse Clearance Agents (30s):** Watch the 4 clearance agents execute in exact reverse order of Onboarding: `1. Health Insurance Cancellation Agent` → `2. Uber Pass Revocation Agent` → `3. Laptop Return Agent` → `4. IT Email Deactivation Agent` (keeping email active until laptop handover is verified).
+  3. **Final Dues E-Sign & Certificate of Service (45s):** Open the Employee Clearance E-Sign Portal (`/sign/{token}`) to sign the Final Settlement Statement and download the **Final Settlement PDF** and **Certificate of Service PDF**.
 
-### `#05` Payroll Variance, Statutory Compliance & Payslip Recon Agent (`HR_PayrollReconAgent`)
-1. **Review Monthly Payroll Bridge:** Sign in and open the monthly payroll comparison table showing last month vs. current month gross-to-net totals.
-2. **Inspect Exception Alerts:** Filter employees flagged for unexplained salary jumps, bank account changes, ghost-worker alerts (exited in Agent `#04` but still on draft payroll), or statutory math discrepancies (PAYE, NSSF, SHIF, Housing Levy).
-3. **Download Payroll Sign-Off Sheet:** Approve reconciled entries and print the 1-Page CFO/CHRO Payroll Reconciliation Sign-Off Certificate.
+### Demo Script #05: Payroll Variance, Statutory Compliance & Payslip Recon Agent (`HR_PayrollReconAgent`)
+* **Live URL:** [https://hr-payroll-recon-agent-259388273008.us-central1.run.app/](https://hr-payroll-recon-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_PayrollReconAgent](https://github.com/zurupream/HR_PayrollReconAgent) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_PayrollReconAgent)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-05-payroll-variance-statutory-compliance--payslip-recon-agent-hr_payrollreconagent)
+* **90-Second Flow:**
+  1. **Sign In & Inspect Monthly Payroll Bridge (15s):** Sign in via SSO and review current-month draft gross and net payroll against prior month totals.
+  2. **Audit Variances & Bank-Swap Alerts (30s):** Inspect employees flagged for unexplained basic pay jumps, unauthorized bank account changes, or ghost-worker risk (exited employee still on draft payroll), alongside deterministic statutory calculations (PAYE, NSSF, SHIF, Housing Levy).
+  3. **Approve & Print CFO/CHRO Sign-Off Sheet (45s):** Approve reconciled records and open the printable **1-Page Payroll Reconciliation Sign-Off Certificate**.
 
-### `#06` Attendance Clock-In/Out & Leave Notification Agent (`HR_AttendanceLeaveAgent`)
-1. **Daily Attendance vs. Leave Check:** View the daily attendance log comparing **Clock-In** and **Clock-Out** timestamps against required daily shift hours (`8.0h`) and approved leave applications.
-2. **Spot Missed Hours & Unapproved Absences:** Filter directly to employees marked **`Missed Hours — No Leave`** or **`Absent — No Leave`**.
-3. **One-Click HR & Employee Notification:** Click **Notify HR & Employee** (or **Notify HR for All Flagged Employees**) to dispatch a clear attendance variance notice and print the Daily Attendance Exception Report.
+### Demo Script #06: Attendance Clock-In/Out & Leave Notification Agent (`HR_AttendanceLeaveAgent`)
+* **Live URL:** [https://hr-attendance-leave-agent-259388273008.us-central1.run.app/](https://hr-attendance-leave-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_AttendanceLeaveAgent](https://github.com/zurupream/HR_AttendanceLeaveAgent) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_AttendanceLeaveAgent)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-06-attendance-clock-inout--leave-notification-agent-hr_attendanceleaveagent)
+* **90-Second Flow:**
+  1. **Sign In & Check Daily Clock-In/Out Log (15s):** Sign in via SSO and view daily employee clock-in and clock-out times compared against required shift hours (`8.0h`) and approved leave records.
+  2. **Filter Missed Hours with No Leave (30s):** Filter directly to employees marked **`Missed Hours — No Leave`** or **`Absent — No Leave`** to see the exact hours shortfall calculated deterministically.
+  3. **Notify HR & Employee in One Click (45s):** Click **Notify HR & Employee** (or **Notify HR for All Flagged Employees**) to send the attendance alert to HR and export the **1-Page Daily Attendance & Missed-Hours Report**.
 
-### `#07` Employee HR Helpdesk Agent (`HR_HelpdeskAgent`)
-1. **Ask Any Everyday HR Question:** Employees choose one of 6 handbook category cards (Annual & Parental Leave, Medical & Dental Cover, Payroll Dates & Payslips, Transport & Expense Claims, Working Hours & Remote Work, Public Holidays & Compassionate Leave) or type a plain-English question.
-2. **Instant Handbook-Backed Answer:** The HR Helpdesk Agent replies in clear, friendly language citing the exact Employee Handbook section and showing key entitlement numbers at a glance.
-3. **Send Request to HR Team When Needed:** If the employee needs personal follow-up, one click creates a tracked HR Helpdesk Request (`HR-2026-XXXX`).
+### Demo Script #07: Employee HR Helpdesk Agent (`HR_HelpdeskAgent`)
+* **Live URL:** [https://hr-helpdesk-agent-259388273008.us-central1.run.app/](https://hr-helpdesk-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_HelpdeskAgent](https://github.com/zurupream/HR_HelpdeskAgent) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_HelpdeskAgent)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-07-employee-hr-helpdesk-agent-hr_helpdeskagent)
+* **90-Second Flow:**
+  1. **Sign In & Pick a Handbook Topic (15s):** Sign in via SSO and click one of the 6 Employee Handbook topic cards (Annual & Parental Leave, Medical & Dental Cover, Payroll & Payslip Dates, Transport & Expense Claims, Working Hours & Remote Work, Compassionate Leave).
+  2. **Read Instant Handbook-Backed Answer (30s):** Ask a question in plain English and review the instant answer showing exact handbook section citations, key entitlement numbers, and step-by-step instructions.
+  3. **Escalate to HR Team in One Click (45s):** Click **Send Request to HR Team** when personal action is needed (e.g., adding a newborn dependent to medical insurance) and track the request under **My HR Requests**.
 
-### `#08` Learning, Certification Expiry & Skills Matrix Agent (`HR_SkillsComplianceAgent`)
-1. **View Expiring Certificates Board:** See all staff professional licenses, safety certificates, and mandatory compliance trainings sorted by **Expired — Action Required**, **Expiring in 30 Days**, **Expiring in 60–90 Days**, and **Active & Valid**.
-2. **Check Role Skills & Training Bonds:** Inspect department certification compliance rates and active staff training bond balances.
-3. **Send Renewal Notices:** Trigger one-click renewal notices to employees and line managers and export the 1-Page Certification Compliance Audit Report.
+### Demo Script #08: Learning, Certification Expiry & Skills Matrix Agent (`HR_SkillsComplianceAgent`)
+* **Live URL:** [https://hr-skills-compliance-agent-259388273008.us-central1.run.app/](https://hr-skills-compliance-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_SkillsComplianceAgent](https://github.com/zurupream/HR_SkillsComplianceAgent) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_SkillsComplianceAgent)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-08-learning-certification-expiry--skills-matrix-agent-hr_skillscomplianceagent)
+* **90-Second Flow:**
+  1. **Sign In & View Expiry Tracker (15s):** Sign in via SSO and inspect staff professional licenses and mandatory certificates grouped into **Expired — Action Required**, **Expiring in 30 Days**, **Expiring in 60–90 Days**, and **Active & Valid**.
+  2. **Send Renewal Notices & Inspect Skills Matrix (30s):** Click **Send Renewal Notice** (or bulk notify) to alert employees and line managers, and switch to the **Department Skills Matrix** tab to review role-required certification coverage.
+  3. **Print Compliance Audit Report (45s):** Open the **Compliance Audit Report** tab to print the 1-Page HR Certification Compliance Summary.
 
-### `#09` Executive "Talk-to-Your-Workforce" & Attrition Stress-Test Agent (`HR_WorkforceAnalyticsAgent`)
-1. **Executive People KPI Overview:** View live headcount (`480`), annual attrition rate (`13.8%`), regrettable departures (`24`), average time to hire (`32 Days`), and monthly payroll cost (`$3,040,000`) in one clean boardroom view.
-2. **Interactive What-If Sliders:** Adjust annual salary increment %, projected turnover %, or planned new hires to see the exact deterministic impact on annual payroll and replacement hiring costs.
-3. **Ask the Workforce Agent:** Ask plain-English questions about department turnover or headcount trends and print a 1-Page CHRO Boardroom Summary.
+### Demo Script #09: Executive "Talk-to-Your-Workforce" & Attrition Stress-Test Agent (`HR_WorkforceAnalyticsAgent`)
+* **Live URL:** [https://hr-workforce-analytics-agent-259388273008.us-central1.run.app/](https://hr-workforce-analytics-agent-259388273008.us-central1.run.app/)
+* **GitHub Repository:** [zurupream/HR_WorkforceAnalyticsAgent](https://github.com/zurupream/HR_WorkforceAnalyticsAgent) • [Monorepo Folder](https://github.com/zurupream/HR_Agents/tree/main/HR_WorkforceAnalyticsAgent)
+* **E2E SSO Screenshots:** [View Sign-In & Workspace Screenshots](./E2E_SSO_SCREENSHOTS.md#agent-09-executive-talk-to-your-workforce--attrition-stress-test-agent-hr_workforceanalyticsagent)
+* **90-Second Flow:**
+  1. **Sign In & Inspect Workforce Snapshot (15s):** Sign in via SSO and review total active headcount (`480`), annual attrition (`13.8%`), regrettable departures (`24`), average time to hire (`32 Days`), and monthly payroll cost (`$3,040,000`).
+  2. **Run Interactive Salary & Attrition Stress Tests (30s):** Adjust the **Annual Salary Increment (`%`)**, **Projected Turnover Rate (`%`)**, and **Planned New Hires** sliders to see deterministic impacts on annual payroll and replacement recruitment costs.
+  3. **Ask the Workforce Agent & Print CHRO Summary (45s):** Ask a plain-English question in **Ask Workforce Agent** and print the **1-Page CHRO Boardroom Summary**.
 
 ---
 
-## 5. End-to-End SSO & Visual Verification Gallery (All 9 Agents)
+## 5. Reference HR AI Architecture
 
-Full high-resolution screenshots (`1440×900`) are stored in [`./screenshots/`](./screenshots/) and detailed in [`E2E_SSO_SCREENSHOTS.md`](./E2E_SSO_SCREENSHOTS.md):
+```mermaid
+flowchart TB
+    subgraph Channels["HR Leader Workbenches & Employee Self-Serve Portals"]
+        TA["Talent Acquisition Workbenches<br/>(#01 Candidates Screening, #02 Interview Scheduler)"]
+        Lifecycle["Hire-to-Retire & E-Sign Portals<br/>(#03 HR Onboarding Pro ↔ #04 HR Offboarding Pro)"]
+        Ops["Payroll, Attendance, Helpdesk, Compliance & CHRO Portals<br/>(#05 Payroll Recon, #06 Attendance & Leave, #07 Helpdesk, #08 Certifications, #09 Workforce Analytics)"]
+    end
 
-| # | Agent | Sign-In Page (3-Step Diagram + SSO) | Authenticated E2E Workspace |
+    subgraph Orchestration["Enterprise HR Agent Layer"]
+        Router["Focused Single-Purpose HR Agents"]
+        DocAgent["CV Screening & Handbook Grounding Agent<br/>(Objective Rubric Scoring & Cited Handbook Answers)"]
+        FlowAgent["Provisioning & Reverse Clearance Agents<br/>(Email, Laptop, Uber Pass & Medical Cover Orchestration)"]
+        QuantAgent["Deterministic Payroll, Attendance & Workforce Math<br/>(100% Python Tax, Hours Shortfall, Final Dues & Stress-Test Math)"]
+    end
+
+    subgraph Grounding["HR Data & Knowledge Sources"]
+        Handbook["Official Employee Handbook & Statutory Rules<br/>(Leave Entitlements, Medical Cover, PAYE/NSSF/SHIF/Levy Formulas)"]
+        CoreHR["HR Master, Attendance Logs & Certification Records<br/>(Employee Roster, Clock-In/Out Logs, Leave Applications, License Expiry Dates)"]
+        Workspace["Google Workspace Integration<br/>(Google Calendar Free/Busy, Gmail Notifications, Google Meet Links)"]
+    end
+
+    subgraph Security["Enterprise Security & Governance"]
+        Sec["Google Single Sign-On (SSO) • Role-Based Access • 100% Human-in-the-Loop Sign-Off • Complete Audit Trail"]
+    end
+
+    Channels --> Router
+    Router --> DocAgent
+    Router --> FlowAgent
+    Router --> QuantAgent
+    DocAgent --> Handbook
+    QuantAgent --> CoreHR
+    FlowAgent --> Workspace
+    Orchestration --- Security
+```
+
+---
+
+## 6. End-to-End SSO & Visual Verification Gallery (All 9 Agents)
+
+All 22 high-resolution E2E screenshots (`1440×900`) are stored in [`./screenshots/`](./screenshots/) and documented in **[`E2E_SSO_SCREENSHOTS.md`](./E2E_SSO_SCREENSHOTS.md)**:
+
+| # | HR Agent | Sign-In Page (3-Step Diagram + SSO) | Authenticated E2E Workspace |
 | :--- | :--- | :--- | :--- |
-| **#01** | **Candidates Screening Agent** | ![#01 Sign-In](./screenshots/agent_01_candidates_screening_signin_sso.png) | ![#01 Workspace](./screenshots/agent_01_candidates_screening_workspace_e2e.png) |
-| **#02** | **Interview Scheduler Agent** | ![#02 Sign-In](./screenshots/agent_02_interview_scheduler_signin_sso.png) | ![#02 Workspace](./screenshots/agent_02_interview_scheduler_workspace_e2e.png) |
-| **#03** | **HR Onboarding Pro Agent** | ![#03 Sign-In](./screenshots/agent_03_hr_onboarding_signin_sso.png) | ![#03 Workspace](./screenshots/agent_03_hr_onboarding_workspace_e2e.png) |
-| **#04** | **HR Offboarding Pro Agent** | ![#04 Sign-In](./screenshots/agent_04_hr_offboarding_signin_sso.png) | ![#04 Workspace](./screenshots/agent_04_hr_offboarding_workspace_e2e.png) |
-| **#05** | **Payroll Recon Agent** | ![#05 Sign-In](./screenshots/agent_05_payroll_recon_signin_sso.png) | ![#05 Workspace](./screenshots/agent_05_payroll_recon_workspace_e2e.png) |
-| **#06** | **Attendance & Leave Agent** | ![#06 Sign-In](./screenshots/agent_06_attendance_leave_signin_sso.png) | ![#06 Workspace](./screenshots/agent_06_attendance_leave_workspace_e2e.png) |
-| **#07** | **Employee HR Helpdesk Agent** | ![#07 Sign-In](./screenshots/agent_07_hr_helpdesk_signin_sso.png) | ![#07 Workspace](./screenshots/agent_07_hr_helpdesk_workspace_e2e.png) |
-| **#08** | **Skills & Certification Agent** | ![#08 Sign-In](./screenshots/agent_08_skills_compliance_signin_sso.png) | ![#08 Workspace](./screenshots/agent_08_skills_compliance_workspace_e2e.png) |
-| **#09** | **Workforce Analytics Agent** | ![#09 Sign-In](./screenshots/agent_09_workforce_analytics_signin_sso.png) | ![#09 Workspace](./screenshots/agent_09_workforce_analytics_workspace_e2e.png) |
+| **#01** | **[Candidates Screening Agent](https://candidates-screening-agent-259388273008.us-central1.run.app/)** | ![#01 Sign-In](./screenshots/agent_01_candidates_screening_signin_sso.png) | ![#01 Workspace](./screenshots/agent_01_candidates_screening_workspace_e2e.png) |
+| **#02** | **[Interview Scheduler Agent](https://interview-scheduler-259388273008.us-central1.run.app/)** | ![#02 Sign-In](./screenshots/agent_02_interview_scheduler_signin_sso.png) | ![#02 Workspace](./screenshots/agent_02_interview_scheduler_workspace_e2e.png) |
+| **#03** | **[HR Onboarding Pro Agent](https://hr-onboarding-259388273008.us-central1.run.app/)** | ![#03 Sign-In](./screenshots/agent_03_hr_onboarding_signin_sso.png) | ![#03 Workspace](./screenshots/agent_03_hr_onboarding_workspace_e2e.png) |
+| **#04** | **[HR Offboarding Pro Agent](https://hr-offboarding-pro-259388273008.us-central1.run.app/)** | ![#04 Sign-In](./screenshots/agent_04_hr_offboarding_signin_sso.png) | ![#04 Workspace](./screenshots/agent_04_hr_offboarding_workspace_e2e.png) |
+| **#05** | **[Payroll Recon Agent](https://hr-payroll-recon-agent-259388273008.us-central1.run.app/)** | ![#05 Sign-In](./screenshots/agent_05_payroll_recon_signin_sso.png) | ![#05 Workspace](./screenshots/agent_05_payroll_recon_workspace_e2e.png) |
+| **#06** | **[Attendance & Leave Agent](https://hr-attendance-leave-agent-259388273008.us-central1.run.app/)** | ![#06 Sign-In](./screenshots/agent_06_attendance_leave_signin_sso.png) | ![#06 Workspace](./screenshots/agent_06_attendance_leave_workspace_e2e.png) |
+| **#07** | **[Employee HR Helpdesk Agent](https://hr-helpdesk-agent-259388273008.us-central1.run.app/)** | ![#07 Sign-In](./screenshots/agent_07_hr_helpdesk_signin_sso.png) | ![#07 Workspace](./screenshots/agent_07_hr_helpdesk_workspace_e2e.png) |
+| **#08** | **[Skills & Certification Agent](https://hr-skills-compliance-agent-259388273008.us-central1.run.app/)** | ![#08 Sign-In](./screenshots/agent_08_skills_compliance_signin_sso.png) | ![#08 Workspace](./screenshots/agent_08_skills_compliance_workspace_e2e.png) |
+| **#09** | **[Workforce Analytics Agent](https://hr-workforce-analytics-agent-259388273008.us-central1.run.app/)** | ![#09 Sign-In](./screenshots/agent_09_workforce_analytics_signin_sso.png) | ![#09 Workspace](./screenshots/agent_09_workforce_analytics_workspace_e2e.png) |
