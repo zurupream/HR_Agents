@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HR Offboarding Pro — Multi-Agent Employee Exit, Clearance & Final Settlement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --apple-bg: #F5F5F7;
+      --apple-card: #FFFFFF;
+      --apple-ink: #1D1D1F;
+      --apple-muted: #6E6E73;
+      --apple-blue: #0071E3;
+      --apple-green: #34C759;
+      --apple-orange: #FF9500;
+      --apple-red: #FF3B30;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, sans-serif;
+      background-color: var(--apple-bg);
+      color: var(--apple-ink);
+      -webkit-font-smoothing: antialiased;
+    }
+    .apple-card {
+      background: var(--apple-card);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.035);
+      border-radius: 18px;
+    }
+    .apple-pill-btn {
+      border-radius: 9999px;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .nav-item.active {
+      background: #1D1D1F;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+    .nav-item:not(.active):hover {
+      background: rgba(0, 0, 0, 0.045);
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.16); border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       EXECUTIVE SIGN-IN GATE (LEFT: 3-STEP REVERSE OFFBOARDING DIAGRAM | RIGHT: SSO)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div id="ssoGateModal" class="fixed inset-0 z-50 bg-[#F5F5F7] overflow-y-auto flex items-center justify-center p-4 lg:p-8">
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left Panel: High-Level 3-Step Visual Workflow Diagram (7 cols) -->
+      <div class="lg:col-span-7 bg-[#1D1D1F] text-white rounded-3xl p-8 lg:p-10 flex flex-col justify-between shadow-xl relative overflow-hidden">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white/90 text-[11px] font-semibold uppercase tracking-wider mb-5">
+            <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
+            Enterprise People Operations Suite • Autonomous Multi-Agent Platform
+          </div>
+          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight leading-snug">
+            HR Offboarding Pro Agent
+          </h1>
+          <p class="text-sm text-white/70 mt-2 leading-relaxed">
+            Orchestrates employee resignations, end-of-contract clearances, equipment recovery, and final settlement payouts in the exact reverse sequence of onboarding.
+          </p>
+
+          <!-- 3-Step High-Level Visual Workflow Diagram -->
+          <div class="mt-7 space-y-4">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-[#64D2FF]">
+              How the HR Offboarding Agent Works (3-Step Reverse Architecture)
+            </p>
+
+            <!-- Step 1 -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+              <div class="w-9 h-9 rounded-xl bg-[#0071E3] text-white font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                1
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-white">Exit Notice & Clearance Launch</h3>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0071E3]/30 text-[#64D2FF]">Final Clearance Agent</span>
+                </div>
+                <p class="text-xs text-white/70 mt-1 leading-relaxed">
+                  Logs voluntary resignation or end-of-contract notice, calculates pro-rata final salary + accrued unused leave encashment, and sends the interactive Clearance & Settlement Pack.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+              <div class="w-9 h-9 rounded-xl bg-[#FF9500] text-white font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                2
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-white">Reverse De-Provisioning & Asset Recovery Agents</h3>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FF9500]/30 text-[#FFD60A]">Role-Aware Sequence</span>
+                </div>
+                <p class="text-xs text-white/70 mt-1 leading-relaxed">
+                  De-provisions access in reverse order while keeping work email active until physical laptop handover is cleared:
+                </p>
+                <div class="mt-2.5 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                  <div class="bg-white/10 rounded-xl p-2 border border-white/10">
+                    <p class="font-bold text-white">1. Health Insurance</p>
+                    <p class="text-white/60 text-[10px]">Termination Agent</p>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2 border border-white/10">
+                    <p class="font-bold text-white">2. Uber Pass</p>
+                    <p class="text-white/60 text-[10px]">Revocation Agent</p>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2 border border-white/10">
+                    <p class="font-bold text-white">3. Laptop Return</p>
+                    <p class="text-white/60 text-[10px]">Asset Recovery Agent</p>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2 border border-white/10">
+                    <p class="font-bold text-white">4. IT Email & SSO</p>
+                    <p class="text-white/60 text-[10px]">Deactivation Agent</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-start gap-4">
+              <div class="w-9 h-9 rounded-xl bg-[#34C759] text-white font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                3
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-white">Employee E-Signature & Certificate of Service</h3>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#34C759]/30 text-[#30D158]">Automated Closure</span>
+                </div>
+                <p class="text-xs text-white/70 mt-1 leading-relaxed">
+                  Employee digitally signs the Final Clearance & Settlement Statement online, releasing Net Final Dues for payroll deposit and generating the official Certificate of Service PDF.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Matrix Footer Summary -->
+        <div class="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-white/65">
+          <div>
+            <span class="font-semibold text-white">Full-Time Employee:</span> Insurance → Uber → Laptop → Email
+          </div>
+          <div>
+            <span class="font-semibold text-white">Trainee:</span> Uber → Laptop → Email
+          </div>
+          <div>
+            <span class="font-semibold text-white">Intern:</span> Email Only
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Single Sign-On (SSO) Card (5 cols) -->
+      <div class="lg:col-span-5 apple-card p-8 lg:p-10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-2xl bg-[#1D1D1F] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              HR
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-[#1D1D1F]">Sign In to HR Offboarding Pro</h2>
+              <p class="text-xs text-[#6E6E73]">Enterprise Single Sign-On for People Operations</p>
+            </div>
+          </div>
+
+          <!-- Instant Executive Demo Sign-In Button -->
+          <div class="bg-[#F5F5F7] p-4 rounded-2xl border border-black/5 mb-6">
+            <p class="text-xs font-semibold text-[#1D1D1F]">Quick Executive Access</p>
+            <p class="text-[11px] text-[#6E6E73] mt-0.5 mb-3">
+              Launch straight into the live HR Offboarding workspace as VP of People Operations.
+            </p>
+            <button onclick="signInDemo()" type="button"
+              class="w-full py-3 px-4 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              Instant Demo Sign-In (HR Director)
+            </button>
+          </div>
+
+          <!-- Google Single Sign-On -->
+          <div class="mb-5">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73] mb-2.5">Corporate Single Sign-On (Google Workspace)</p>
+            <div id="g_id_onload"
+                 data-client_id="259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com"
+                 data-callback="handleGoogleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="pill" data-logo_alignment="left"></div>
+          </div>
+
+          <div class="relative flex py-2 items-center my-4">
+            <div class="flex-grow border-t border-black/10"></div>
+            <span class="flex-shrink mx-3 text-[11px] uppercase tracking-wider text-[#6E6E73]">Or Work Email Code</span>
+            <div class="flex-grow border-t border-black/10"></div>
+          </div>
+
+          <!-- Work Email Verification Code -->
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#1D1D1F] mb-1">Work Email Address</label>
+              <div class="flex gap-2">
+                <input id="ssoEmailInput" type="email" value="elena.rostova@acme.com" placeholder="name@company.com"
+                  class="flex-1 px-3.5 py-2.5 rounded-xl border border-black/15 text-xs focus:outline-none focus:border-[#0071E3]" />
+                <button onclick="requestOtpCode()" type="button"
+                  class="px-3.5 py-2.5 rounded-xl bg-[#F5F5F7] hover:bg-black/10 text-xs font-semibold text-[#1D1D1F] transition">
+                  Send Code
+                </button>
+              </div>
+            </div>
+
+            <div id="otpVerifyBox" class="hidden space-y-2 pt-1">
+              <label class="block text-xs font-semibold text-[#1D1D1F]">6-Digit Verification Code</label>
+              <div class="flex gap-2">
+                <input id="ssoOtpInput" type="text" placeholder="246810"
+                  class="flex-1 px-3.5 py-2.5 rounded-xl border border-black/15 text-xs font-mono tracking-widest focus:outline-none focus:border-[#0071E3]" />
+                <button onclick="verifyOtpCode()" type="button"
+                  class="px-4 py-2.5 rounded-xl bg-[#1D1D1F] text-white text-xs font-semibold">
+                  Verify & Sign In
+                </button>
+              </div>
+              <p id="otpHintText" class="text-[11px] text-[#0071E3] font-medium"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-black/5 mt-6 flex items-center justify-between text-[11px] text-[#6E6E73]">
+          <span>Protected by Enterprise Single Sign-On</span>
+          <span>Zero Technical Setup Required</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       MAIN WORKSPACE SHELL (SIDEBAR + CONTENT AREA)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="flex-1 flex min-h-screen">
+    <!-- Left Sidebar -->
+    <aside class="w-68 bg-white/85 backdrop-blur-md border-r border-black/5 flex flex-col justify-between p-5 shrink-0">
+      <div>
+        <!-- Brand Header -->
+        <div class="flex items-center gap-3 px-2 py-1.5 mb-6">
+          <div class="w-9 h-9 rounded-xl bg-[#1D1D1F] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            HR
+          </div>
+          <div>
+            <h1 class="text-sm font-bold tracking-tight text-[#1D1D1F]">HR Offboarding Pro</h1>
+            <p class="text-[11px] text-[#6E6E73]">Exit & Final Settlement Suite</p>
+          </div>
+        </div>
+
+        <!-- Primary Navigation -->
+        <nav class="space-y-1">
+          <button onclick="switchTab('pipeline')" id="nav-pipeline"
+            class="nav-item active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="user-minus" class="w-4 h-4"></i>
+              Exit Clearance Tracking
+            </span>
+            <span id="badgeTotalCandidates" class="text-[11px] px-2 py-0.5 rounded-full bg-white/20">0</span>
+          </button>
+
+          <button onclick="switchTab('actions')" id="nav-actions"
+            class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#424245] transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="bell-ring" class="w-4 h-4"></i>
+              HR Action Center
+            </span>
+            <span id="badgeActionItems" class="text-[11px] px-2 py-0.5 rounded-full bg-[#FF3B30] text-white font-semibold">0</span>
+          </button>
+
+          <button onclick="switchTab('launchpad')" id="nav-launchpad"
+            class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#424245] transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="file-output" class="w-4 h-4"></i>
+              Exit Launchpad
+            </span>
+          </button>
+
+          <button onclick="switchTab('agents')" id="nav-agents"
+            class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#424245] transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              Clearance Agents
+            </span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-black/5 text-[#6E6E73]">4 Agents</span>
+          </button>
+
+          <button onclick="switchTab('templates')" id="nav-templates"
+            class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#424245] transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="calculator" class="w-4 h-4"></i>
+              Final Dues & Templates
+            </span>
+          </button>
+
+          <button onclick="switchTab('activity')" id="nav-activity"
+            class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#424245] transition">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="history" class="w-4 h-4"></i>
+              Activity History
+            </span>
+          </button>
+        </nav>
+
+        <!-- Reverse Role-Based Offboarding Reference Card -->
+        <div class="mt-7 p-4 rounded-2xl bg-[#F5F5F7] border border-black/5 space-y-2.5">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-[#6E6E73]">Reverse Offboarding Rules</p>
+          <div class="text-xs space-y-2">
+            <div>
+              <span class="font-semibold text-[#1D1D1F]">Full-Time Employee:</span>
+              <p class="text-[11px] text-[#6E6E73]">1. Insurance → 2. Uber → 3. Laptop → 4. Email</p>
+            </div>
+            <div>
+              <span class="font-semibold text-[#1D1D1F]">Graduate Trainee:</span>
+              <p class="text-[11px] text-[#6E6E73]">1. Uber → 2. Laptop → 3. Email</p>
+            </div>
+            <div>
+              <span class="font-semibold text-[#1D1D1F]">Intern:</span>
+              <p class="text-[11px] text-[#6E6E73]">1. Work Email & Single Sign-On Only</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signed-in User Profile & Reset Demo -->
+      <div class="space-y-2 pt-4 border-t border-black/5">
+        <div class="px-3 py-2.5 rounded-xl bg-[#F5F5F7] flex items-center justify-between">
+          <div class="truncate">
+            <p id="sidebarUserName" class="text-xs font-bold text-[#1D1D1F] truncate">Elena Rostova</p>
+            <p id="sidebarUserRole" class="text-[10px] text-[#6E6E73] truncate">VP of People Operations</p>
+          </div>
+          <button onclick="openSsoModal()" title="View Architecture Diagram / Switch User"
+            class="text-[11px] font-semibold text-[#0071E3] hover:underline shrink-0 ml-2">
+            SSO / Guide
+          </button>
+        </div>
+        <button onclick="resetDemoData()"
+          class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-[#6E6E73] hover:text-[#1D1D1F] hover:bg-black/5 transition">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          Reset Demo Workspace
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Bar -->
+      <header class="bg-white/80 backdrop-blur-md border-b border-black/5 px-8 py-4 flex items-center justify-between sticky top-0 z-20">
+        <div>
+          <h2 id="pageTitle" class="text-lg font-bold text-[#1D1D1F]">Exit Clearance Tracking</h2>
+          <p id="pageSubtitle" class="text-xs text-[#6E6E73]">Track resignations, department asset handovers, final settlements, and Certificates of Service</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="openSsoModal()"
+            class="apple-pill-btn px-3.5 py-2 text-xs bg-[#F5F5F7] hover:bg-black/10 text-[#1D1D1F] inline-flex items-center gap-1.5">
+            <i data-lucide="workflow" class="w-3.5 h-3.5"></i>
+            3-Step Agent Diagram
+          </button>
+          <button onclick="switchTab('launchpad')"
+            class="apple-pill-btn px-4 py-2 text-xs bg-[#0071E3] text-white hover:bg-[#0077ED] inline-flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Log Exit Notice
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Container -->
+      <main class="p-8 space-y-7 max-w-7xl w-full mx-auto">
+
+        <!-- KPI Summary Strip -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="apple-card p-5">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">Exiting Employees</p>
+            <p id="kpiTotal" class="text-2xl font-bold text-[#1D1D1F] mt-1">0</p>
+            <p id="kpiRoleSplit" class="text-[11px] text-[#6E6E73] mt-1">Across all role tiers</p>
+          </div>
+          <div class="apple-card p-5">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">Awaiting E-Signature</p>
+            <p id="kpiAwaiting" class="text-2xl font-bold text-[#0071E3] mt-1">0</p>
+            <p class="text-[11px] text-[#6E6E73] mt-1">Clearance statements sent</p>
+          </div>
+          <div class="apple-card p-5">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">Clearance In Progress</p>
+            <p id="kpiProvisioning" class="text-2xl font-bold text-[#FF9500] mt-1">0</p>
+            <p class="text-[11px] text-[#6E6E73] mt-1">Reverse de-provisioning active</p>
+          </div>
+          <div class="apple-card p-5">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">Offboarding Complete</p>
+            <p id="kpiOnboarded" class="text-2xl font-bold text-[#34C759] mt-1">0</p>
+            <p class="text-[11px] text-[#6E6E73] mt-1">100% cleared & Certificate issued</p>
+          </div>
+          <div class="apple-card p-5 cursor-pointer hover:border-[#FF3B30]/40 transition" onclick="switchTab('actions')">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-[#FF3B30]">Needs HR Attention</p>
+            <p id="kpiAlerts" class="text-2xl font-bold text-[#FF3B30] mt-1">0</p>
+            <p id="kpiSettlementTotal" class="text-[11px] text-[#6E6E73] mt-1">Asset blockers or settlement queries</p>
+          </div>
+        </section>
+
+        <!-- TAB 1: EXIT CLEARANCE TRACKING PIPELINE -->
+        <section id="tab-pipeline" class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <button onclick="setRoleFilter('ALL')" id="filter-ALL"
+                class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white">All Exiting Staff</button>
+              <button onclick="setRoleFilter('EMPLOYEE')" id="filter-EMPLOYEE"
+                class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-[#424245] border border-black/10">Full-Time Employees</button>
+              <button onclick="setRoleFilter('TRAINEE')" id="filter-TRAINEE"
+                class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-[#424245] border border-black/10">Graduate Trainees</button>
+              <button onclick="setRoleFilter('INTERN')" id="filter-INTERN"
+                class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-[#424245] border border-black/10">Interns</button>
+            </div>
+            <p class="text-xs text-[#6E6E73]">
+              Click any employee card to advance department clearance steps, preview Final Dues, or download PDFs
+            </p>
+          </div>
+
+          <div id="candidatesGrid" class="grid grid-cols-1 gap-4"></div>
+        </section>
+
+        <!-- TAB 2: HR ACTION CENTER (ASSET BLOCKERS & SETTLEMENT QUERIES) -->
+        <section id="tab-actions" class="hidden space-y-5">
+          <div class="apple-card p-6">
+            <h3 class="text-base font-bold text-[#1D1D1F]">HR Action Center — Unreturned Equipment & Final Settlement Queries</h3>
+            <p class="text-xs text-[#6E6E73] mt-1">
+              Whenever an exiting employee raises a Final Settlement / Leave Balance query or IT Equipment flags a missing hardware item, it is routed here for immediate resolution.
+            </p>
+            <div id="actionCenterList" class="mt-5 space-y-3"></div>
+          </div>
+        </section>
+
+        <!-- TAB 3: EXIT LAUNCHPAD (SINGLE + BATCH EXIT INTAKE & LIVE SETTLEMENT PREVIEW) -->
+        <section id="tab-launchpad" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Single Employee Exit Notice Form -->
+            <div class="lg:col-span-2 apple-card p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-base font-bold text-[#1D1D1F]">Log Individual Exit Notice & Send Clearance Pack</h3>
+                  <p class="text-xs text-[#6E6E73]">Calculates pro-rata pay & leave encashment and launches role-based reverse de-provisioning agents</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-[#0071E3]/10 text-[#0071E3]">Automated Clearance + PDF</span>
+              </div>
+
+              <form id="singleOfferForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Employee Full Name *</label>
+                  <input name="full_name" required placeholder="e.g. Marcus Vance"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Personal Forwarding Email *</label>
+                  <input name="personal_email" type="email" required placeholder="marcus.vance@gmail.com"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Role Classification *</label>
+                  <select id="launchRoleSelect" name="role_category"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm bg-white font-medium">
+                    <option value="EMPLOYEE">EMPLOYEE — Full-Time (1. Insurance → 2. Uber → 3. Laptop → 4. Email)</option>
+                    <option value="TRAINEE">TRAINEE — Graduate Trainee (1. Uber → 2. Laptop → 3. Email)</option>
+                    <option value="INTERN">INTERN — Intern (1. Work Email & Single Sign-On Deactivation Only)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Exit Category *</label>
+                  <select name="exit_type" class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm bg-white">
+                    <option value="Voluntary Resignation">Voluntary Resignation</option>
+                    <option value="End of Contract">End of Fixed-Term Contract</option>
+                    <option value="End of Internship Term">End of Internship Term</option>
+                    <option value="Mutual Separation">Mutual Separation Agreement</option>
+                    <option value="Retirement">Retirement</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Job Title *</label>
+                  <input name="job_title" required placeholder="e.g. Senior Product Designer"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Department *</label>
+                  <input name="department" required placeholder="e.g. Design & User Experience"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Reporting Manager *</label>
+                  <input name="manager_name" required placeholder="e.g. Elena Rostova"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Last Working Day *</label>
+                  <input name="last_working_day" type="date" value="2026-05-29" required
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Base Compensation Amount ($) *</label>
+                  <input id="inpCompAmount" name="compensation_amount" type="number" step="100" value="148000" required
+                    oninput="updateLiveSettlementPreview()"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Compensation Period</label>
+                  <select id="inpCompPeriod" name="compensation_period" onchange="updateLiveSettlementPreview()"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm bg-white">
+                    <option value="per year">per year</option>
+                    <option value="per month">per month</option>
+                    <option value="per hour">per hour</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Working Days in Final Month</label>
+                  <input id="inpDaysWorked" name="days_worked_final_month" type="number" value="18" min="0" max="31"
+                    oninput="updateLiveSettlementPreview()"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Accrued Unused Leave Days</label>
+                  <input id="inpUnusedLeave" name="unused_leave_days" type="number" step="0.5" value="6.5" min="0" max="60"
+                    oninput="updateLiveSettlementPreview()"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Equipment Deduction ($)</label>
+                  <input id="inpDeduction" name="asset_deduction" type="number" step="1" value="0" min="0"
+                    oninput="updateLiveSettlementPreview()"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Assigned Laptop Serial (If Applicable)</label>
+                  <input name="assigned_laptop_serial" placeholder="e.g. MBP16-ACME-4890"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-black/15 text-sm" />
+                </div>
+
+                <!-- Live Final Dues Preview Banner -->
+                <div class="sm:col-span-2 bg-[#F5F5F7] rounded-2xl p-4 border border-black/5 flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#0071E3]">Live Final Settlement Calculator Preview</p>
+                    <p id="liveSettlementBreakdown" class="text-xs text-[#424245] mt-0.5">
+                      Pro-Rata Pay: $10,246.15 + Leave Encashment: $3,700.00 - Deductions: $0.00
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-[10px] uppercase tracking-wider text-[#6E6E73] block">Net Settlement Payable</span>
+                    <span id="liveNetSettlement" class="text-lg font-bold text-[#1D1D1F]">$13,946.15</span>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2 flex justify-end pt-2">
+                  <button type="submit"
+                    class="apple-pill-btn px-6 py-3 bg-[#0071E3] text-white text-xs inline-flex items-center gap-2 shadow-sm hover:bg-[#0077ED]">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    Log Exit Notice, Launch Clearance Agents & Send E-Sign Link
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Batch Cohort Exit Launch Card -->
+            <div class="apple-card p-6 flex flex-col justify-between">
+              <div>
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#34C759]/15 text-[#1E7E34]">Cohort Exit Mode</span>
+                <h3 class="text-base font-bold text-[#1D1D1F] mt-2">Batch Exit Clearance Dispatch</h3>
+                <p class="text-xs text-[#6E6E73] mt-1 leading-relaxed">
+                  Concluding a summer internship class or rotational trainee cohort? Launch 3 exiting staff across Intern, Trainee, and Full-Time Employee tiers in one click.
+                </p>
+
+                <div class="mt-4 space-y-2.5 text-xs bg-[#F5F5F7] p-4 rounded-2xl border border-black/5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold">1. Victor Krum (EMPLOYEE)</span>
+                    <span class="text-[#6E6E73]">Staff Backend Eng</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold">2. Mei-Ling Zhou (TRAINEE)</span>
+                    <span class="text-[#6E6E73]">Product Analytics Trainee</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold">3. Noah Goldstein (INTERN)</span>
+                    <span class="text-[#6E6E73]">Data Science Intern</span>
+                  </div>
+                </div>
+              </div>
+
+              <button onclick="launchSampleBatch()" type="button"
+                class="mt-6 w-full apple-pill-btn py-3 bg-[#1D1D1F] text-white text-xs hover:bg-black/85 inline-flex items-center justify-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4"></i>
+                Launch 3-Employee Cohort Exit
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: CLEARANCE AGENTS (4-COLUMN REVERSE DE-PROVISIONING BOARD) -->
+        <section id="tab-agents" class="hidden space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4" id="agentsBoardGrid"></div>
+        </section>
+
+        <!-- TAB 5: FINAL DUES & CERTIFICATE TEMPLATES + EMAIL SETTINGS -->
+        <section id="tab-templates" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Clearance & Settlement Template Editor -->
+            <div class="lg:col-span-2 apple-card p-6 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="text-base font-bold text-[#1D1D1F]">Role-Based Final Clearance & Settlement Templates</h3>
+                  <p class="text-xs text-[#6E6E73]">Customize the clearance statements & post-exit entitlements generated for each role tier</p>
+                </div>
+                <div class="flex gap-1.5">
+                  <button onclick="loadTemplateRole('EMPLOYEE')" id="tplBtn-EMPLOYEE"
+                    class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white">Employee</button>
+                  <button onclick="loadTemplateRole('TRAINEE')" id="tplBtn-TRAINEE"
+                    class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F5F5F7] text-[#424245]">Trainee</button>
+                  <button onclick="loadTemplateRole('INTERN')" id="tplBtn-INTERN"
+                    class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F5F5F7] text-[#424245]">Intern</button>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-[#424245] mb-1">Company Name</label>
+                    <input id="tplCompany" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-[#424245] mb-1">Clearance Statement Heading</label>
+                    <input id="tplTitle" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Opening Paragraph (Supports {company_name}, {job_title}, {department}, {manager_name}, {last_working_day})</label>
+                  <textarea id="tplIntro" rows="3" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm"></textarea>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Clearance Terms & Separation Commitments (One per line)</label>
+                  <textarea id="tplTerms" rows="4" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm"></textarea>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">Post-Exit Entitlements & Documentation (One per line)</label>
+                  <textarea id="tplBenefits" rows="4" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm"></textarea>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#424245] mb-1">E-Signature Footer Note</label>
+                  <input id="tplFooter" class="w-full px-3.5 py-2 rounded-xl border border-black/15 text-sm" />
+                </div>
+                <div class="flex justify-end">
+                  <button onclick="saveCurrentTemplate()" type="button"
+                    class="apple-pill-btn px-5 py-2.5 bg-[#0071E3] text-white text-xs">
+                    Save Clearance Template
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Delivery Settings -->
+            <div class="apple-card p-6 space-y-4">
+              <div>
+                <h3 class="text-base font-bold text-[#1D1D1F]">Automated Email Delivery</h3>
+                <p class="text-xs text-[#6E6E73]">All exit clearance packs, blocker alerts, and Certificates of Service are logged automatically. Enable live corporate email relay below if desired.</p>
+              </div>
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="font-semibold text-[#424245] block mb-1">Mail Server Address</label>
+                  <input id="smtpHost" placeholder="smtp.acme-enterprise.com" class="w-full px-3 py-2 rounded-xl border border-black/15" />
+                </div>
+                <div>
+                  <label class="font-semibold text-[#424245] block mb-1">Port</label>
+                  <input id="smtpPort" type="number" value="587" class="w-full px-3 py-2 rounded-xl border border-black/15" />
+                </div>
+                <div>
+                  <label class="font-semibold text-[#424245] block mb-1">Account Username</label>
+                  <input id="smtpUser" class="w-full px-3 py-2 rounded-xl border border-black/15" />
+                </div>
+                <div>
+                  <label class="font-semibold text-[#424245] block mb-1">Account Password</label>
+                  <input id="smtpPass" type="password" class="w-full px-3 py-2 rounded-xl border border-black/15" />
+                </div>
+                <div>
+                  <label class="font-semibold text-[#424245] block mb-1">Sender Email Address</label>
+                  <input id="smtpFromEmail" class="w-full px-3 py-2 rounded-xl border border-black/15" />
+                </div>
+                <label class="flex items-center gap-2 pt-1 cursor-pointer">
+                  <input id="smtpEnabled" type="checkbox" class="rounded" />
+                  <span class="font-semibold text-[#1D1D1F]">Enable Live External Email Delivery</span>
+                </label>
+                <button onclick="saveSmtpSettings()" type="button"
+                  class="w-full apple-pill-btn py-2.5 bg-[#1D1D1F] text-white text-xs mt-2">
+                  Save Delivery Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 6: ACTIVITY HISTORY (SENT CLEARANCE PACKS & AGENT HANDOFFS) -->
+        <section id="tab-activity" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="apple-card p-6">
+              <h3 class="text-base font-bold text-[#1D1D1F]">Clearance Agent Activity Timeline</h3>
+              <p class="text-xs text-[#6E6E73] mb-4">Chronological record of reverse de-provisioning steps across Benefits, Transport, IT Equipment, and IT Security</p>
+              <div id="auditEventsList" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1"></div>
+            </div>
+            <div class="apple-card p-6">
+              <h3 class="text-base font-bold text-[#1D1D1F]">Sent Clearance Packs & HR Notifications</h3>
+              <p class="text-xs text-[#6E6E73] mb-4">All dispatched clearance statements, settlement query alerts, and Certificates of Service</p>
+              <div id="outboxEmailsList" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       SLIDE-OVER EXITING EMPLOYEE DETAIL DRAWER
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div id="candidateDrawerBackdrop" onclick="closeCandidateDrawer()"
+    class="fixed inset-0 bg-black/30 backdrop-blur-xs z-40 hidden"></div>
+  <aside id="candidateDrawer"
+    class="fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-200 overflow-y-auto">
+    <div id="drawerContent" class="p-8 space-y-6"></div>
+  </aside>
+
+  <script>
+    let overviewData = null;
+    let activeRoleFilter = "ALL";
+    let templatesCache = {};
+    let activeTemplateRole = "EMPLOYEE";
+    let openCandidateId = null;
+
+    // ─── Single Sign-On & Session Handling ───────────────────────────────────
+    function checkSsoSession() {
+      const saved = sessionStorage.getItem("hr_offboarding_user");
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          applySignedInUser(user);
+          document.getElementById("ssoGateModal").classList.add("hidden");
+        } catch (e) {}
+      }
+    }
+
+    function applySignedInUser(user) {
+      if (!user) return;
+      document.getElementById("sidebarUserName").textContent = user.name || "Elena Rostova";
+      document.getElementById("sidebarUserRole").textContent = user.role || "VP of People Operations";
+    }
+
+    function openSsoModal() {
+      document.getElementById("ssoGateModal").classList.remove("hidden");
+    }
+
+    async function signInDemo() {
+      const res = await fetch("/api/auth/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ persona: "Elena Rostova" }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem("hr_offboarding_user", JSON.stringify(data.user));
+        applySignedInUser(data.user);
+        document.getElementById("ssoGateModal").classList.add("hidden");
+      }
+    }
+
+    async function handleGoogleCredentialResponse(response) {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem("hr_offboarding_user", JSON.stringify(data.user));
+        applySignedInUser(data.user);
+        document.getElementById("ssoGateModal").classList.add("hidden");
+      }
+    }
+
+    async function requestOtpCode() {
+      const email = document.getElementById("ssoEmailInput").value.trim();
+      if (!email) return;
+      const res = await fetch("/api/auth/otp/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById("otpVerifyBox").classList.remove("hidden");
+        document.getElementById("ssoOtpInput").value = data.demo_code || "246810";
+        document.getElementById("otpHintText").textContent = `Verification code sent to ${email} (Demo code auto-filled: ${data.demo_code})`;
+      }
+    }
+
+    async function verifyOtpCode() {
+      const email = document.getElementById("ssoEmailInput").value.trim();
+      const code = document.getElementById("ssoOtpInput").value.trim();
+      const res = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem("hr_offboarding_user", JSON.stringify(data.user));
+        applySignedInUser(data.user);
+        document.getElementById("ssoGateModal").classList.add("hidden");
+      } else {
+        alert("Invalid verification code. Please try again.");
+      }
+    }
+
+    // ─── Live Final Settlement Preview in Launchpad ──────────────────────────
+    async function updateLiveSettlementPreview() {
+      const amount = parseFloat(document.getElementById("inpCompAmount")?.value || 148000);
+      const period = document.getElementById("inpCompPeriod")?.value || "per year";
+      const days = parseInt(document.getElementById("inpDaysWorked")?.value || 18, 10);
+      const leave = parseFloat(document.getElementById("inpUnusedLeave")?.value || 6.5);
+      const ded = parseFloat(document.getElementById("inpDeduction")?.value || 0);
+
+      const res = await fetch("/api/employees/calculate-settlement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          compensation_amount: amount,
+          compensation_period: period,
+          days_worked_final_month: days,
+          unused_leave_days: leave,
+          asset_deduction: ded,
+        }),
+      });
+      if (res.ok) {
+        const st = await res.json();
+        document.getElementById("liveSettlementBreakdown").textContent =
+          `Pro-Rata Pay (${days}d): $${st.pro_rata_pay.toLocaleString(undefined, {minimumFractionDigits: 2})} + Leave Encashment (${leave}d): $${st.leave_encashment.toLocaleString(undefined, {minimumFractionDigits: 2})} - Deductions: $${st.asset_deduction.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+        document.getElementById("liveNetSettlement").textContent =
+          `$${st.net_settlement.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+      }
+    }
+
+    function roleBadgeHtml(role) {
+      const styles = {
+        EMPLOYEE: "bg-[#0071E3]/10 text-[#0071E3]",
+        TRAINEE: "bg-[#FF9500]/15 text-[#B25000]",
+        INTERN: "bg-[#34C759]/15 text-[#1E7E34]",
+      };
+      const labels = {
+        EMPLOYEE: "Full-Time Employee",
+        TRAINEE: "Graduate Trainee",
+        INTERN: "Intern",
+      };
+      return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${styles[role] || 'bg-black/5'}">${labels[role] || role}</span>`;
+    }
+
+    function offerStatusBadgeHtml(status) {
+      const map = {
+        SENT: ["bg-[#0071E3]/10 text-[#0071E3]", "Clearance Pack Sent"],
+        VIEWED: ["bg-[#FF9500]/15 text-[#B25000]", "Clearance Viewed"],
+        ACCEPTED: ["bg-[#34C759]/15 text-[#1E7E34]", "Clearance Signed"],
+        DECLINED: ["bg-[#FF3B30]/15 text-[#C62828]", "Settlement Query Raised"],
+      };
+      const [cls, label] = map[status] || ["bg-black/5 text-[#6E6E73]", status];
+      return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${cls}">${label}</span>`;
+    }
+
+    function taskStatusPill(task) {
+      const colors = {
+        COMPLETED: "bg-[#34C759]/15 text-[#1E7E34] border-[#34C759]/30",
+        IN_PROGRESS: "bg-[#0071E3]/10 text-[#0071E3] border-[#0071E3]/25",
+        PENDING: "bg-black/5 text-[#6E6E73] border-black/10",
+        BLOCKED: "bg-[#FF3B30]/15 text-[#C62828] border-[#FF3B30]/30",
+      };
+      const shortLabels = {
+        INSURANCE: "1. Health Insurance",
+        UBER: "2. Uber Pass",
+        LAPTOP: "3. Laptop Return",
+        EMAIL: "4. Work Email & SSO",
+      };
+      return `<span class="px-2.5 py-1 rounded-xl text-[11px] font-medium border ${colors[task.status] || ''}">
+        ${shortLabels[task.task_type] || task.task_type}: <strong>${task.current_stage}</strong>
+      </span>`;
+    }
+
+    async function fetchOverview() {
+      const res = await fetch("/api/overview");
+      overviewData = await res.json();
+      renderKPIs();
+      renderCandidatesGrid();
+      renderActionCenter();
+      renderActivityLog();
+      if (openCandidateId) {
+        const updated = overviewData.candidates.find(c => c.id === openCandidateId);
+        if (updated) openCandidateDrawer(openCandidateId, false);
+      }
+      lucide.createIcons();
+    }
+
+    function renderKPIs() {
+      const k = overviewData.kpis;
+      document.getElementById("kpiTotal").textContent = k.total_exiting;
+      document.getElementById("badgeTotalCandidates").textContent = k.total_exiting;
+      document.getElementById("kpiRoleSplit").textContent =
+        `${k.role_counts.EMPLOYEE} Full-Time • ${k.role_counts.TRAINEE} Trainees • ${k.role_counts.INTERN} Interns`;
+      document.getElementById("kpiAwaiting").textContent = k.awaiting_signature;
+      document.getElementById("kpiProvisioning").textContent = k.clearance_active;
+      document.getElementById("kpiOnboarded").textContent = k.fully_offboarded;
+      document.getElementById("kpiAlerts").textContent = k.action_required_count;
+      document.getElementById("badgeActionItems").textContent = k.action_required_count;
+      document.getElementById("kpiSettlementTotal").textContent =
+        `Total Final Dues: $${Number(k.total_final_settlement_value || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+    }
+
+    // 4-Step Visual Milestone Bar for Offboarding
+    function buildJourneyStepperHtml(c) {
+      const offerStatus = c.offer ? c.offer.status : "SENT";
+      const isSigned = offerStatus === "ACCEPTED";
+      const isDisputed = offerStatus === "DECLINED";
+      const hasTasks = c.tasks && c.tasks.length > 0;
+      const isComplete = c.offboarding_status === "OFFBOARDED" || c.overall_progress_pct === 100;
+
+      const steps = [
+        { label: "1. Exit Notice Logged", done: true, active: !hasTasks && !isDisputed },
+        { label: "2. Clearance & Handover In Progress", done: isComplete || (hasTasks && c.clearance_pct >= 50), active: hasTasks && !isComplete && !isDisputed },
+        { label: isDisputed ? "3. Settlement Query Raised" : "3. Final Dues & Clearance Signed", done: isSigned || isComplete, active: !isSigned && !isDisputed, alert: isDisputed },
+        { label: "4. Offboarding Complete & Certificate Issued", done: isComplete, active: false },
+      ];
+
+      return `
+        <div class="grid grid-cols-4 gap-2 pt-3 border-t border-black/5">
+          ${steps.map(s => {
+            let barClass = "bg-black/10";
+            let txtClass = "text-[#6E6E73]";
+            if (s.alert) {
+              barClass = "bg-[#FF3B30]";
+              txtClass = "text-[#C62828] font-semibold";
+            } else if (s.done) {
+              barClass = "bg-[#34C759]";
+              txtClass = "text-[#1D1D1F] font-semibold";
+            } else if (s.active) {
+              barClass = "bg-[#0071E3]";
+              txtClass = "text-[#0071E3] font-semibold";
+            }
+            return `
+              <div>
+                <div class="h-1.5 w-full rounded-full ${barClass} mb-1.5"></div>
+                <p class="text-[11px] truncate ${txtClass}">${s.label}</p>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderCandidatesGrid() {
+      const grid = document.getElementById("candidatesGrid");
+      const list = overviewData.candidates.filter(
+        c => activeRoleFilter === "ALL" || c.role_category === activeRoleFilter
+      );
+
+      if (!list.length) {
+        grid.innerHTML = `<div class="apple-card p-10 text-center text-sm text-[#6E6E73]">No exiting employees match this filter.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(c => {
+        const tasksHtml = c.tasks.length
+          ? c.tasks.map(taskStatusPill).join("")
+          : `<span class="text-xs text-[#6E6E73]">Reverse clearance sequence (${c.expected_steps.join(" → ")})</span>`;
+
+        const blockerBanner = c.has_blocker
+          ? `<div class="mt-3 px-3.5 py-2 rounded-xl bg-[#FFF2F2] border border-[#FF3B30]/30 text-xs text-[#C62828] font-medium flex items-center justify-between">
+               <span>⚠️ Requires HR Action: ${c.offer.status === 'DECLINED' ? 'Final Settlement Query: "' + (c.offer.decline_reason || '') + '"' : 'Unreturned IT equipment / clearance blocker flagged'}</span>
+               <span class="underline font-semibold">Resolve →</span>
+             </div>`
+          : "";
+
+        const netPay = c.settlement ? c.settlement.net_settlement : c.net_settlement;
+
+        return `
+          <div onclick="openCandidateDrawer(${c.id})"
+            class="apple-card p-6 hover:border-black/20 transition cursor-pointer">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h3 class="text-base font-bold text-[#1D1D1F]">${c.full_name}</h3>
+                  ${roleBadgeHtml(c.role_category)}
+                  ${c.offer ? offerStatusBadgeHtml(c.offer.status) : ""}
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#F5F5F7] text-[#424245]">${c.exit_type || 'Voluntary Resignation'}</span>
+                </div>
+                <p class="text-xs text-[#6E6E73]">
+                  ${c.job_title} • ${c.department} • Manager: <strong>${c.manager_name}</strong> • Last Working Day: <strong>${c.last_working_day || c.start_date}</strong>
+                </p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <p class="text-[11px] font-semibold text-[#6E6E73]">Net Final Settlement</p>
+                  <p class="text-sm font-bold text-[#1D1D1F]">$${Number(netPay || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                </div>
+                <div class="text-right pl-3 border-l border-black/10">
+                  <p class="text-[11px] font-semibold text-[#6E6E73]">Clearance</p>
+                  <p class="text-sm font-bold text-[#0071E3]">${c.overall_progress_pct}%</p>
+                </div>
+                <a onclick="event.stopPropagation()" href="/api/employees/${c.id}/clearance-pdf" target="_blank"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F5F5F7] hover:bg-black/10 text-[#1D1D1F]">
+                  Clearance PDF
+                </a>
+                <a onclick="event.stopPropagation()" href="/api/employees/${c.id}/certificate-pdf" target="_blank"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#34C759]/15 hover:bg-[#34C759]/25 text-[#1E7E34]">
+                  Certificate PDF
+                </a>
+                ${c.offer ? `<a onclick="event.stopPropagation()" href="/sign/${c.offer.signing_token}" target="_blank"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3]">
+                  E-Sign Portal ↗
+                </a>` : ""}
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              ${tasksHtml}
+            </div>
+            ${blockerBanner}
+            <div class="mt-4">
+              ${buildJourneyStepperHtml(c)}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderActionCenter() {
+      const container = document.getElementById("actionCenterList");
+      const items = overviewData.action_items || [];
+      if (!items.length) {
+        container.innerHTML = `
+          <div class="p-8 rounded-2xl bg-[#F5F5F7] text-center">
+            <p class="text-sm font-semibold text-[#1E7E34]">All Clear — Zero Equipment Blockers or Settlement Queries</p>
+            <p class="text-xs text-[#6E6E73] mt-1">All exiting employees and department clearance agents are progressing smoothly.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+        <div class="p-5 rounded-2xl border ${item.type === 'SETTLEMENT_DISPUTED' ? 'bg-[#FFF5F5] border-[#FF3B30]/30' : 'bg-[#FFFBF2] border-[#FF9500]/40'} flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1 max-w-2xl">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${item.type === 'SETTLEMENT_DISPUTED' ? 'bg-[#FF3B30] text-white' : 'bg-[#FF9500] text-white'}">
+                ${item.type === 'SETTLEMENT_DISPUTED' ? 'FINAL SETTLEMENT QUERY' : 'EQUIPMENT / CLEARANCE BLOCKER'}
+              </span>
+              ${roleBadgeHtml(item.role_category)}
+              <span class="text-xs text-[#6E6E73]">${item.department}</span>
+            </div>
+            <h4 class="text-sm font-bold text-[#1D1D1F]">${item.title}</h4>
+            <p class="text-xs text-[#424245]">Reason: "${item.reason}"</p>
+          </div>
+          <div class="flex items-center gap-2">
+            ${item.task_id ? `
+              <button onclick="advanceTask(${item.task_id})"
+                class="px-4 py-2 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white hover:bg-black/80">
+                Resolve & Advance Step
+              </button>
+            ` : ""}
+            <button onclick="openCandidateDrawer(${item.candidate_id})"
+              class="px-4 py-2 rounded-full text-xs font-semibold bg-white border border-black/15 text-[#1D1D1F]">
+              Inspect Employee Record
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function loadAgentsBoard() {
+      const res = await fetch("/api/agents/board");
+      const board = await res.json();
+      const grid = document.getElementById("agentsBoardGrid");
+
+      grid.innerHTML = board.map(col => `
+        <div class="apple-card p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-[#0071E3]">${col.department}</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-[#F5F5F7] font-semibold">${col.tasks.length} Active</span>
+            </div>
+            <h3 class="text-base font-bold text-[#1D1D1F] mt-1">${col.agent_name}</h3>
+            <p class="text-xs text-[#6E6E73] mt-1">${col.description}</p>
+            <div class="mt-2 flex flex-wrap gap-1">
+              ${col.applicable_roles.map(r => `<span class="text-[10px] px-2 py-0.5 rounded-md bg-black/5 font-semibold text-[#424245]">${r}</span>`).join("")}
+              ${col.depends_on ? `<span class="text-[10px] px-2 py-0.5 rounded-md bg-[#FF9500]/15 font-semibold text-[#B25000]">Waits for ${col.depends_on} Return</span>` : ""}
+            </div>
+
+            <div class="mt-4 space-y-2.5">
+              ${col.tasks.length ? col.tasks.map(t => `
+                <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-black/5 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-[#1D1D1F]">${t.candidate_name}</span>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white">${t.candidate_role}</span>
+                  </div>
+                  <p class="text-[11px] text-[#424245] font-medium">${t.current_stage}</p>
+                  <div class="w-full h-1.5 rounded-full bg-black/10 overflow-hidden">
+                    <div class="h-full ${t.status === 'COMPLETED' ? 'bg-[#34C759]' : t.status === 'BLOCKED' ? 'bg-[#FF3B30]' : 'bg-[#0071E3]'}" style="width:${t.progress_pct}%"></div>
+                  </div>
+                  <div class="flex items-center justify-between pt-1">
+                    <span class="text-[10px] text-[#6E6E73]">Step ${t.stage_idx + 1} of ${t.total_stages}</span>
+                    ${t.status !== 'COMPLETED' ? `
+                      <button onclick="advanceTask(${t.id})"
+                        class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#0071E3] text-white hover:bg-[#0077ED]">
+                        Advance Step →
+                      </button>
+                    ` : `<span class="text-[11px] font-semibold text-[#1E7E34]">✓ Cleared</span>`}
+                  </div>
+                </div>
+              `).join("") : `<p class="text-xs text-[#6E6E73] py-6 text-center">No active clearance tasks in queue</p>`}
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderActivityLog() {
+      const evEl = document.getElementById("auditEventsList");
+      const emEl = document.getElementById("outboxEmailsList");
+
+      evEl.innerHTML = (overviewData.recent_events || []).map(e => `
+        <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-black/5 text-xs space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-[#1D1D1F]">${e.agent_name}</span>
+            <span class="text-[10px] text-[#6E6E73]">${e.created_at}</span>
+          </div>
+          <p class="text-[#424245]">${e.message}</p>
+        </div>
+      `).join("");
+
+      emEl.innerHTML = (overviewData.recent_emails || []).map(m => `
+        <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-black/5 text-xs space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-[#0071E3]">${m.recipient_name} &lt;${m.recipient_email}&gt;</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-white font-semibold">${m.delivery_status}</span>
+          </div>
+          <p class="font-semibold text-[#1D1D1F]">${m.subject}</p>
+          <p class="text-[#6E6E73] whitespace-pre-line">${m.body_preview}</p>
+        </div>
+      `).join("");
+    }
+
+    async function openCandidateDrawer(candidateId, showBackdrop = true) {
+      openCandidateId = candidateId;
+      const res = await fetch(`/api/employees/${candidateId}`);
+      const c = await res.json();
+      const drawer = document.getElementById("candidateDrawer");
+      const backdrop = document.getElementById("candidateDrawerBackdrop");
+      const content = document.getElementById("drawerContent");
+      const st = c.settlement || {};
+
+      content.innerHTML = `
+        <div class="flex items-start justify-between gap-4 border-b border-black/10 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              ${roleBadgeHtml(c.role_category)}
+              ${c.offer ? offerStatusBadgeHtml(c.offer.status) : ""}
+            </div>
+            <h2 class="text-xl font-bold text-[#1D1D1F] mt-2">${c.full_name}</h2>
+            <p class="text-xs text-[#6E6E73]">${c.job_title} • ${c.department} • Last Working Day: <strong>${c.last_working_day || c.start_date}</strong></p>
+          </div>
+          <button onclick="closeCandidateDrawer()" class="p-2 rounded-full bg-[#F5F5F7] hover:bg-black/10">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <a href="/api/employees/${c.id}/clearance-pdf" target="_blank"
+            class="px-4 py-2 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white inline-flex items-center gap-1.5">
+            <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
+            Final Clearance PDF
+          </a>
+          <a href="/api/employees/${c.id}/certificate-pdf" target="_blank"
+            class="px-4 py-2 rounded-full text-xs font-semibold bg-[#34C759] text-white inline-flex items-center gap-1.5">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+            Certificate of Service PDF
+          </a>
+          ${c.offer ? `
+            <a href="/sign/${c.offer.signing_token}" target="_blank"
+              class="px-4 py-2 rounded-full text-xs font-semibold bg-[#0071E3] text-white inline-flex items-center gap-1.5">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              Open Employee E-Sign Portal
+            </a>
+          ` : ""}
+          ${c.tasks.length && c.overall_progress_pct < 100 ? `
+            <button onclick="advanceAllForCandidate(${c.id})"
+              class="px-4 py-2 rounded-full text-xs font-semibold bg-[#0071E3]/10 text-[#0071E3] hover:bg-[#0071E3]/20">
+              Advance All Unlocked Steps →
+            </button>
+          ` : ""}
+        </div>
+
+        <!-- Deterministic Final Dues Breakdown Box -->
+        <div class="p-4 rounded-2xl bg-[#F5F5F7] border border-black/5 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-[#0071E3]">Final Dues & Leave Encashment Calculation</p>
+            <span class="text-[11px] text-[#6E6E73]">Daily Rate: $${Number(st.daily_rate || 0).toLocaleString()}</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+            <div class="bg-white p-2.5 rounded-xl border border-black/5">
+              <p class="text-[10px] text-[#6E6E73]">Pro-Rata Salary (${c.days_worked_final_month}d)</p>
+              <p class="text-sm font-bold text-[#1D1D1F]">+$${Number(st.pro_rata_pay || 0).toLocaleString()}</p>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-black/5">
+              <p class="text-[10px] text-[#6E6E73]">Leave Encash (${c.unused_leave_days}d)</p>
+              <p class="text-sm font-bold text-[#1D1D1F]">+$${Number(st.leave_encashment || 0).toLocaleString()}</p>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-black/5">
+              <p class="text-[10px] text-[#6E6E73]">Asset Deduction</p>
+              <p class="text-sm font-bold text-[#FF3B30]">-$${Number(st.asset_deduction || 0).toLocaleString()}</p>
+            </div>
+            <div class="bg-[#0071E3]/10 p-2.5 rounded-xl border border-[#0071E3]/20">
+              <p class="text-[10px] font-semibold text-[#0071E3]">Net Payable</p>
+              <p class="text-sm font-bold text-[#0071E3]">$${Number(st.net_settlement || 0).toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asset Recovery & De-Provisioning Summary -->
+        <div class="grid grid-cols-2 gap-3 bg-[#F5F5F7] p-4 rounded-2xl text-xs">
+          <div>
+            <span class="text-[#6E6E73] block">Work Email Status</span>
+            <strong class="text-[#1D1D1F]">${c.work_email || "Pending"}</strong>
+          </div>
+          <div>
+            <span class="text-[#6E6E73] block">Laptop Handover Status</span>
+            <strong class="text-[#1D1D1F]">${c.assigned_laptop_serial || "Not Applicable (Intern)"}</strong>
+          </div>
+          <div>
+            <span class="text-[#6E6E73] block">Uber Commute Pass</span>
+            <strong class="text-[#1D1D1F]">${c.uber_pass_id || "Not Applicable (Intern)"}</strong>
+          </div>
+          <div>
+            <span class="text-[#6E6E73] block">Health Insurance Policy</span>
+            <strong class="text-[#1D1D1F]">${c.insurance_policy_id || "Not Applicable (Intern/Trainee)"}</strong>
+          </div>
+        </div>
+
+        <!-- Reverse Role-Based De-Provisioning Tasks -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#6E6E73]">
+              Reverse De-Provisioning Sequence (${c.expected_steps.join(" → ")})
+            </h3>
+            <span class="text-xs font-bold text-[#0071E3]">${c.clearance_pct}% Cleared</span>
+          </div>
+
+          ${c.tasks.map(t => `
+            <div class="p-4 rounded-2xl border ${t.status === 'BLOCKED' ? 'border-[#FF3B30]/40 bg-[#FFF5F5]' : 'border-black/10 bg-white'} space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#0071E3]">${t.department}</span>
+                  <h4 class="text-sm font-bold text-[#1D1D1F]">${t.agent_name}</h4>
+                </div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#F5F5F7]">${t.status}</span>
+              </div>
+
+              <!-- 5-Stage Stepper -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="font-semibold text-[#1D1D1F]">Current Step: ${t.current_stage}</span>
+                  <span class="text-[#6E6E73]">${t.stage_idx + 1} / ${t.total_stages}</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-[#F5F5F7] overflow-hidden">
+                  <div class="h-full ${t.status === 'COMPLETED' ? 'bg-[#34C759]' : t.status === 'BLOCKED' ? 'bg-[#FF3B30]' : 'bg-[#0071E3]'}" style="width: ${t.progress_pct}%"></div>
+                </div>
+              </div>
+
+              ${t.blocker_reason ? `<p class="text-xs text-[#C62828] font-medium">⚠️ Blocker: ${t.blocker_reason}</p>` : ""}
+              ${t.artifact_value ? `<p class="text-xs text-[#1E7E34] font-semibold">✓ Clearance Record: ${t.artifact_value}</p>` : ""}
+
+              <div class="flex items-center justify-between pt-2 border-t border-black/5">
+                <button onclick="promptBlocker(${t.id})"
+                  class="text-xs font-semibold text-[#FF3B30] hover:underline">
+                  Flag Equipment / Clearance Issue
+                </button>
+                ${t.status !== 'COMPLETED' ? `
+                  <button onclick="advanceTask(${t.id})"
+                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#0071E3] text-white hover:bg-[#0077ED]">
+                    Advance to Next Step →
+                  </button>
+                ` : `<span class="text-xs font-bold text-[#1E7E34]">Cleared</span>`}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- Employee Activity History -->
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[#6E6E73]">Employee Exit Audit Log</h3>
+          <div class="space-y-2 max-h-60 overflow-y-auto">
+            ${(c.events || []).map(ev => `
+              <div class="p-3 rounded-xl bg-[#F5F5F7] text-xs">
+                <div class="flex justify-between font-semibold">
+                  <span>${ev.agent_name}</span>
+                  <span class="text-[10px] text-[#6E6E73]">${ev.created_at}</span>
+                </div>
+                <p class="text-[#424245] mt-0.5">${ev.message}</p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      if (showBackdrop) {
+        backdrop.classList.remove("hidden");
+        drawer.classList.remove("translate-x-full");
+      }
+      lucide.createIcons();
+    }
+
+    function closeCandidateDrawer() {
+      openCandidateId = null;
+      document.getElementById("candidateDrawerBackdrop").classList.add("hidden");
+      document.getElementById("candidateDrawer").classList.add("translate-x-full");
+    }
+
+    async function advanceTask(taskId) {
+      const res = await fetch(`/api/tasks/${taskId}/advance`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.detail || "Unable to advance clearance step");
+      }
+      await fetchOverview();
+      if (!document.getElementById("tab-agents").classList.contains("hidden")) {
+        await loadAgentsBoard();
+      }
+    }
+
+    async function advanceAllForCandidate(candidateId) {
+      await fetch(`/api/employees/${candidateId}/advance-all`, { method: "POST" });
+      await fetchOverview();
+    }
+
+    async function promptBlocker(taskId) {
+      const reason = prompt(
+        "Describe the clearance or equipment return blocker:",
+        "Returned workstation has missing power adapter or screen damage requiring IT inspection."
+      );
+      if (!reason) return;
+      await fetch(`/api/tasks/${taskId}/block`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ blocker_reason: reason }),
+      });
+      await fetchOverview();
+    }
+
+    function setRoleFilter(role) {
+      activeRoleFilter = role;
+      ["ALL", "EMPLOYEE", "TRAINEE", "INTERN"].forEach(r => {
+        const btn = document.getElementById(`filter-${r}`);
+        if (r === role) {
+          btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white";
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-[#424245] border border-black/10";
+        }
+      });
+      renderCandidatesGrid();
+    }
+
+    function switchTab(tab) {
+      const tabs = ["pipeline", "actions", "launchpad", "agents", "templates", "activity"];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== tab);
+        const nav = document.getElementById(`nav-${t}`);
+        if (nav) nav.classList.toggle("active", t === tab);
+      });
+
+      const titles = {
+        pipeline: ["Exit Clearance Tracking", "Track resignations, department asset handovers, final settlements, and Certificates of Service"],
+        actions: ["HR Action Center", "Resolve employee Final Settlement queries and unreturned equipment blockers"],
+        launchpad: ["Exit Launchpad", "Log single or cohort exit notices with automatic pro-rata & leave encashment calculation"],
+        agents: ["Clearance Agents", "Live status across Health Insurance, Uber Pass, Laptop Return, and IT Email Deactivation Agents"],
+        templates: ["Final Dues & Templates", "Customize role-specific Final Clearance & Settlement templates and email settings"],
+        activity: ["Activity History", "Complete audit log of sent clearance statements, equipment inspections, and agent handoffs"],
+      };
+      document.getElementById("pageTitle").textContent = titles[tab][0];
+      document.getElementById("pageSubtitle").textContent = titles[tab][1];
+
+      if (tab === "agents") loadAgentsBoard();
+      if (tab === "templates") loadSettingsAndTemplates();
+      if (tab === "launchpad") updateLiveSettlementPreview();
+    }
+
+    document.getElementById("singleOfferForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = Object.fromEntries(fd.entries());
+      payload.compensation_amount = parseFloat(payload.compensation_amount);
+      payload.days_worked_final_month = parseInt(payload.days_worked_final_month || "18", 10);
+      payload.unused_leave_days = parseFloat(payload.unused_leave_days || "6.0");
+      payload.asset_deduction = parseFloat(payload.asset_deduction || "0");
+      const res = await fetch("/api/employees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        e.target.reset();
+        await fetchOverview();
+        switchTab("pipeline");
+      }
+    });
+
+    async function launchSampleBatch() {
+      const batch = {
+        employees: [
+          {
+            full_name: "Victor Krum",
+            personal_email: "victor.krum@alumni.org",
+            phone: "+1 (415) 820-9011",
+            role_category: "EMPLOYEE",
+            job_title: "Staff Backend Engineer",
+            department: "Core Infrastructure",
+            manager_name: "Elena Rostova",
+            location: "San Francisco, CA",
+            compensation_amount: 188000,
+            compensation_period: "per year",
+            last_working_day: "2026-06-05",
+            exit_type: "Voluntary Resignation",
+            days_worked_final_month: 15,
+            unused_leave_days: 8.0,
+            asset_deduction: 0.0,
+          },
+          {
+            full_name: "Mei-Ling Zhou",
+            personal_email: "meiling.zhou@columbia.edu",
+            phone: "+1 (212) 641-3391",
+            role_category: "TRAINEE",
+            job_title: "Product Analytics Graduate Trainee",
+            department: "Data & Insights",
+            manager_name: "Marcus Sterling",
+            location: "New York, NY",
+            compensation_amount: 82000,
+            compensation_period: "per year",
+            last_working_day: "2026-06-05",
+            exit_type: "End of Rotational Contract",
+            days_worked_final_month: 15,
+            unused_leave_days: 4.5,
+            asset_deduction: 0.0,
+          },
+          {
+            full_name: "Noah Goldstein",
+            personal_email: "noah.goldstein@mit.edu",
+            phone: "+1 (617) 309-1182",
+            role_category: "INTERN",
+            job_title: "Data Science Intern",
+            department: "AI Platform & Core ML",
+            manager_name: "Elena Rostova",
+            location: "Boston, MA (Remote)",
+            compensation_amount: 5400,
+            compensation_period: "per month",
+            last_working_day: "2026-06-05",
+            exit_type: "End of Internship Term",
+            days_worked_final_month: 15,
+            unused_leave_days: 1.5,
+            asset_deduction: 0.0,
+          },
+        ],
+      };
+      await fetch("/api/employees/batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(batch),
+      });
+      await fetchOverview();
+      switchTab("pipeline");
+    }
+
+    async function loadSettingsAndTemplates() {
+      const [tplRes, smtpRes] = await Promise.all([
+        fetch("/api/settings/templates"),
+        fetch("/api/settings/smtp"),
+      ]);
+      templatesCache = await tplRes.json();
+      const smtp = await smtpRes.json();
+
+      document.getElementById("smtpHost").value = smtp.smtp_host || "";
+      document.getElementById("smtpPort").value = smtp.smtp_port || 587;
+      document.getElementById("smtpUser").value = smtp.smtp_user || "";
+      document.getElementById("smtpPass").value = smtp.smtp_password || "";
+      document.getElementById("smtpFromEmail").value = smtp.from_email || "";
+      document.getElementById("smtpEnabled").checked = Boolean(smtp.enabled);
+
+      loadTemplateRole(activeTemplateRole);
+    }
+
+    function loadTemplateRole(role) {
+      activeTemplateRole = role;
+      ["EMPLOYEE", "TRAINEE", "INTERN"].forEach(r => {
+        const btn = document.getElementById(`tplBtn-${r}`);
+        btn.className = r === role
+          ? "px-3 py-1.5 rounded-full text-xs font-semibold bg-[#1D1D1F] text-white"
+          : "px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F5F5F7] text-[#424245]";
+      });
+      const t = templatesCache[role];
+      if (!t) return;
+      document.getElementById("tplCompany").value = t.company_name;
+      document.getElementById("tplTitle").value = t.title;
+      document.getElementById("tplIntro").value = t.intro_text;
+      document.getElementById("tplTerms").value = (t.terms || []).join("\n");
+      document.getElementById("tplBenefits").value = (t.benefits || []).join("\n");
+      document.getElementById("tplFooter").value = t.footer_text;
+    }
+
+    async function saveCurrentTemplate() {
+      const payload = {
+        company_name: document.getElementById("tplCompany").value,
+        title: document.getElementById("tplTitle").value,
+        intro_text: document.getElementById("tplIntro").value,
+        terms_json: document.getElementById("tplTerms").value.split("\n").map(s => s.trim()).filter(Boolean),
+        benefits_json: document.getElementById("tplBenefits").value.split("\n").map(s => s.trim()).filter(Boolean),
+        footer_text: document.getElementById("tplFooter").value,
+      };
+      const res = await fetch(`/api/settings/templates/${activeTemplateRole}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        templatesCache[activeTemplateRole] = await res.json();
+        alert(`Saved ${activeTemplateRole} Final Clearance template.`);
+      }
+    }
+
+    async function saveSmtpSettings() {
+      const payload = {
+        smtp_host: document.getElementById("smtpHost").value,
+        smtp_port: parseInt(document.getElementById("smtpPort").value || "587", 10),
+        smtp_user: document.getElementById("smtpUser").value,
+        smtp_password: document.getElementById("smtpPass").value,
+        from_email: document.getElementById("smtpFromEmail").value,
+        from_name: "Acme People Operations — Exit & Clearance Team",
+        enabled: document.getElementById("smtpEnabled").checked,
+      };
+      await fetch("/api/settings/smtp", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      alert("Email delivery settings updated.");
+    }
+
+    async function resetDemoData() {
+      await fetch("/api/demo/reset", { method: "POST" });
+      closeCandidateDrawer();
+      await fetchOverview();
+    }
+
+    checkSsoSession();
+    fetchOverview();
+  </script>
+</body>
+</html>

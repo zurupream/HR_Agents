@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Exit Clearance & Final Settlement Portal — Acme Enterprise Corp.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --apple-bg: #F5F5F7;
+      --apple-card: #FFFFFF;
+      --apple-ink: #1D1D1F;
+      --apple-muted: #6E6E73;
+      --apple-blue: #0071E3;
+      --apple-green: #34C759;
+      --apple-orange: #FF9500;
+      --apple-red: #FF3B30;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, sans-serif;
+      background-color: var(--apple-bg);
+      color: var(--apple-ink);
+      -webkit-font-smoothing: antialiased;
+    }
+    .signature-font {
+      font-family: "Snell Roundhand", "Brush Script MT", "Apple Chancery", Georgia, serif;
+    }
+    .apple-card {
+      background: var(--apple-card);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+      border-radius: 18px;
+    }
+    .btn-primary {
+      background: var(--apple-blue);
+      color: #fff;
+      border-radius: 9999px;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .btn-primary:hover { background: #0077ED; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Top Brand Header -->
+  <header class="bg-white/85 backdrop-blur-md border-b border-black/5 sticky top-0 z-30">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-[#1D1D1F] flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+          HR
+        </div>
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">Employee Exit & Final Settlement Portal</p>
+          <h1 id="hdrCompanyName" class="text-sm font-semibold text-[#1D1D1F]">Acme Enterprise Corp.</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <a id="btnDownloadPdf" href="#" target="_blank"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium bg-[#F5F5F7] hover:bg-black/10 text-[#1D1D1F] transition">
+          <i data-lucide="file-Down" class="w-3.5 h-3.5"></i>
+          Clearance Statement PDF
+        </a>
+        <a id="btnCertificatePdf" href="#" target="_blank"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3] transition">
+          <i data-lucide="award" class="w-3.5 h-3.5"></i>
+          Certificate of Service PDF
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
+    <div id="loadingState" class="apple-card p-12 text-center">
+      <p class="text-sm text-[#6E6E73]">Loading your Final Clearance & Settlement Statement...</p>
+    </div>
+
+    <div id="errorState" class="hidden apple-card p-12 text-center">
+      <h2 class="text-lg font-semibold text-[#1D1D1F]">Clearance Statement Link Not Found</h2>
+      <p class="text-sm text-[#6E6E73] mt-1">Please contact People Operations for an updated clearance statement link.</p>
+    </div>
+
+    <div id="offerContainer" class="hidden space-y-6">
+      <!-- Status Banner -->
+      <div id="statusBanner" class="rounded-2xl p-4 border flex items-center justify-between"></div>
+
+      <!-- Clearance & Final Settlement Document Card -->
+      <div class="apple-card overflow-hidden">
+        <!-- Dark Executive Banner -->
+        <div class="bg-[#1D1D1F] text-white px-8 py-7">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span id="roleBadge" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/15 text-white mb-2"></span>
+              <h2 id="docTitle" class="text-2xl font-bold tracking-tight">Employee Exit Clearance & Final Settlement Statement</h2>
+              <p id="docRef" class="text-xs text-white/65 mt-1"></p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-white/65 uppercase tracking-wider">Net Final Settlement Payable</p>
+              <p id="docCompensation" class="text-2xl font-bold text-[#34C759]"></p>
+              <p id="docLastDaySub" class="text-[11px] text-white/70 mt-0.5"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Body -->
+        <div class="p-8 space-y-6">
+          <p id="docGreeting" class="text-base font-semibold text-[#1D1D1F]"></p>
+          <p id="docIntro" class="text-sm text-[#424245] leading-relaxed"></p>
+
+          <!-- Key Exit Details Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-[#F5F5F7] p-5 rounded-2xl border border-black/5">
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Position & Department</p>
+              <p id="metaJobDept" class="text-sm font-semibold text-[#1D1D1F] mt-0.5"></p>
+            </div>
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Reporting Manager</p>
+              <p id="metaManager" class="text-sm font-semibold text-[#1D1D1F] mt-0.5"></p>
+            </div>
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Exit Type</p>
+              <p id="metaExitType" class="text-sm font-semibold text-[#1D1D1F] mt-0.5"></p>
+            </div>
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Date of Joining</p>
+              <p id="metaJoinDate" class="text-sm font-semibold text-[#1D1D1F] mt-0.5"></p>
+            </div>
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Last Working Day</p>
+              <p id="metaLastDay" class="text-sm font-semibold text-[#0071E3] mt-0.5"></p>
+            </div>
+            <div>
+              <p class="text-[11px] font-medium uppercase text-[#6E6E73]">Assigned Laptop / Email</p>
+              <p id="metaAssets" class="text-sm font-semibold text-[#1D1D1F] mt-0.5"></p>
+            </div>
+          </div>
+
+          <!-- Deterministic Final Settlement Financial Breakdown -->
+          <div class="bg-[#F5F5F7]/70 rounded-2xl p-5 border border-black/5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#0071E3]">Final Dues & Leave Encashment Breakdown</h3>
+              <span id="baseRateBadge" class="text-xs text-[#6E6E73]"></span>
+            </div>
+            <div class="space-y-2.5 text-sm">
+              <div class="flex items-center justify-between py-1.5 border-b border-black/5">
+                <span id="lblProRata" class="text-[#424245]">1. Pro-Rata Final Month Salary</span>
+                <span id="valProRata" class="font-semibold text-[#1D1D1F]"></span>
+              </div>
+              <div class="flex items-center justify-between py-1.5 border-b border-black/5">
+                <span id="lblLeaveEncash" class="text-[#424245]">2. Accrued Unused Leave Encashment</span>
+                <span id="valLeaveEncash" class="font-semibold text-[#1D1D1F]"></span>
+              </div>
+              <div class="flex items-center justify-between py-1.5 border-b border-black/5">
+                <span id="lblDeduction" class="text-[#424245]">3. Less: Unreturned Equipment / Advance Recovery</span>
+                <span id="valDeduction" class="font-semibold text-[#FF3B30]"></span>
+              </div>
+              <div class="flex items-center justify-between pt-2 text-base font-bold">
+                <span class="text-[#1D1D1F]">Net Final Settlement Payable</span>
+                <span id="valNetSettlement" class="text-[#0071E3]"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reverse De-Provisioning & Department Clearance Checklist -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#0071E3] mb-2.5">Department Reverse Clearance Progress</h3>
+            <div id="clearanceChecklist" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+          </div>
+
+          <!-- Terms -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#0071E3] mb-2.5">Clearance Terms & Separation Commitments</h3>
+            <ol id="termsList" class="list-decimal list-inside space-y-2 text-sm text-[#424245]"></ol>
+          </div>
+
+          <!-- Benefits & Post-Exit Entitlements -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#0071E3] mb-2.5">Post-Exit Entitlements & Documentation</h3>
+            <ul id="benefitsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-[#424245]"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive E-Signature / Settlement Query Action Card -->
+      <div id="actionCard" class="apple-card p-8">
+        <h3 class="text-lg font-bold text-[#1D1D1F]">Digital Clearance Sign-Off & Settlement Approval</h3>
+        <p class="text-sm text-[#6E6E73] mt-1">
+          Type your full legal name below to confirm equipment handover and approve your Final Settlement for direct deposit, or submit a settlement calculation query to HR.
+        </p>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#6E6E73] mb-2">
+                Type Your Full Legal Name
+              </label>
+              <input id="signatureInput" type="text" placeholder="e.g. Sophia Martinez"
+                class="w-full px-4 py-3 rounded-xl border border-black/15 focus:outline-none focus:border-[#0071E3] text-sm font-medium" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#6E6E73] mb-2">
+                Personal Forwarding Email (For Tax Forms & Certificate of Service)
+              </label>
+              <input id="forwardingInput" type="email" placeholder="your.name@personal-email.com"
+                class="w-full px-4 py-2.5 rounded-xl border border-black/15 focus:outline-none focus:border-[#0071E3] text-sm" />
+            </div>
+            <label class="flex items-start gap-2.5 text-xs text-[#424245] cursor-pointer">
+              <input id="chkHandover" type="checkbox" checked class="mt-0.5 rounded border-black/20 text-[#0071E3]" />
+              <span>I confirm that I have returned (or scheduled return of) all assigned company equipment and completed knowledge transfer with my manager.</span>
+            </label>
+          </div>
+          <div class="bg-[#F5F5F7] rounded-2xl p-5 border border-black/5 text-center">
+            <p class="text-[11px] uppercase tracking-wider text-[#6E6E73] mb-1">Live Digital Signature Preview</p>
+            <p id="signaturePreview" class="signature-font text-3xl text-[#1D1D1F] min-h-[42px]">Your Signature</p>
+            <p class="text-[11px] text-[#6E6E73] mt-2">Verified Electronic Clearance Sign-Off</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-black/5">
+          <button id="btnToggleDecline" type="button"
+            class="px-4 py-2.5 rounded-full text-xs font-semibold text-[#FF3B30] bg-[#FF3B30]/10 hover:bg-[#FF3B30]/15 transition">
+            Raise a Final Settlement or Leave Balance Query
+          </button>
+          <button id="btnAcceptOffer" type="button"
+            class="btn-primary px-6 py-3 text-sm inline-flex items-center gap-2 shadow-sm">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            Sign Final Clearance & Approve Settlement
+          </button>
+        </div>
+
+        <!-- Settlement Dispute / Query Subform -->
+        <div id="declineDrawer" class="hidden mt-5 pt-5 border-t border-black/10 bg-[#FFF5F5] p-5 rounded-2xl">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#FF3B30] mb-1.5">
+            Describe Your Final Settlement or Leave Balance Query (Sent Directly to HR Manager)
+          </label>
+          <textarea id="declineReasonInput" rows="3"
+            placeholder="e.g., My unused vacation balance should include 4.5 carryover days approved in Q1..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-[#FF3B30]/30 text-sm bg-white focus:outline-none"></textarea>
+          <div class="mt-3 flex justify-end gap-2">
+            <button id="btnCancelDecline" type="button" class="px-4 py-2 rounded-full text-xs font-medium text-[#6E6E73]">
+              Cancel
+            </button>
+            <button id="btnConfirmDecline" type="button"
+              class="px-5 py-2 rounded-full text-xs font-semibold bg-[#FF3B30] text-white hover:bg-[#D7281E]">
+              Submit Query to HR Action Center
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const token = window.location.pathname.split("/sign/")[1];
+    let currentCandidate = null;
+
+    function replaceVars(text, cand, tpl) {
+      if (!text) return "";
+      const map = {
+        company_name: tpl.company_name || "Acme Enterprise Corp.",
+        full_name: cand.full_name,
+        job_title: cand.job_title,
+        department: cand.department,
+        manager_name: cand.manager_name,
+        location: cand.location,
+        compensation: `$${Number(cand.compensation_amount).toLocaleString()} ${cand.compensation_period}`,
+        start_date: cand.last_working_day || cand.start_date,
+        last_working_day: cand.last_working_day || cand.start_date,
+        join_date: cand.join_date || "2023-03-15",
+        exit_type: cand.exit_type || "Voluntary Resignation",
+        unused_leave_days: String(cand.unused_leave_days ?? 6),
+        work_email: cand.work_email || "employee@acme.com",
+        assigned_laptop_serial: cand.assigned_laptop_serial || "N/A",
+        uber_pass_id: cand.uber_pass_id || "N/A",
+        insurance_policy_id: cand.insurance_policy_id || "N/A",
+      };
+      let out = text;
+      Object.entries(map).forEach(([k, v]) => {
+        out = out.replaceAll(`{${k}}`, v);
+      });
+      return out;
+    }
+
+    async function loadOffer() {
+      try {
+        const res = await fetch(`/api/sign/${token}`);
+        if (!res.ok) throw new Error("Not found");
+        const data = await res.json();
+        currentCandidate = data.employee || data.candidate;
+        const tpl = data.template;
+
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("offerContainer").classList.remove("hidden");
+
+        document.getElementById("hdrCompanyName").textContent = tpl.company_name;
+        document.getElementById("btnDownloadPdf").href = `/api/employees/${currentCandidate.id}/clearance-pdf`;
+        document.getElementById("btnCertificatePdf").href = `/api/employees/${currentCandidate.id}/certificate-pdf`;
+        document.getElementById("roleBadge").textContent = `${currentCandidate.role_category} EXIT CLEARANCE`;
+        document.getElementById("docTitle").textContent = replaceVars(tpl.title, currentCandidate, tpl);
+        document.getElementById("docRef").textContent = `Exit Reference: EXIT-${String(currentCandidate.id).padStart(4, "0")} • Logged ${currentCandidate.notice_date || currentCandidate.offer.sent_at.slice(0, 10)}`;
+
+        const st = currentCandidate.settlement || {};
+        document.getElementById("docCompensation").textContent = `$${Number(st.net_settlement || currentCandidate.net_settlement || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById("docLastDaySub").textContent = `Last Working Day: ${currentCandidate.last_working_day || currentCandidate.start_date}`;
+        document.getElementById("docGreeting").textContent = `Dear ${currentCandidate.full_name},`;
+        document.getElementById("docIntro").textContent = replaceVars(tpl.intro_text, currentCandidate, tpl);
+
+        document.getElementById("metaJobDept").textContent = `${currentCandidate.job_title} (${currentCandidate.department})`;
+        document.getElementById("metaManager").textContent = currentCandidate.manager_name;
+        document.getElementById("metaExitType").textContent = currentCandidate.exit_type || "Voluntary Resignation";
+        document.getElementById("metaJoinDate").textContent = currentCandidate.join_date || "2023-03-15";
+        document.getElementById("metaLastDay").textContent = currentCandidate.last_working_day || currentCandidate.start_date;
+        document.getElementById("metaAssets").textContent = `${currentCandidate.assigned_laptop_serial || "No Laptop"} • ${currentCandidate.work_email || ""}`;
+
+        // Financial Breakdown
+        document.getElementById("baseRateBadge").textContent = `Base: $${Number(currentCandidate.compensation_amount).toLocaleString()} ${currentCandidate.compensation_period} ($${Number(st.daily_rate || 0).toLocaleString()}/day)`;
+        document.getElementById("lblProRata").textContent = `1. Pro-Rata Final Month Salary (${currentCandidate.days_worked_final_month} working days)`;
+        document.getElementById("valProRata").textContent = `+ $${Number(st.pro_rata_pay || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById("lblLeaveEncash").textContent = `2. Accrued Unused Leave Encashment (${currentCandidate.unused_leave_days} days)`;
+        document.getElementById("valLeaveEncash").textContent = `+ $${Number(st.leave_encashment || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById("lblDeduction").textContent = `3. Less: Equipment / Advance Recovery (${currentCandidate.deduction_notes || "None"})`;
+        document.getElementById("valDeduction").textContent = `- $${Number(st.asset_deduction || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById("valNetSettlement").textContent = `$${Number(st.net_settlement || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+        // Department Clearance Checklist
+        const checklistEl = document.getElementById("clearanceChecklist");
+        checklistEl.innerHTML = "";
+        (currentCandidate.tasks || []).forEach(t => {
+          const isDone = t.status === "COMPLETED";
+          const isBlocked = t.status === "BLOCKED";
+          const pillCls = isDone
+            ? "bg-[#34C759]/15 text-[#1E7E34]"
+            : isBlocked
+            ? "bg-[#FF3B30]/15 text-[#C62828]"
+            : "bg-[#0071E3]/10 text-[#0071E3]";
+          const div = document.createElement("div");
+          div.className = "bg-[#F5F5F7] rounded-xl px-3.5 py-2.5 border border-black/5 flex items-center justify-between gap-2";
+          div.innerHTML = `
+            <div>
+              <p class="text-xs font-semibold text-[#1D1D1F]">${t.agent_name}</p>
+              <p class="text-[11px] text-[#6E6E73]">${t.current_stage}</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${pillCls}">${t.status}</span>
+          `;
+          checklistEl.appendChild(div);
+        });
+
+        const termsEl = document.getElementById("termsList");
+        termsEl.innerHTML = "";
+        (tpl.terms || []).forEach(t => {
+          const li = document.createElement("li");
+          li.textContent = replaceVars(t, currentCandidate, tpl);
+          termsEl.appendChild(li);
+        });
+
+        const benEl = document.getElementById("benefitsList");
+        benEl.innerHTML = "";
+        (tpl.benefits || []).forEach(b => {
+          const li = document.createElement("li");
+          li.className = "flex items-start gap-2 bg-[#F5F5F7] px-3.5 py-2.5 rounded-xl";
+          li.innerHTML = `<span class="text-[#34C759] font-bold">✓</span><span>${replaceVars(b, currentCandidate, tpl)}</span>`;
+          benEl.appendChild(li);
+        });
+
+        const sigInput = document.getElementById("signatureInput");
+        sigInput.value = currentCandidate.full_name;
+        document.getElementById("signaturePreview").textContent = currentCandidate.full_name;
+        document.getElementById("forwardingInput").value = currentCandidate.personal_email || "";
+
+        renderStatusState(currentCandidate.offer);
+        lucide.createIcons();
+      } catch (e) {
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("errorState").classList.remove("hidden");
+      }
+    }
+
+    function renderStatusState(offer) {
+      const banner = document.getElementById("statusBanner");
+      const actionCard = document.getElementById("actionCard");
+
+      if (offer.status === "ACCEPTED") {
+        banner.className = "rounded-2xl p-5 border bg-[#EBF9EE] border-[#34C759]/40 flex flex-wrap items-center justify-between gap-4";
+        banner.innerHTML = `
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-[#1E7E34]">Final Clearance Signed & Approved</p>
+            <p class="text-sm font-semibold text-[#1D1D1F] mt-0.5">
+              Electronically signed as "${offer.signature_text}" on ${offer.responded_at}. Your Net Final Settlement is approved and your Certificate of Service PDF is ready above.
+            </p>
+          </div>
+          <a href="/" class="px-4 py-2 rounded-full bg-[#1D1D1F] text-white text-xs font-semibold">Open HR Offboarding Dashboard →</a>
+        `;
+        actionCard.classList.add("hidden");
+      } else if (offer.status === "DECLINED") {
+        banner.className = "rounded-2xl p-5 border bg-[#FFF2F2] border-[#FF3B30]/40 flex flex-wrap items-center justify-between gap-4";
+        banner.innerHTML = `
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-[#C62828]">Final Settlement Query Logged with HR</p>
+            <p class="text-sm font-semibold text-[#1D1D1F] mt-0.5">
+              Query Reason: "${offer.decline_reason}". People Operations & your manager have been notified in the HR Action Center.
+            </p>
+          </div>
+          <a href="/" class="px-4 py-2 rounded-full bg-[#1D1D1F] text-white text-xs font-semibold">View in HR Action Center →</a>
+        `;
+        actionCard.classList.add("hidden");
+      } else {
+        banner.className = "rounded-2xl p-4 border bg-white border-black/10 flex items-center justify-between";
+        banner.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#0071E3]"></span>
+            <p class="text-xs font-medium text-[#424245]">Awaiting your digital clearance signature • Reverse department clearance is active</p>
+          </div>
+          <span class="text-[11px] font-semibold text-[#0071E3] uppercase">${offer.status}</span>
+        `;
+        actionCard.classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("signatureInput").addEventListener("input", (e) => {
+      document.getElementById("signaturePreview").textContent = e.target.value || "Your Signature";
+    });
+
+    document.getElementById("btnAcceptOffer").addEventListener("click", async () => {
+      const sig = document.getElementById("signatureInput").value.trim();
+      const fwd = document.getElementById("forwardingInput").value.trim();
+      const handover = document.getElementById("chkHandover").checked;
+      if (!sig) {
+        alert("Please type your full legal name to sign.");
+        return;
+      }
+      const res = await fetch(`/api/sign/${token}/accept`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          signature_name: sig,
+          forwarding_address: fwd,
+          handover_confirmed: handover,
+        }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        renderStatusState(updated.offer);
+      }
+    });
+
+    document.getElementById("btnToggleDecline").addEventListener("click", () => {
+      document.getElementById("declineDrawer").classList.toggle("hidden");
+    });
+
+    document.getElementById("btnCancelDecline").addEventListener("click", () => {
+      document.getElementById("declineDrawer").classList.add("hidden");
+    });
+
+    document.getElementById("btnConfirmDecline").addEventListener("click", async () => {
+      const reason = document.getElementById("declineReasonInput").value.trim() || "Requesting review of accrued unused leave encashment calculation.";
+      const res = await fetch(`/api/sign/${token}/dispute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        renderStatusState(updated.offer);
+      }
+    });
+
+    loadOffer();
+  </script>
+</body>
+</html>

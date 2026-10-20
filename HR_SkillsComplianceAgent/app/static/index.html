@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certification &amp; Skills Agent — Learning, Certification Expiry &amp; Skills Matrix</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg-canvas: #F5F5F7;
+      --bg-card: #FFFFFF;
+      --text-primary: #1D1D1F;
+      --text-secondary: #515154;
+      --text-muted: #86868B;
+      --apple-blue: #0071E3;
+      --apple-blue-hover: #0077ED;
+      --border-subtle: #E5E5EA;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
+      --shadow-elevated: 0 12px 34px rgba(0, 0, 0, 0.08);
+      --radius-card: 18px;
+      --radius-pill: 999px;
+      --badge-valid-bg: #E8F8EE;
+      --badge-valid-fg: #146C32;
+      --badge-30-bg: #FFF4E5;
+      --badge-30-fg: #B25000;
+      --badge-60-bg: #EBF4FF;
+      --badge-60-fg: #0055B3;
+      --badge-expired-bg: #FFEBEA;
+      --badge-expired-fg: #C92A2A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SIGN-IN PAGE (2-PANEL EXECUTIVE WORKFLOW + SSO) ─── */
+    #auth-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      background: radial-gradient(circle at top left, #FFFFFF 0%, #F5F5F7 65%);
+    }
+
+    .auth-shell {
+      max-width: 1160px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.2fr 0.95fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 960px) {
+      .auth-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .workflow-panel {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 40px 38px;
+      box-shadow: var(--shadow-elevated);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .eyebrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--apple-blue);
+      background: #EBF4FF;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      width: fit-content;
+      margin-bottom: 16px;
+    }
+
+    .workflow-panel h1 {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .workflow-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .diagram-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .workflow-step-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: #FAFAFC;
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .workflow-step-card:hover {
+      transform: translateY(-1px);
+      border-color: #C7C7CC;
+    }
+
+    .step-number-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: var(--apple-blue);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .workflow-connector {
+      display: flex;
+      align-items: center;
+      padding-left: 36px;
+      color: var(--apple-blue);
+      font-size: 12px;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .workflow-footer {
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* Right Auth Panel */
+    .sso-panel {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: var(--shadow-elevated);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .sso-panel h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.015em;
+    }
+
+    .sso-panel p.lead {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      background-color: var(--apple-blue);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--apple-blue-hover);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.99);
+    }
+
+    .btn-secondary {
+      background-color: #F2F2F7;
+      color: var(--text-primary);
+      border: 1px solid #D1D1D6;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #E5E5EA;
+    }
+
+    .btn-google-fallback {
+      background: #FFFFFF;
+      color: #1D1D1F;
+      border: 1px solid #D1D1D6;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 8px;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-google-fallback:hover {
+      background: #F5F5F7;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid #D1D1D6;
+      background: #FAFAFC;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .input-control:focus {
+      border-color: var(--apple-blue);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.14);
+    }
+
+    .auth-feedback {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: none;
+    }
+
+    /* ─── FROSTED GLASS HEADER ─── */
+    #app-screen {
+      display: none;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    .frosted-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 14px 32px;
+    }
+
+    .header-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0071E3 0%, #004999 100%);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-titles h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-titles span {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: #F2F2F7;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ─── MAIN CONTAINER & KPI STRIP ─── */
+    .main-container {
+      max-width: 1360px;
+      margin: 26px auto 0;
+      padding: 0 28px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1120px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .kpi-foot {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── NAVIGATION TABS ─── */
+    .workspace-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .segmented-tabs {
+      display: inline-flex;
+      background: #E5E5EA;
+      padding: 4px;
+      border-radius: 13px;
+      gap: 4px;
+    }
+
+    .seg-tab {
+      border: none;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .seg-tab.active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    .action-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-apple-sm {
+      background: var(--apple-blue);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 15px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-apple-sm:hover {
+      background: var(--apple-blue-hover);
+    }
+
+    .btn-outline-sm {
+      background: #FFFFFF;
+      color: var(--text-primary);
+      border: 1px solid #D1D1D6;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-outline-sm:hover {
+      background: #F2F2F7;
+    }
+
+    /* ─── SURFACE CARDS & TRACKER TABLE ─── */
+    .surface-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-subtle);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .filter-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .status-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      border: 1px solid var(--border-subtle);
+      background: #FAFAFC;
+      color: var(--text-secondary);
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill.active {
+      background: var(--apple-blue);
+      color: #FFFFFF;
+      border-color: var(--apple-blue);
+    }
+
+    .search-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table.apple-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table.apple-table th {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #FAFAFC;
+    }
+
+    table.apple-table td {
+      padding: 15px 14px;
+      border-bottom: 1px solid #F0F0F5;
+      font-size: 13.5px;
+      vertical-align: middle;
+    }
+
+    table.apple-table tr:hover td {
+      background: #FAFAFC;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-valid {
+      background: var(--badge-valid-bg);
+      color: var(--badge-valid-fg);
+    }
+
+    .badge-30 {
+      background: var(--badge-30-bg);
+      color: var(--badge-30-fg);
+    }
+
+    .badge-60 {
+      background: var(--badge-60-bg);
+      color: var(--badge-60-fg);
+    }
+
+    .badge-expired {
+      background: var(--badge-expired-bg);
+      color: var(--badge-expired-fg);
+    }
+
+    .bond-tag {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #0055B3;
+      background: #EBF4FF;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* ─── ROLE SKILLS & CERTIFICATION MATRIX ─── */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 960px) {
+      .matrix-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dept-card {
+      background: #FAFAFC;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .dept-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #E5E5EA;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--apple-blue);
+      border-radius: 99px;
+    }
+
+    .role-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid #EAEAEF;
+      font-size: 13px;
+      gap: 10px;
+    }
+
+    /* ─── ASK CERTIFICATION AGENT PANEL ─── */
+    .agent-qa-box {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFC 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .prompt-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .prompt-chip {
+      background: #F2F2F7;
+      border: 1px solid #D1D1D6;
+      border-radius: var(--radius-pill);
+      padding: 6px 13px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .prompt-chip:hover {
+      background: #EBF4FF;
+      border-color: var(--apple-blue);
+      color: var(--apple-blue);
+    }
+
+    .agent-answer-card {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #F5F5F7;
+      border-left: 4px solid var(--apple-blue);
+    }
+
+    /* ─── TOAST BANNER ─── */
+    #toast-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1D1D1F;
+      color: #FFFFFF;
+      padding: 14px 20px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-elevated);
+      font-size: 13.5px;
+      font-weight: 500;
+      z-index: 100;
+      display: none;
+      max-width: 440px;
+    }
+
+    /* ─── PRINTABLE 1-PAGE AUDIT REPORT STYLING ─── */
+    @media print {
+      .frosted-header,
+      .workspace-bar,
+      .no-print,
+      #auth-screen {
+        display: none !important;
+      }
+      body {
+        background: #FFFFFF;
+      }
+      .surface-card {
+        box-shadow: none;
+        border: 1px solid #CCCCCC;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       1. SIGN-IN PAGE WITH 3-STEP VISUAL WORKFLOW DIAGRAM + GOOGLE SSO
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <section id="auth-screen">
+    <div class="auth-shell">
+      <!-- LEFT PANEL: 3-Step Visual Workflow Diagram -->
+      <div class="workflow-panel">
+        <div>
+          <div class="eyebrow-pill">HR Agent #08 • Learning, Certification Expiry &amp; Skills Matrix</div>
+          <h1>Certification &amp; Skills Agent</h1>
+          <p class="workflow-subtitle">
+            Proactive license tracking, 30 / 60 / 90-day expiry detection, and one-click renewal reminders across every department.
+          </p>
+
+          <div class="diagram-title">High-Level 3-Step Visual Workflow Diagram</div>
+          <div class="workflow-steps">
+            <div class="workflow-step-card">
+              <div class="step-number-badge">1</div>
+              <div class="step-content">
+                <h3>Step 1: Track Employee Licenses &amp; Mandatory Certifications</h3>
+                <p>Monitors professional licenses, safety certificates, and role-required credentials across departments.</p>
+              </div>
+            </div>
+
+            <div class="workflow-connector">↓ Automated Daily Compliance Scan</div>
+
+            <div class="workflow-step-card">
+              <div class="step-number-badge">2</div>
+              <div class="step-content">
+                <h3>Step 2: 30 / 60 / 90-Day Expiry Detection Agent</h3>
+                <p>Automatically flags expired certificates and upcoming renewals before compliance breaches occur.</p>
+              </div>
+            </div>
+
+            <div class="workflow-connector">↓ Human-in-the-Loop Action &amp; Audit Sign-Off</div>
+
+            <div class="workflow-step-card">
+              <div class="step-number-badge">3</div>
+              <div class="step-content">
+                <h3>Step 3: One-Click Renewal Reminders &amp; Compliance Report</h3>
+                <p>Sends renewal alerts to employees and line managers and generates an HR Compliance Summary.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="workflow-footer">
+          <span>✓ Deterministic Expiry Math</span>
+          <span>✓ Role Skills &amp; Training Bond Matrix</span>
+          <span>✓ 1-Page Printable Audit Report</span>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Google Single Sign-On (SSO), Work Email OTP, & Instant Demo Sign-In -->
+      <div class="sso-panel">
+        <h2>Sign in to Certification &amp; Skills Agent</h2>
+        <p class="lead">Access the employee license tracker, department skills matrix, and compliance audit report.</p>
+
+        <!-- 1-Click Instant Demo Sign-In -->
+        <button id="btn-demo-signin" class="btn-primary" onclick="signInInstantDemo()">
+          Instant Demo Sign-In (L&amp;D and Compliance Lead)
+        </button>
+
+        <div class="divider">Or Sign In with Enterprise SSO</div>
+
+        <!-- Google Single Sign-On Button Container + Fallback Trigger -->
+        <div id="g_id_onload"
+             data-client_id="259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com"
+             data-callback="handleGoogleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="signin_with"
+             data-shape="rectangular"
+             data-logo_alignment="left"
+             style="width:100%; display:flex; justify-content:center;">
+        </div>
+        <button type="button" class="btn-google-fallback" onclick="signInWithGoogleDemoToken()">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continue with Google Single Sign-On (SSO)
+        </button>
+
+        <div class="divider">Or Work Email One-Time Code</div>
+
+        <div class="form-group">
+          <label for="otp-email">Work Email Address</label>
+          <div style="display:flex; gap:8px;">
+            <input id="otp-email" type="email" class="input-control" placeholder="amara.okafor@acme.com" value="amara.okafor@acme.com" />
+            <button type="button" class="btn-secondary" onclick="requestOtpCode()" style="white-space:nowrap;">Send Code</button>
+          </div>
+        </div>
+
+        <div id="otp-verify-row" class="form-group" style="display:none;">
+          <label for="otp-code">6-Digit Verification Code</label>
+          <div style="display:flex; gap:8px;">
+            <input id="otp-code" type="text" class="input-control" placeholder="Enter 6-digit code" />
+            <button type="button" class="btn-primary" onclick="verifyOtpCode()" style="width:auto; white-space:nowrap;">Verify &amp; Sign In</button>
+          </div>
+        </div>
+
+        <div id="auth-feedback" class="auth-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       2. MAIN AUTHENTICATED WORKSPACE
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="app-screen">
+    <header class="frosted-header">
+      <div class="header-inner">
+        <div class="brand-cluster">
+          <div class="brand-icon">08</div>
+          <div class="brand-titles">
+            <h1>Certification &amp; Skills Agent</h1>
+            <span>Learning, Certification Expiry &amp; Role Skills Compliance Workspace</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-outline-sm" onclick="switchView('audit')">1-Page Compliance Audit Report</button>
+          <button class="btn-outline-sm" onclick="window.location.href='/api/audit-report/pdf'">Download Audit PDF</button>
+          <div class="user-chip">
+            <span id="header-user-name">Amara Okafor</span>
+            <span style="color:var(--text-muted);">• L&amp;D and Compliance Lead</span>
+          </div>
+          <button class="btn-outline-sm" onclick="signOutUser()">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <!-- TOP 5 KPI CARDS -->
+      <section class="kpi-grid" aria-label="Key Compliance Metrics">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Tracked Certifications</div>
+          <div class="kpi-value" id="kpi-total">12</div>
+          <div class="kpi-foot" id="kpi-total-sub">Across 6 enterprise departments</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Valid &amp; Compliant</div>
+          <div class="kpi-value" id="kpi-valid" style="color:var(--badge-valid-fg);">9</div>
+          <div class="kpi-foot" id="kpi-valid-sub">75.0% overall compliance rate</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Expiring Within 30 Days</div>
+          <div class="kpi-value" id="kpi-exp30" style="color:var(--badge-30-fg);">3</div>
+          <div class="kpi-foot">Priority 30-day renewal window</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Expired (Immediate Renewal Needed)</div>
+          <div class="kpi-value" id="kpi-expired" style="color:var(--badge-expired-fg);">3</div>
+          <div class="kpi-foot">Action required by employee &amp; manager</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Reminders Sent</div>
+          <div class="kpi-value" id="kpi-reminders" style="color:var(--apple-blue);">3</div>
+          <div class="kpi-foot">Sent to staff &amp; line managers</div>
+        </div>
+      </section>
+
+      <!-- WORKSPACE TABS & PRIMARY ACTIONS -->
+      <div class="workspace-bar">
+        <div class="segmented-tabs">
+          <button id="tab-btn-tracker" class="seg-tab active" onclick="switchView('tracker')">
+            Certification &amp; License Tracker
+          </button>
+          <button id="tab-btn-matrix" class="seg-tab" onclick="switchView('matrix')">
+            Role Skills &amp; Certification Matrix
+          </button>
+          <button id="tab-btn-ask" class="seg-tab" onclick="switchView('ask')">
+            Ask Certification Agent
+          </button>
+          <button id="tab-btn-audit" class="seg-tab" onclick="switchView('audit')">
+            1-Page Compliance Audit Report
+          </button>
+        </div>
+
+        <div class="action-cluster">
+          <button class="btn-apple-sm" onclick="sendBulkRenewalReminders()">
+            Send Renewal Notices to All Expiring / Expired
+          </button>
+          <button class="btn-outline-sm" onclick="toggleAddModal(true)">
+            + Record New Certificate
+          </button>
+          <button class="btn-outline-sm" onclick="window.location.href='/api/audit-report/csv'">
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- ─── VIEW 1: CERTIFICATION & LICENSE TRACKER TABLE ─── -->
+      <section id="view-tracker" class="surface-card">
+        <div class="filter-toolbar">
+          <div class="status-pills">
+            <button class="filter-pill active" onclick="setStatusFilter('All', this)">All Certifications</button>
+            <button class="filter-pill" onclick="setStatusFilter('Expired — Action Required', this)">Expired — Action Required</button>
+            <button class="filter-pill" onclick="setStatusFilter('Expiring in 30 Days', this)">Expiring in 30 Days</button>
+            <button class="filter-pill" onclick="setStatusFilter('Expiring in 60–90 Days', this)">Expiring in 60–90 Days</button>
+            <button class="filter-pill" onclick="setStatusFilter('Active & Valid', this)">Active &amp; Valid</button>
+          </div>
+
+          <div class="search-controls">
+            <select id="dept-filter" class="input-control" style="width:auto; padding:7px 12px;" onchange="renderTrackerTable()">
+              <option value="All">All Departments</option>
+              <option value="Finance & Accounting">Finance &amp; Accounting</option>
+              <option value="Operations & Safety">Operations &amp; Safety</option>
+              <option value="Clinical & Field Services">Clinical &amp; Field Services</option>
+              <option value="People & Culture">People &amp; Culture</option>
+              <option value="Engineering & Cloud Security">Engineering &amp; Cloud Security</option>
+              <option value="Legal & Regulatory Compliance">Legal &amp; Regulatory Compliance</option>
+            </select>
+            <input id="search-input" type="text" class="input-control" style="width:240px; padding:7px 12px;" placeholder="Search employee, license, issuer..." oninput="renderTrackerTable()" />
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="apple-table">
+            <thead>
+              <tr>
+                <th>Employee Name</th>
+                <th>Role &amp; Department</th>
+                <th>Certificate / License Name</th>
+                <th>Issuing Body</th>
+                <th>Expiry Date</th>
+                <th>Days Remaining</th>
+                <th>Status Badge</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tracker-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─── VIEW 2: ROLE SKILLS & CERTIFICATION MATRIX VIEW ─── -->
+      <section id="view-matrix" class="surface-card" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 style="font-size:20px; font-weight:700;">Role Skills &amp; Certification Matrix by Department</h2>
+            <p style="font-size:13.5px; color:var(--text-secondary);">
+              Required vs. completed role certifications, active staff training bonds, and renewal status across departments.
+            </p>
+          </div>
+          <div id="matrix-bond-summary" class="eyebrow-pill" style="margin:0;">
+            Active Training Bonds Tracked: $17,400
+          </div>
+        </div>
+        <div id="matrix-container" class="matrix-grid"></div>
+      </section>
+
+      <!-- ─── VIEW 3: ASK CERTIFICATION AGENT (CONVERSATIONAL Q&A) ─── -->
+      <section id="view-ask" class="surface-card" style="display:none;">
+        <div class="agent-qa-box">
+          <div class="eyebrow-pill">Interactive HR Compliance Assistant</div>
+          <h2 style="font-size:20px; font-weight:700; margin-bottom:4px;">Ask Certification Agent</h2>
+          <p style="font-size:13.5px; color:var(--text-secondary);">
+            Ask any plain-English question about expired licenses, 30/60/90-day upcoming renewals, department compliance rates, or active training bonds.
+          </p>
+
+          <div class="prompt-chips">
+            <button class="prompt-chip" onclick="askPresetQuestion('Which employees have expired licenses right now?')">
+              Which employees have expired licenses right now?
+            </button>
+            <button class="prompt-chip" onclick="askPresetQuestion('Who has certificates expiring within 30 days?')">
+              Who has certificates expiring within 30 days?
+            </button>
+            <button class="prompt-chip" onclick="askPresetQuestion('What is our compliance rate by department?')">
+              What is our compliance rate by department?
+            </button>
+            <button class="prompt-chip" onclick="askPresetQuestion('Which employees have active training bonds?')">
+              Which employees have active training bonds?
+            </button>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <input id="agent-question-input" type="text" class="input-control" placeholder="Ask Certification Agent a question..." />
+            <button class="btn-primary" style="width:auto; white-space:nowrap;" onclick="submitAgentQuestion()">
+              Ask Certification Agent
+            </button>
+          </div>
+
+          <div id="agent-answer-container" class="agent-answer-card">
+            <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--apple-blue); margin-bottom:6px;">
+              Certification &amp; Skills Agent Response
+            </div>
+            <div id="agent-answer-text" style="font-size:14.5px; font-weight:500; margin-bottom:10px;">
+              Select a quick question above or type your question to inspect live certification compliance across all departments.
+            </div>
+            <ul id="agent-answer-list" style="padding-left:20px; font-size:13.5px; color:var(--text-secondary);"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── VIEW 4: PRINTABLE 1-PAGE CERTIFICATION COMPLIANCE AUDIT REPORT ─── -->
+      <section id="view-audit" class="surface-card" style="display:none;">
+        <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
+          <div>
+            <span class="eyebrow-pill" style="margin-bottom:4px;">Board &amp; Regulatory Ready</span>
+            <h2 style="font-size:20px; font-weight:700;">Printable 1-Page Certification Compliance Audit Report</h2>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-apple-sm" onclick="window.print()">Print 1-Page Report</button>
+            <button class="btn-outline-sm" onclick="window.location.href='/api/audit-report/pdf'">Download Official PDF</button>
+          </div>
+        </div>
+
+        <div id="printable-audit-sheet">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; border-bottom:2px solid #1D1D1F; padding-bottom:14px;">
+            <div>
+              <h3 style="font-size:18px; font-weight:700;">ENTERPRISE CERTIFICATION &amp; SKILLS COMPLIANCE AUDIT REPORT</h3>
+              <p style="font-size:13px; color:var(--text-secondary);">Generated by Certification &amp; Skills Agent • Human Resources &amp; Compliance Division</p>
+            </div>
+            <div style="text-align:right; font-size:12.5px; color:var(--text-secondary);">
+              <div><strong>Audit Date:</strong> <span id="audit-date-label"></span></div>
+              <div><strong>Prepared By:</strong> Amara Okafor (L&amp;D and Compliance Lead)</div>
+            </div>
+          </div>
+
+          <h4 style="font-size:13px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">1. Department Role Skills &amp; Compliance Summary</h4>
+          <div class="table-wrapper" style="margin-bottom:20px;">
+            <table class="apple-table">
+              <thead>
+                <tr>
+                  <th>Department</th>
+                  <th>Department Lead</th>
+                  <th>Required Licenses</th>
+                  <th>Valid &amp; Compliant</th>
+                  <th>Expired Gaps</th>
+                  <th>Compliance Rate</th>
+                  <th>Active Training Bonds</th>
+                </tr>
+              </thead>
+              <tbody id="audit-matrix-tbody"></tbody>
+            </table>
+          </div>
+
+          <h4 style="font-size:13px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">2. Priority Renewal &amp; Expiry Action Register</h4>
+          <div class="table-wrapper">
+            <table class="apple-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Role &amp; Department</th>
+                  <th>Certificate / License</th>
+                  <th>Issuing Body</th>
+                  <th>Expiry Date</th>
+                  <th>Days Remaining</th>
+                  <th>Status Badge</th>
+                </tr>
+              </thead>
+              <tbody id="audit-certs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ─── MODAL: ADD / RECORD NEW CERTIFICATE ─── -->
+  <div id="add-cert-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:90; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#FFFFFF; border-radius:20px; max-width:540px; width:100%; padding:28px; box-shadow:var(--shadow-elevated);">
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:6px;">Record Employee License or Certification</h3>
+      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+        Add a mandatory role certificate to the 30 / 60 / 90-day expiry detection tracker.
+      </p>
+      <div class="form-group">
+        <label>Employee Name</label>
+        <input id="new-emp-name" class="input-control" placeholder="e.g. Joy Muthoni" />
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Role Title</label>
+          <input id="new-role-title" class="input-control" placeholder="e.g. Safety Officer" />
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select id="new-department" class="input-control">
+            <option value="Operations & Safety">Operations &amp; Safety</option>
+            <option value="Finance & Accounting">Finance &amp; Accounting</option>
+            <option value="Engineering & Cloud Security">Engineering &amp; Cloud Security</option>
+            <option value="People & Culture">People &amp; Culture</option>
+            <option value="Legal & Regulatory Compliance">Legal &amp; Regulatory Compliance</option>
+            <option value="Clinical & Field Services">Clinical &amp; Field Services</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Certificate / License Name</label>
+        <input id="new-cert-name" class="input-control" placeholder="e.g. NEBOSH International General Certificate" />
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Issuing Body</label>
+          <input id="new-issuer" class="input-control" placeholder="e.g. NEBOSH / DOSHS" />
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input id="new-expiry" type="date" class="input-control" />
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+        <button class="btn-outline-sm" onclick="toggleAddModal(false)">Cancel</button>
+        <button class="btn-apple-sm" onclick="createNewCertRecord()">Save Certificate</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-banner"></div>
+
+  <script>
+    let appState = {
+      user: null,
+      kpis: {},
+      certifications: [],
+      skills_matrix: [],
+      reminder_logs: [],
+      statusFilter: "All"
+    };
+
+    function showToast(msg) {
+      const el = document.getElementById("toast-banner");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        el.style.display = "none";
+      }, 4200);
+    }
+
+    function showAuthFeedback(msg, isError) {
+      const box = document.getElementById("auth-feedback");
+      box.style.display = "block";
+      box.style.background = isError ? "#FFEBEA" : "#E8F8EE";
+      box.style.color = isError ? "#C92A2A" : "#146C32";
+      box.textContent = msg;
+    }
+
+    async function signInInstantDemo() {
+      try {
+        const res = await fetch("/api/auth/demo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ persona: "Amara Okafor" })
+        });
+        const data = await res.json();
+        if (data.authenticated) {
+          completeSignIn(data.user);
+        }
+      } catch (err) {
+        showAuthFeedback("Unable to start demo session. Please try again.", true);
+      }
+    }
+
+    async function handleGoogleCredentialResponse(response) {
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (res.ok && data.authenticated) {
+          completeSignIn(data.user);
+        } else {
+          showAuthFeedback(data.detail || "Google Single Sign-On verification failed.", true);
+        }
+      } catch (err) {
+        showAuthFeedback("Google Single Sign-On connection error.", true);
+      }
+    }
+
+    async function signInWithGoogleDemoToken() {
+      await handleGoogleCredentialResponse({ credential: "demo-google-sso-token" });
+    }
+
+    async function requestOtpCode() {
+      const email = document.getElementById("otp-email").value.trim();
+      try {
+        const res = await fetch("/api/auth/otp/request", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showAuthFeedback(data.detail || "Please enter a valid work email.", true);
+          return;
+        }
+        document.getElementById("otp-verify-row").style.display = "block";
+        document.getElementById("otp-code").value = data.demo_code || "246810";
+        showAuthFeedback(`${data.message} (Demo code pre-filled: ${data.demo_code})`, false);
+      } catch (err) {
+        showAuthFeedback("Could not send verification code.", true);
+      }
+    }
+
+    async function verifyOtpCode() {
+      const email = document.getElementById("otp-email").value.trim();
+      const code = document.getElementById("otp-code").value.trim();
+      try {
+        const res = await fetch("/api/auth/otp/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, code })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showAuthFeedback(data.detail || "Invalid verification code.", true);
+          return;
+        }
+        completeSignIn(data.user);
+      } catch (err) {
+        showAuthFeedback("Verification failed.", true);
+      }
+    }
+
+    async function completeSignIn(user) {
+      appState.user = user;
+      sessionStorage.setItem("hr_skills_agent_user", JSON.stringify(user));
+      document.getElementById("header-user-name").textContent = user.name || "Amara Okafor";
+      document.getElementById("auth-screen").style.display = "none";
+      document.getElementById("app-screen").style.display = "block";
+      await loadOverviewData();
+    }
+
+    function signOutUser() {
+      sessionStorage.removeItem("hr_skills_agent_user");
+      appState.user = null;
+      document.getElementById("app-screen").style.display = "none";
+      document.getElementById("auth-screen").style.display = "flex";
+    }
+
+    async function loadOverviewData() {
+      const res = await fetch("/api/overview");
+      const data = await res.json();
+      appState.kpis = data.kpis;
+      appState.certifications = data.certifications;
+      appState.skills_matrix = data.skills_matrix;
+      appState.reminder_logs = data.reminder_logs;
+      renderKpis();
+      renderTrackerTable();
+      renderSkillsMatrix();
+      renderAuditReport();
+    }
+
+    function renderKpis() {
+      const k = appState.kpis;
+      document.getElementById("kpi-total").textContent = k.total_tracked_certifications ?? 0;
+      document.getElementById("kpi-valid").textContent = k.valid_and_compliant ?? 0;
+      document.getElementById("kpi-valid-sub").textContent = `${k.overall_compliance_rate_pct ?? 100}% overall compliance rate`;
+      document.getElementById("kpi-exp30").textContent = k.expiring_within_30_days ?? 0;
+      document.getElementById("kpi-expired").textContent = k.expired_immediate_renewal ?? 0;
+      document.getElementById("kpi-reminders").textContent = k.reminders_sent ?? 0;
+    }
+
+    function badgeClassForStatus(status) {
+      if (status === "Expired — Action Required") return "badge-expired";
+      if (status === "Expiring in 30 Days") return "badge-30";
+      if (status === "Expiring in 60–90 Days") return "badge-60";
+      return "badge-valid";
+    }
+
+    function setStatusFilter(status, btnEl) {
+      appState.statusFilter = status;
+      document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+      renderTrackerTable();
+    }
+
+    function renderTrackerTable() {
+      const tbody = document.getElementById("tracker-tbody");
+      const deptFilter = document.getElementById("dept-filter").value;
+      const searchQ = (document.getElementById("search-input").value || "").trim().toLowerCase();
+
+      const filtered = appState.certifications.filter(c => {
+        if (appState.statusFilter !== "All" && c.status_badge !== appState.statusFilter) return false;
+        if (deptFilter !== "All" && c.department !== deptFilter) return false;
+        if (searchQ) {
+          const hay = `${c.employee_name} ${c.role_title} ${c.department} ${c.certificate_name} ${c.issuing_body}`.toLowerCase();
+          if (!hay.includes(searchQ)) return false;
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--text-muted);">No certifications match the selected filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(c => {
+        const bClass = badgeClassForStatus(c.status_badge);
+        const bondHtml = c.bond_amount_usd > 0
+          ? `<div class="bond-tag">Active Training Bond: $${Number(c.bond_amount_usd).toLocaleString()} (until ${c.bond_end_date})</div>`
+          : "";
+        const reminderNote = c.reminders_sent > 0
+          ? `<div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">Reminders sent: ${c.reminders_sent}</div>`
+          : "";
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight:600; color:var(--text-primary);">${c.employee_name}</div>
+              <div style="font-size:12px; color:var(--text-muted);">${c.employee_id} • ${c.employee_email}</div>
+            </td>
+            <td>
+              <div style="font-weight:500;">${c.role_title}</div>
+              <div style="font-size:12px; color:var(--text-secondary);">${c.department} • Manager: ${c.manager_name}</div>
+            </td>
+            <td>
+              <div style="font-weight:600;">${c.certificate_name}</div>
+              <div style="font-size:12px; color:var(--text-muted);">License #${c.license_number}</div>
+              ${bondHtml}
+            </td>
+            <td>${c.issuing_body}</td>
+            <td style="font-weight:500;">${c.expiry_date}</td>
+            <td>
+              <span style="font-weight:600; color:${c.days_remaining < 0 ? 'var(--badge-expired-fg)' : (c.days_remaining <= 30 ? 'var(--badge-30-fg)' : 'var(--text-primary)')};">
+                ${c.days_remaining_label}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge ${bClass}">${c.status_badge}</span>
+              ${reminderNote}
+            </td>
+            <td style="text-align:right; white-space:nowrap;">
+              <button class="btn-apple-sm" onclick="sendSingleReminder(${c.id})">Send Renewal Notice</button>
+              ${c.status_badge !== 'Active & Valid' ? `<button class="btn-outline-sm" style="margin-left:6px;" onclick="markCertificateRenewed(${c.id})">Mark Renewed</button>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderSkillsMatrix() {
+      const container = document.getElementById("matrix-container");
+      const totalBond = appState.kpis.total_training_bond_value_usd || 0;
+      document.getElementById("matrix-bond-summary").textContent =
+        `Active Training Bonds Tracked: $${Number(totalBond).toLocaleString()} (${appState.kpis.active_training_bonds_count || 0} staff bonds)`;
+
+      container.innerHTML = appState.skills_matrix.map(dept => {
+        const rolesHtml = dept.roles.map(r => {
+          const bClass = badgeClassForStatus(r.status_badge);
+          return `
+            <div class="role-row">
+              <div>
+                <div style="font-weight:600;">${r.employee_name} — ${r.role_title}</div>
+                <div style="font-size:12px; color:var(--text-secondary);">${r.certificate_name} (${r.issuing_body})</div>
+              </div>
+              <div style="text-align:right;">
+                <span class="status-badge ${bClass}">${r.status_badge}</span>
+                <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">${r.days_remaining_label}</div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <div class="dept-card">
+            <div class="dept-header">
+              <div>
+                <h3 style="font-size:16px; font-weight:700;">${dept.department}</h3>
+                <div style="font-size:12.5px; color:var(--text-secondary);">
+                  Department Lead: ${dept.department_head} • Required: ${dept.required_count} | Valid: ${dept.completed_valid_count}
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:20px; font-weight:700; color:var(--apple-blue);">${dept.compliance_rate_pct}%</div>
+                <div style="font-size:11.5px; color:var(--text-muted);">Compliance</div>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${dept.compliance_rate_pct}%;"></div>
+            </div>
+            ${rolesHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderAuditReport() {
+      document.getElementById("audit-date-label").textContent = new Date().toISOString().slice(0, 10);
+      const mBody = document.getElementById("audit-matrix-tbody");
+      mBody.innerHTML = appState.skills_matrix.map(d => `
+        <tr>
+          <td style="font-weight:600;">${d.department}</td>
+          <td>${d.department_head}</td>
+          <td>${d.required_count}</td>
+          <td>${d.completed_valid_count}</td>
+          <td style="color:${d.expired_gap_count > 0 ? 'var(--badge-expired-fg)' : 'inherit'}; font-weight:600;">${d.expired_gap_count}</td>
+          <td style="font-weight:600;">${d.compliance_rate_pct}%</td>
+          <td>$${Number(d.active_bond_total_usd || 0).toLocaleString()}</td>
+        </tr>
+      `).join("");
+
+      const cBody = document.getElementById("audit-certs-tbody");
+      cBody.innerHTML = appState.certifications.map(c => `
+        <tr>
+          <td style="font-weight:600;">${c.employee_name}</td>
+          <td>${c.role_title} (${c.department})</td>
+          <td>${c.certificate_name}</td>
+          <td>${c.issuing_body}</td>
+          <td>${c.expiry_date}</td>
+          <td>${c.days_remaining_label}</td>
+          <td><span class="status-badge ${badgeClassForStatus(c.status_badge)}">${c.status_badge}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    async function sendSingleReminder(certId) {
+      const res = await fetch(`/api/certifications/${certId}/remind`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sender_name: "Amara Okafor (L&D and Compliance Lead)" })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message);
+        await loadOverviewData();
+      }
+    }
+
+    async function sendBulkRenewalReminders() {
+      const res = await fetch("/api/certifications/remind-bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ include_sixty_ninety: true, sender_name: "Amara Okafor (L&D and Compliance Lead)" })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message);
+        await loadOverviewData();
+      }
+    }
+
+    async function markCertificateRenewed(certId) {
+      const res = await fetch(`/api/certifications/${certId}/renew`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message);
+        await loadOverviewData();
+      }
+    }
+
+    function switchView(viewName) {
+      ["tracker", "matrix", "ask", "audit"].forEach(v => {
+        document.getElementById(`view-${v}`).style.display = (v === viewName) ? "block" : "none";
+        const tabBtn = document.getElementById(`tab-btn-${v}`);
+        if (tabBtn) {
+          if (v === viewName) tabBtn.classList.add("active");
+          else tabBtn.classList.remove("active");
+        }
+      });
+    }
+
+    async function askPresetQuestion(qText) {
+      document.getElementById("agent-question-input").value = qText;
+      await submitAgentQuestion();
+    }
+
+    async function submitAgentQuestion() {
+      const q = document.getElementById("agent-question-input").value.trim();
+      const res = await fetch("/api/agent/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q })
+      });
+      const data = await res.json();
+      document.getElementById("agent-answer-text").textContent = data.answer;
+      const listEl = document.getElementById("agent-answer-list");
+      listEl.innerHTML = (data.highlights || []).map(item => `<li style="margin-bottom:4px;">${item}</li>`).join("");
+    }
+
+    function toggleAddModal(show) {
+      document.getElementById("add-cert-modal").style.display = show ? "flex" : "none";
+    }
+
+    async function createNewCertRecord() {
+      const empName = document.getElementById("new-emp-name").value.trim() || "Joy Muthoni";
+      const roleTitle = document.getElementById("new-role-title").value.trim() || "Safety & Compliance Specialist";
+      const dept = document.getElementById("new-department").value;
+      const certName = document.getElementById("new-cert-name").value.trim() || "NEBOSH General Safety Certificate";
+      const issuer = document.getElementById("new-issuer").value.trim() || "NEBOSH Board";
+      const exp = document.getElementById("new-expiry").value || new Date(Date.now() + 20 * 86400000).toISOString().slice(0, 10);
+
+      const res = await fetch("/api/certifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          employee_name: empName,
+          employee_email: empName.toLowerCase().replace(/\s+/g, ".") + "@acme.com",
+          role_title: roleTitle,
+          department: dept,
+          manager_name: "Amara Okafor",
+          manager_email: "amara.okafor@acme.com",
+          certificate_name: certName,
+          issuing_body: issuer,
+          expiry_date: exp
+        })
+      });
+      if (res.ok) {
+        toggleAddModal(false);
+        showToast(`Added '${certName}' for ${empName}.`);
+        await loadOverviewData();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = sessionStorage.getItem("hr_skills_agent_user");
+      if (saved) {
+        try {
+          completeSignIn(JSON.parse(saved));
+        } catch (e) {}
+      }
+    });
+  </script>
+</body>
+</html>
