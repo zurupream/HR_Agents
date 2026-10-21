@@ -1362,20 +1362,7 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
           </div>
 
           <div id="logout-banner-msg" class="mb-4 px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-black/5 text-[12px] text-[#515154]">
-            Authenticate with Google Workspace SSO or launch an instant demo session.
-          </div>
-
-          <!-- 1-Click Instant Demo SSO Sign-In -->
-          <div class="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200/80 mb-4">
-            <div class="text-[10px] font-bold uppercase tracking-wider text-blue-800 mb-1.5">Instant Evaluation Access</div>
-            <button id="btn-demo-sso" type="button" onclick="loginWithEmail('guruprem.saginadham@sybyl.com', 'Talent Acquisition Lead')"
-              class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#0071E3] to-[#1D4ED8] hover:opacity-95 text-white text-[12.5px] font-semibold flex items-center justify-between shadow-sm transition">
-              <span>⚡ Instant Demo SSO Sign-In (Talent Acquisition Lead)</span>
-              <span>→</span>
-            </button>
-            <div class="text-[11px] text-slate-600 mt-1.5">
-              Signs in as <strong>guruprem.saginadham@sybyl.com</strong> with pre-loaded jobs, panels &amp; bottlenecks
-            </div>
+            Authenticate with your authorized Google Workspace account to continue.
           </div>
 
           <div class="space-y-3">
@@ -1393,20 +1380,6 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
               </svg>
               <span>Sign in with Google</span>
             </button>
-
-            <!-- Direct Google Workspace Email Sign-In -->
-            <div class="pt-3 border-t border-black/5 text-left">
-              <label class="block text-[11.5px] font-medium text-[#6E6E73] mb-1.5">
-                Or continue directly with your Google Workspace email:
-              </label>
-              <form onsubmit="submitWorkspaceQuickSignIn(event)" class="flex gap-2">
-                <input id="login-workspace-email" type="email" required placeholder="name@company.com" value="guruprem.saginadham@sybyl.com"
-                  class="apple-input flex-1 text-[12.5px]" />
-                <button type="submit" class="px-4 py-2 rounded-xl bg-[#1D1D1F] hover:bg-[#333336] text-white text-[12.5px] font-semibold shrink-0 transition">
-                  Sign In
-                </button>
-              </form>
-            </div>
           </div>
         </div>
 

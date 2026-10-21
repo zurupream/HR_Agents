@@ -220,22 +220,9 @@
 
                     <div id="ssoErrorBanner" class="hidden mb-4 px-3.5 py-2.5 rounded-xl bg-[#FF3B30]/10 border border-[#FF3B30]/20 text-[12px] text-[#D70015] font-medium"></div>
 
-                    <!-- 1-Click Instant Demo Sign-In -->
-                    <div class="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200/80 mb-4">
-                        <div class="text-[10px] font-bold uppercase tracking-wider text-blue-800 mb-1.5">Instant Evaluation Access</div>
-                        <button id="btn-demo-sso" type="button" onclick="signInDemo()"
-                            class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#0071E3] to-[#1D4ED8] hover:opacity-95 text-white text-[12.5px] font-semibold flex items-center justify-between shadow-sm transition">
-                            <span>⚡ Instant Demo Sign-In (HR Director)</span>
-                            <span>→</span>
-                        </button>
-                        <div class="text-[11px] text-slate-600 mt-1.5">
-                            Signs in as <strong>guruprem.saginadham@sybyl.com</strong> (VP of People Operations) with live candidates &amp; e-sign links
-                        </div>
-                    </div>
-
                     <!-- Google OAuth 2.0 Button -->
                     <div class="mb-4">
-                        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] mb-2 text-center">Or Sign In with Google Workspace</div>
+                        <div class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] mb-2 text-center">Sign In with Google Workspace</div>
                         <div class="flex justify-center">
                             <div id="g_id_onload"
                                  data-client_id="259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com"
@@ -250,30 +237,6 @@
                                  data-shape="rectangular"
                                  data-logo_alignment="left"
                                  data-width="340">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Work Email 6-Digit OTP Verification -->
-                    <div class="pt-3 border-t border-black/[0.06] space-y-2.5">
-                        <label class="block text-[11.5px] font-medium text-[#6E6E73]">
-                            Or sign in with Work Email 6-Digit Verification Code:
-                        </label>
-                        <div class="flex gap-2">
-                            <input id="ssoEmailInput" type="email" value="guruprem.saginadham@sybyl.com" placeholder="name@company.com"
-                                class="flex-1 px-3 py-2 rounded-xl border border-black/10 bg-[#F5F5F7] text-[12.5px] focus:outline-none focus:border-[#0071E3]" />
-                            <button type="button" onclick="requestEmailOtp()" class="px-3.5 py-2 rounded-xl bg-[#1D1D1F] hover:bg-black/80 text-white text-[12px] font-semibold shrink-0 transition">
-                                Send Code
-                            </button>
-                        </div>
-                        <div id="ssoOtpVerifyRow" class="hidden space-y-2 pt-1">
-                            <div id="ssoOtpHint" class="text-[11px] text-[#0071E3] font-medium"></div>
-                            <div class="flex gap-2">
-                                <input id="ssoOtpInput" type="text" maxlength="6" placeholder="6-digit code (e.g. 246810)"
-                                    class="flex-1 px-3 py-2 rounded-xl border border-black/10 bg-white text-[12.5px] apple-mono tracking-widest" />
-                                <button type="button" onclick="verifyEmailOtp()" class="px-4 py-2 rounded-xl bg-[#0071E3] text-white text-[12px] font-semibold shrink-0">
-                                    Verify &amp; Sign In
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -399,7 +362,7 @@
             <div class="px-3 py-2.5 rounded-xl bg-[#F5F5F7] flex items-center justify-between gap-2">
                 <div class="min-w-0">
                     <div id="ssoUserName" class="text-[12px] font-semibold text-[#1D1D1F] truncate">HR Director</div>
-                    <div id="ssoUserEmail" class="text-[10.5px] text-[#6E6E73] truncate">guruprem.saginadham@sybyl.com</div>
+                    <div id="ssoUserEmail" class="text-[10.5px] text-[#6E6E73] truncate">Signed In</div>
                 </div>
                 <button type="button" onclick="signOutSession()" class="px-2.5 py-1 rounded-lg bg-white border border-black/10 hover:bg-black/[0.04] text-[11px] font-medium text-[#1D1D1F] shrink-0">
                     Sign Out
@@ -2555,13 +2518,13 @@
             const overlay = document.getElementById('sso-gate-overlay');
             if (overlay) overlay.classList.add('hidden');
             const user = (authData && authData.user) || {
-                name: 'HR Director',
-                email: 'guruprem.saginadham@sybyl.com',
+                name: 'HR User',
+                email: '',
             };
             const nameEl = document.getElementById('ssoUserName');
             const emailEl = document.getElementById('ssoUserEmail');
-            if (nameEl) nameEl.textContent = user.name || 'HR Director';
-            if (emailEl) emailEl.textContent = user.email || 'guruprem.saginadham@sybyl.com';
+            if (nameEl) nameEl.textContent = user.name || 'HR User';
+            if (emailEl) emailEl.textContent = user.email || '';
             try {
                 sessionStorage.setItem('hr_onboarding_sso_session', JSON.stringify(user));
             } catch (_) {}
