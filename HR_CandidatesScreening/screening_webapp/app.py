@@ -1819,6 +1819,16 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
     if STATIC_DIR.exists():
         app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+    @app.middleware("http")
+    async def add_no_cache_headers(request: Request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if path == "/" or path.startswith("/static/"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+        return response
+
     @app.get("/health")
     def health_check() -> dict[str, Any]:
         """Public health check endpoint."""
@@ -1835,7 +1845,10 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
         index_file = STATIC_DIR / "index.html"
         if not index_file.exists():
             return HTMLResponse("<h1>HR Candidate Screening App</h1>")
-        return HTMLResponse(index_file.read_text(encoding="utf-8"))
+        return HTMLResponse(
+            index_file.read_text(encoding="utf-8"),
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+        )
 
     @app.post("/api/auth/demo")
     def demo_sso_sign_in(
