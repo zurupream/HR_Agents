@@ -74,6 +74,84 @@ PROMPT_VERSION = "v1.1"
 DEFAULT_TEMPERATURE = 0.1
 
 
+def sync_decision_and_reasoning(
+    evaluation: CandidateEvaluation,
+    rubric: JobRubric,
+) -> CandidateEvaluation:
+    """Ensure evaluation.decision and evaluation.reasoning are 100% consistent with no contradictions."""
+    must_have_ids = {c.id for c in rubric.must_have_criteria}
+    must_have_scores = [
+        cs
+        for cs in evaluation.criterion_scores
+        if cs.category == "must_have" or cs.criterion_id in must_have_ids
+    ]
+    if evaluation.criterion_scores:
+        has_core_must_haves = all(cs.score >= 3 for cs in must_have_scores) if must_have_scores else True
+        if evaluation.overall_score >= rubric.shortlist_threshold and has_core_must_haves:
+            evaluation.decision = "Shortlisted"
+        else:
+            evaluation.decision = "Not Shortlisted"
+
+    reasoning = (evaluation.reasoning or "").strip()
+    if reasoning and reasoning != "Pending final synthesis.":
+        if evaluation.decision == "Shortlisted":
+            reasoning = re.sub(
+                r"recommended\s+as\s+Not\s+Shortlisted",
+                "recommended as Shortlisted",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+            reasoning = re.sub(
+                r"\bis\s+not\s+shortlisted\b",
+                "is recommended as Shortlisted",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+            reasoning = re.sub(
+                r"\bdo\s+not\s+shortlist\b",
+                "recommend for shortlisting",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+            reasoning = re.sub(
+                r"\(well\s+below\s+the\s+[\d.]+\s+threshold\),\s*the\s+candidate\s+is\s+a\s+clear\s+non-match\.?",
+                f"(above the {rubric.shortlist_threshold} threshold), the candidate is a strong match for shortlisting.",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+        else:
+            reasoning = re.sub(
+                r"recommended\s+as\s+Shortlisted",
+                "recommended as Not Shortlisted",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+            reasoning = re.sub(
+                r"\bis\s+recommended\s+for\s+shortlisting\b",
+                "is recommended as Not Shortlisted",
+                reasoning,
+                flags=re.IGNORECASE,
+            )
+            if (
+                evaluation.overall_score >= rubric.shortlist_threshold
+                and must_have_scores
+                and any(cs.score < 3 for cs in must_have_scores)
+            ):
+                low_must_haves = [cs.criterion_name for cs in must_have_scores if cs.score < 3]
+                reasoning = re.sub(
+                    r"achieved\s+a\s+weighted\s+overall\s+score\s+of\s+([\d.]+)/100\s+against\s+the\s+(.*?)\s+rubric\s+and\s+is\s+recommended\s+as\s+Not\s+Shortlisted\.",
+                    (
+                        r"achieved a weighted overall score of \1/100 against the \2 rubric, "
+                        f"but is recommended as Not Shortlisted because must-have criteria ({', '.join(low_must_haves[:2])}) scored below the minimum requirement."
+                    ),
+                    reasoning,
+                    flags=re.IGNORECASE,
+                )
+        evaluation.reasoning = reasoning
+
+    return evaluation
+
+
 def apply_uncertainty_rules(
     evaluation: CandidateEvaluation,
     rubric: JobRubric,
@@ -189,13 +267,19 @@ def apply_uncertainty_rules(
             for s in sentences
             if not re.search(r"flagged\s+for\s+(?:human|hr)\s+review", s, flags=re.IGNORECASE)
         ]
-        filtered.append(
-            f"With a weighted score of {evaluation.overall_score}/100 (well below the "
-            f"{rubric.shortlist_threshold} threshold), the candidate is a clear non-match."
-        )
+        if evaluation.decision == "Shortlisted":
+            filtered.append(
+                f"With a weighted score of {evaluation.overall_score}/100 (above the "
+                f"{rubric.shortlist_threshold} threshold), the candidate is recommended as Shortlisted."
+            )
+        else:
+            filtered.append(
+                f"With a weighted score of {evaluation.overall_score}/100 (well below the "
+                f"{rubric.shortlist_threshold} threshold), the candidate is a clear non-match."
+            )
         evaluation.reasoning = " ".join(filtered[:3])
 
-    return evaluation
+    return sync_decision_and_reasoning(evaluation, rubric)
 
 
 def get_model_name() -> str:
@@ -563,8 +647,8 @@ class ScreeningAdkLlm(BaseLlm):
 
         # Build concise reasoning (strictly max 3 sentences)
         s1 = (
-            f"Candidate {candidate_id} achieved a weighted overall score of {overall_score}/100 "
-            f"against the {rubric.job_title} rubric and is recommended as {decision}."
+            f"Candidate {candidate_id} achieved a weighted overall score of {prelim_eval.overall_score}/100 "
+            f"against the {rubric.job_title} rubric and is recommended as {prelim_eval.decision}."
         )
         if strengths and strengths[0] != "No rubric criteria strongly demonstrated in submitted documents":
             s2 = f"Key demonstrated strengths include {', '.join(strengths[:3])}."
@@ -582,7 +666,7 @@ class ScreeningAdkLlm(BaseLlm):
             s3 = "All must-have and nice-to-have criteria are well supported by direct evidence."
 
         prelim_eval.reasoning = f"{s1} {s2} {s3}"
-        return prelim_eval
+        return sync_decision_and_reasoning(prelim_eval, rubric)
 
     async def generate_content_async(
         self, llm_request: LlmRequest, stream: bool = False

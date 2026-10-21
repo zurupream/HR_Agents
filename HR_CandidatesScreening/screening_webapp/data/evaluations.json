@@ -4,59 +4,57 @@
     "criterion_scores": [
       {
         "criterion_id": "M1",
-        "criterion_name": "Python Software Engineering & Testing",
+        "criterion_name": "B2B & Retail Sales Experience with Targets",
         "category": "must_have",
         "weight": 25.0,
         "score": 5,
-        "evidence": "Senior Python & AI Engineer with 7 years of production Python 3, asyncio, and pytest experience."
+        "evidence": "CV: \"Sales Executive with 6 years of B2B and retail sales experience working against annual revenue targets and quarterly quotas, having consistently exceeded targets by 125%.\""
       },
       {
         "criterion_id": "M2",
-        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "criterion_name": "Closing Deals & Pipeline Conversion",
         "category": "must_have",
         "weight": 25.0,
         "score": 5,
-        "evidence": "Built production multi-agent systems using Google ADK (SequentialAgent, LlmAgent) and Gemini with Pydantic output_schema."
+        "evidence": "CV: \"Full-cycle deal closing: prospecting, qualifying leads, and closing deals across 180+ new business and commercial contracts from discovery to signature.\""
       },
       {
         "criterion_id": "M3",
-        "criterion_name": "REST APIs & Google OAuth Security",
+        "criterion_name": "CRM Software Proficiency",
         "category": "must_have",
         "weight": 20.0,
         "score": 5,
-        "evidence": "Implemented FastAPI REST APIs with OAuth 2.0 / OIDC Google ID token audience verification and bearer authentication."
+        "evidence": "CV: \"Daily CRM user with Salesforce and HubSpot for pipeline tracking, revenue forecasting, activity logging, and maintaining complete account records.\""
       },
       {
         "criterion_id": "N1",
-        "criterion_name": "Document & Spreadsheet Processing",
+        "criterion_name": "Negotiation & Client Presentations",
         "category": "nice_to_have",
         "weight": 15.0,
-        "score": 5,
-        "evidence": "Automated document ingestion and Excel reporting using python-docx, pypdf, and openpyxl."
+        "score": 4,
+        "evidence": "CV: \"Led commercial terms negotiation, pricing proposals, and boardroom presentations to senior stakeholders and decision-makers.\""
       },
       {
         "criterion_id": "N2",
-        "criterion_name": "Cloud Deployment & CI/CD",
+        "criterion_name": "Client Relationship Management & Bilingual Communication",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 5,
-        "evidence": "Deployed Docker containers to Google Cloud (Cloud Run and Vertex AI) using GitHub Actions CI/CD pipelines."
+        "evidence": "CV: \"Managed long-term client relationship and account management portfolios with 96% retention, consistent upselling and renewals, and fluent bilingual communication in English and French.\""
       }
     ],
-    "overall_score": 100.0,
+    "overall_score": 97.0,
     "decision": "Shortlisted",
-    "confidence": 0.98,
+    "confidence": 0.95,
     "review_reasons": [],
     "strengths": [
-      "7 years of production Python 3, asyncio, and pytest experience",
-      "Direct production experience with Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema",
-      "FastAPI with Google OAuth 2.0 / OIDC ID token audience verification",
-      "Document processing (python-docx, pypdf, openpyxl) and Cloud Run / Vertex AI CI/CD deployments"
+      "6 years of B2B and retail sales experience consistently exceeding quotas by 125%",
+      "Strong track record of closing 180+ commercial and business contracts full-cycle",
+      "Daily hands-on proficiency with both Salesforce and HubSpot CRM",
+      "Demonstrated 96% client retention with upselling and fluent bilingual communication in English and French"
     ],
-    "gaps": [
-      "None noted"
-    ],
-    "reasoning": "Candidate C001 demonstrates strong, direct production experience across all must-have and nice-to-have criteria, including 7 years of Python/asyncio/pytest, Google ADK multi-agent systems with Pydantic validation, and FastAPI with Google OAuth 2.0 audience verification. With an overall score of 100.0 exceeding the 70.0 threshold and consistent evidence across the CV, cover letter, and email, the candidate is a clear match for shortlisting.",
+    "gaps": [],
+    "reasoning": "Candidate C001 strongly exceeds all must-have and nice-to-have criteria with 6 years of B2B and retail sales experience, 180+ closed deals, and daily Salesforce and HubSpot proficiency. Measurable achievements such as 125% target attainment and 96% client retention make this a clear shortlist recommendation.",
     "needs_human_review": false
   },
   {
@@ -64,61 +62,60 @@
     "criterion_scores": [
       {
         "criterion_id": "M1",
-        "criterion_name": "Python Software Engineering & Testing",
-        "category": "must_have",
-        "weight": 25.0,
-        "score": 3,
-        "evidence": "CV: \"Python Backend Developer (4 years): Built production Python async services with pytest automated test suites.\" (Slightly below the 5+ years requirement, but solid async and pytest production experience)."
-      },
-      {
-        "criterion_id": "M2",
-        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "criterion_name": "B2B & Retail Sales Experience with Targets",
         "category": "must_have",
         "weight": 25.0,
         "score": 2,
-        "evidence": "CV: \"Built internal prototypes with Gemini LLM and Pydantic structured output validation (no Google ADK yet).\""
+        "evidence": "Retail Sales Associate (2 years): Worked against monthly retail sales targets and store revenue goals."
+      },
+      {
+        "criterion_id": "M2",
+        "criterion_name": "Closing Deals & Pipeline Conversion",
+        "category": "must_have",
+        "weight": 25.0,
+        "score": 2,
+        "evidence": "Assisted senior executives with qualifying leads and supporting new business inquiries, though I have not yet independently closed full-cycle commercial contracts."
       },
       {
         "criterion_id": "M3",
-        "criterion_name": "REST APIs & Google OAuth Security",
+        "criterion_name": "CRM Software Proficiency",
         "category": "must_have",
         "weight": 20.0,
         "score": 3,
-        "evidence": "CV: \"Developed FastAPI REST API endpoints with OAuth2 token validation and JWT audience checks.\""
+        "evidence": "Used Salesforce CRM daily to maintain account records and log customer inquiries."
       },
       {
         "criterion_id": "N1",
-        "criterion_name": "Document & Spreadsheet Processing",
+        "criterion_name": "Negotiation & Client Presentations",
         "category": "nice_to_have",
         "weight": 15.0,
-        "score": 4,
-        "evidence": "CV: \"Built document pipelines with python-docx, pypdf, and openpyxl for Excel reporting.\""
+        "score": 3,
+        "evidence": "Prepared pricing proposals and delivered product presentations to store stakeholders."
       },
       {
         "criterion_id": "N2",
-        "criterion_name": "Cloud Deployment & CI/CD",
+        "criterion_name": "Client Relationship Management & Bilingual Communication",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 0,
-        "evidence": "CV: \"Basic familiarity with Linux VMs; no production Docker, Google Cloud Run, or Vertex AI CI/CD experience yet.\""
+        "evidence": "I do not have long-term account management or bilingual experience yet."
       }
     ],
-    "overall_score": 49.0,
+    "overall_score": 41.0,
     "decision": "Not Shortlisted",
-    "confidence": 0.85,
+    "confidence": 0.88,
     "review_reasons": [],
     "strengths": [
-      "4 years of production Python experience with async services and pytest",
-      "FastAPI REST API development with OAuth2 token validation and JWT audience checks",
-      "Strong document and spreadsheet processing using python-docx, pypdf, and openpyxl",
-      "Prototyping experience with Gemini LLM and Pydantic structured output validation"
+      "Daily hands-on experience using Salesforce CRM to maintain account records",
+      "Experience preparing pricing proposals and delivering presentations to stakeholders",
+      "2 years of retail sales experience working against monthly revenue targets"
     ],
     "gaps": [
-      "1 year short of the 5+ years Python requirement",
-      "No experience with Google ADK multi-agent frameworks",
-      "No production experience with Docker, Google Cloud Run, Vertex AI, or CI/CD pipelines"
+      "Has 2 years of retail sales experience rather than the required 3+ years",
+      "Has not independently closed full-cycle commercial deals",
+      "Lacks long-term account retention and bilingual communication experience"
     ],
-    "reasoning": "Candidate C002 demonstrates solid backend skills in Python (4 years), FastAPI with OAuth2/JWT audience checks, and document processing using python-docx, pypdf, and openpyxl. However, they explicitly lack experience with Google ADK multi-agent frameworks and Google Cloud/Docker deployment, and have only prototype-level Gemini experience. With an overall score of 49.0 (well below the 70.0 threshold), the candidate is not shortlisted.",
+    "reasoning": "The candidate demonstrates solid daily Salesforce CRM usage and experience preparing pricing proposals and presentations, along with 2 years of target-driven retail sales. However, they fall short of the 3+ years sales requirement and have not independently closed full-cycle commercial deals. With an overall score of 41.0 against the 70.0 threshold, the candidate is not shortlisted.",
     "needs_human_review": false
   },
   {
@@ -126,60 +123,58 @@
     "criterion_scores": [
       {
         "criterion_id": "M1",
-        "criterion_name": "Python Software Engineering & Testing",
+        "criterion_name": "B2B & Retail Sales Experience with Targets",
         "category": "must_have",
         "weight": 25.0,
         "score": 0,
-        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+        "evidence": "Cover letter explicitly states: \"I do not have experience with B2B or retail sales targets, closing deals, CRM software, commercial negotiations, or client presentations.\""
       },
       {
         "criterion_id": "M2",
-        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "criterion_name": "Closing Deals & Pipeline Conversion",
         "category": "must_have",
         "weight": 25.0,
         "score": 0,
-        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+        "evidence": "Cover letter explicitly states: \"I do not have experience with B2B or retail sales targets, closing deals, CRM software, commercial negotiations, or client presentations.\""
       },
       {
         "criterion_id": "M3",
-        "criterion_name": "REST APIs & Google OAuth Security",
+        "criterion_name": "CRM Software Proficiency",
         "category": "must_have",
         "weight": 20.0,
         "score": 0,
-        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+        "evidence": "Cover letter explicitly states: \"I do not have experience with B2B or retail sales targets, closing deals, CRM software, commercial negotiations, or client presentations.\""
       },
       {
         "criterion_id": "N1",
-        "criterion_name": "Document & Spreadsheet Processing",
+        "criterion_name": "Negotiation & Client Presentations",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 0,
-        "evidence": "No evidence of programmatic document or spreadsheet processing in the application; email states: \"I do not have a technical CV yet as my background is in print graphic design and typography.\""
+        "evidence": "Cover letter explicitly states: \"I do not have experience with B2B or retail sales targets, closing deals, CRM software, commercial negotiations, or client presentations.\""
       },
       {
         "criterion_id": "N2",
-        "criterion_name": "Cloud Deployment & CI/CD",
+        "criterion_name": "Client Relationship Management & Bilingual Communication",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 0,
-        "evidence": "Cover letter explicitly states: \"I do not have experience with Python programming, LLM frameworks, FastAPI, OAuth, or cloud infrastructure\"."
+        "evidence": "No evidence of client relationship management or bilingual communication; cover letter states: \"My background over the past 8 years is in greenhouse botanical care, floral arrangement, and nursery plant propagation.\""
       }
     ],
     "overall_score": 0.0,
     "decision": "Not Shortlisted",
     "confidence": 0.98,
     "review_reasons": [],
-    "strengths": [
-      "None noted"
-    ],
+    "strengths": [],
     "gaps": [
-      "No experience with Python software engineering, asyncio, or pytest",
-      "No experience with LLM or multi-agent frameworks (Google ADK, Gemini, Pydantic)",
-      "No experience with FastAPI or Google OAuth 2.0 / OIDC security",
-      "No experience with Python document/spreadsheet processing libraries",
-      "No experience with Docker, Google Cloud deployment, or CI/CD"
+      "B2B & Retail Sales Experience with Targets",
+      "Closing Deals & Pipeline Conversion",
+      "CRM Software Proficiency",
+      "Negotiation & Client Presentations",
+      "Client Relationship Management & Bilingual Communication"
     ],
-    "reasoning": "The candidate is a print graphic designer seeking a career transition and explicitly states in their cover letter that they have no experience with Python, LLM frameworks, FastAPI, OAuth, or cloud infrastructure. Consequently, the application scores 0/100 against the rubric and is a clear non-match with high confidence.",
+    "reasoning": "The candidate's background is exclusively in greenhouse botanical care, floral arrangement, and nursery plant propagation. In both the cover letter and email, the candidate explicitly states that they lack experience in all core requirements, including B2B/retail sales targets, closing deals, CRM software, and negotiations. Consequently, the candidate scores 0/100 and is a clear non-match for the role.",
     "needs_human_review": false
   },
   {
@@ -187,43 +182,43 @@
     "criterion_scores": [
       {
         "criterion_id": "M1",
-        "criterion_name": "Python Software Engineering & Testing",
+        "criterion_name": "B2B & Retail Sales Experience with Targets",
         "category": "must_have",
         "weight": 25.0,
         "score": 4,
-        "evidence": "Cover Letter & CV: \"I have 6 years of production Python 3 software engineering experience, with deep expertise in asyncio concurrency and automated pytest test suites.\""
+        "evidence": "CV: 'Sales Executive with 5 years of B2B and retail sales experience working against annual revenue targets and quarterly quotas, having consistently exceeded targets across regional territories.'"
       },
       {
         "criterion_id": "M2",
-        "criterion_name": "LLM & Multi-Agent Frameworks",
+        "criterion_name": "Closing Deals & Pipeline Conversion",
         "category": "must_have",
         "weight": 25.0,
         "score": 4,
-        "evidence": "CV: \"Architected multi-agent pipelines using Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema.\""
+        "evidence": "CV: 'Proven track record in prospecting, closing deals, and winning new business across retail and commercial accounts.'"
       },
       {
         "criterion_id": "M3",
-        "criterion_name": "REST APIs & Google OAuth Security",
+        "criterion_name": "CRM Software Proficiency",
         "category": "must_have",
         "weight": 20.0,
         "score": 0,
-        "evidence": "No mention of FastAPI, REST APIs, or Google OAuth 2.0 / OIDC token verification in the cover letter, CV, or email."
+        "evidence": "No mention of Salesforce, HubSpot, or any CRM software found in the CV, cover letter, or email."
       },
       {
         "criterion_id": "N1",
-        "criterion_name": "Document & Spreadsheet Processing",
+        "criterion_name": "Negotiation & Client Presentations",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 4,
-        "evidence": "CV: \"Built automated document and report pipelines using python-docx, pypdf, and openpyxl.\""
+        "evidence": "CV: 'Skilled in commercial negotiation, preparing pricing proposals, and delivering persuasive presentations to client buyers.'"
       },
       {
         "criterion_id": "N2",
-        "criterion_name": "Cloud Deployment & CI/CD",
+        "criterion_name": "Client Relationship Management & Bilingual Communication",
         "category": "nice_to_have",
         "weight": 15.0,
         "score": 4,
-        "evidence": "Cover Letter & CV: \"deployed containerized batch pipelines with Docker and GitHub Actions CI/CD to Google Cloud Run and Vertex AI.\""
+        "evidence": "CV: 'Experienced in client relationship management, driving high retention and renewals, with bilingual communication skills.'"
       }
     ],
     "overall_score": 64.0,
@@ -234,15 +229,14 @@
       "missing_evidence"
     ],
     "strengths": [
-      "6 years of production Python 3, asyncio, and pytest experience",
-      "Hands-on experience with Google ADK (SequentialAgent, LlmAgent), Gemini, and Pydantic output_schema",
-      "Experience with python-docx, pypdf, and openpyxl document processing",
-      "Docker containerization and CI/CD deployment to Google Cloud Run and Vertex AI"
+      "5 years of B2B and retail sales experience consistently exceeding revenue targets and quotas",
+      "Track record in prospecting, closing deals, and winning new business across retail and commercial accounts",
+      "Commercial negotiation, pricing proposals, presentations, and bilingual client relationship retention"
     ],
     "gaps": [
-      "No evidence of FastAPI or Google OAuth 2.0 / OIDC ID token verification (Must-Have M3)"
+      "No mention or evidence of CRM software proficiency (must-have criterion M3)"
     ],
-    "reasoning": "Candidate C004 demonstrates strong experience across Python 3 (M1), Google ADK multi-agent workflows (M2), document processing (N1), and Cloud Run/Vertex AI deployments (N2). However, the application completely omits any mention of FastAPI or Google OAuth 2.0 / OIDC token verification (must-have criterion M3), resulting in a borderline overall score of 64.0. The application is flagged for human review so HR can decide whether to verify M3 experience with the candidate.",
+    "reasoning": "Candidate C004 demonstrates 5 years of relevant B2B and retail sales experience, deal closing, commercial negotiation, and bilingual client retention. However, the application completely omits any mention of CRM software proficiency (M3), resulting in a borderline overall score of 64.0 below the 70.0 threshold. Human review is flagged to verify whether the candidate has unstated CRM experience before making a final decision.",
     "needs_human_review": true
   }
 ]

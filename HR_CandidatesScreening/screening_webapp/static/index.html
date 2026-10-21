@@ -121,17 +121,9 @@
         <span id="topbar-active-job" class="badge badge-hr hidden"></span>
       </div>
       <div class="topbar-actions">
-        <select id="theme-select" class="select-input" style="width: auto;" aria-label="Color theme">
-          <option value="system">Theme: Follow OS</option>
-          <option value="light">Theme: Light</option>
-          <option value="dark">Theme: Dark</option>
-        </select>
-        <button id="btn-default-settings" type="button" class="btn btn-outline" aria-expanded="false" aria-controls="settings-panel">
-          Default settings
-        </button>
-        <span id="settings-summary" class="settings-summary-pill" aria-live="polite">Threshold 70 · gemini-4-argon · Redaction on</span>
-        <button id="btn-export-excel" type="button" class="btn btn-outline">
-          Export Excel (.xlsx)
+        <button id="btn-default-settings" type="button" class="btn btn-outline settings-trigger-btn" aria-expanded="false" aria-controls="settings-panel" title="Global &amp; Default Settings">
+          <span>⚙️ Settings</span>
+          <span class="sr-only">Default settings</span>
         </button>
         <span id="signed-in-user" class="user-pill"></span>
         <button id="btn-logout" type="button" class="btn btn-outline">
@@ -140,17 +132,35 @@
       </div>
     </header>
 
-    <!-- Folded-by-default Default Screening Settings Panel -->
+    <!-- Folded-by-default Global & Default Screening Settings Menu -->
     <aside id="settings-panel" class="settings-panel collapsed hidden" data-folded="true" aria-hidden="true" aria-label="Default Screening Settings">
       <div class="settings-panel-inner">
         <div class="settings-panel-header">
-          <h2>Default Screening Settings</h2>
-          <button id="btn-close-settings" type="button" class="btn btn-outline btn-xs">
-            Fold panel
-          </button>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <h2>Global &amp; Default Screening Settings</h2>
+            <span id="settings-summary" class="settings-summary-pill" aria-live="polite">Threshold 70 · gemini-4-argon · Redaction on</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button id="btn-export-excel" type="button" class="btn btn-outline btn-xs">
+              ⬇ Export Excel (.xlsx)
+            </button>
+            <button id="btn-close-settings" type="button" class="btn btn-outline btn-xs">
+              Close Settings
+            </button>
+          </div>
         </div>
 
         <div class="settings-panel-grid">
+          <div class="form-group">
+            <label for="theme-select">Appearance / Theme</label>
+            <select id="theme-select" class="select-input" aria-label="Color theme">
+              <option value="system">Theme: Follow OS</option>
+              <option value="light">Theme: Light</option>
+              <option value="dark">Theme: Dark</option>
+            </select>
+            <div class="form-help">Switch between OS default, light, or dark interface theme.</div>
+          </div>
+
           <div class="form-group">
             <label for="setting-threshold">
               <span>Pass Threshold</span>
@@ -235,18 +245,34 @@
                 <input id="new-job-jd-file" type="file" accept=".docx,.pdf,.txt" class="text-input file-input" />
               </div>
 
-              <div class="form-group">
-                <label for="new-job-cv-folder">
-                  <span>Candidate CV Folder (Browser Folder Picker)</span>
-                  <span id="new-job-cv-count" class="badge badge-ai">0 files selected</span>
+              <div class="form-group cv-source-span">
+                <label>
+                  <span>Candidate CVs Source</span>
+                  <div class="source-radio-group" role="radiogroup" aria-label="Candidate CVs Source">
+                    <label class="source-radio-pill active" id="cv-source-upload-pill">
+                      <input type="radio" name="cv-source-mode" id="cv-source-upload" value="upload" checked />
+                      <span>📁 Upload Candidate Folder / CVs</span>
+                    </label>
+                    <label class="source-radio-pill" id="cv-source-server-pill">
+                      <input type="radio" name="cv-source-mode" id="cv-source-server" value="server" />
+                      <span>🖧 Server Folder Path</span>
+                    </label>
+                  </div>
                 </label>
-                <input id="new-job-cv-folder" type="file" webkitdirectory directory multiple class="text-input file-input" />
-                <div class="form-help">Pick a folder containing candidate subfolders or CV documents. Files are stored under <code>screening_webapp/data/jobs/&lt;JOB-ID&gt;/</code>.</div>
-              </div>
 
-              <div class="form-group">
-                <label for="new-job-server-dir">Or Server Folder Path (Optional, inside project root)</label>
-                <input id="new-job-server-dir" type="text" class="text-input" placeholder="Leave blank when uploading a folder above" />
+                <div id="cv-source-upload-group">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                    <span class="form-help" style="margin: 0;">Select a folder of CVs (1 file = 1 candidate review, or candidate subfolders)</span>
+                    <span id="new-job-cv-count" class="badge badge-ai">0 files selected</span>
+                  </div>
+                  <input id="new-job-cv-folder" type="file" webkitdirectory directory multiple class="text-input file-input" />
+                  <div class="form-help">Each standalone resume file (.pdf, .docx, .txt) is ingested as an individual candidate review under <code>screening_webapp/data/jobs/&lt;JOB-ID&gt;/</code>.</div>
+                </div>
+
+                <div id="cv-source-server-group" class="hidden">
+                  <input id="new-job-server-dir" type="text" class="text-input" placeholder="e.g. screening_agent/data/applications (inside project root)" />
+                  <div class="form-help">Provide a relative or absolute folder path inside the project workspace containing candidate CVs or subfolders.</div>
+                </div>
               </div>
             </div>
 
@@ -460,7 +486,7 @@
                   <th>Time (UTC)</th>
                   <th>User</th>
                   <th>Action</th>
-                  <th>Details</th>
+                  <th class="audit-details-col">Details</th>
                 </tr>
               </thead>
               <tbody id="history-audit-tbody">
@@ -575,7 +601,7 @@
                   <th>Time (UTC)</th>
                   <th>Actor</th>
                   <th>Action</th>
-                  <th>Details</th>
+                  <th class="audit-details-col">Details</th>
                 </tr>
               </thead>
               <tbody id="access-audit-tbody">
@@ -595,7 +621,10 @@
     <div class="modal-card">
       <div class="modal-header">
         <h3 id="doc-modal-title" style="margin: 0;">Candidate Documents</h3>
-        <button id="btn-close-doc-modal" type="button" class="btn btn-outline btn-xs">Close</button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button id="btn-download-all-docs" type="button" class="btn btn-outline btn-xs hidden">⬇ Download Original</button>
+          <button id="btn-close-doc-modal" type="button" class="btn btn-outline btn-xs">Close</button>
+        </div>
       </div>
       <div id="doc-modal-body" class="modal-body"></div>
     </div>

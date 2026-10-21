@@ -10,6 +10,7 @@ per-job screening runs, per-job HR decisions keyed by (job_id, candidate_id), an
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import io
 import json
 import math
 import os
@@ -18,9 +19,10 @@ import re
 import threading
 from typing import Any
 import uuid
+import zipfile
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from sqlalchemy import desc
@@ -28,7 +30,11 @@ from sqlalchemy.orm import Session
 
 from screening_agent import agent as agent_module
 from screening_agent import tools as tools_module
-from screening_agent.agent import apply_uncertainty_rules, run_screening_pipeline
+from screening_agent.agent import (
+    apply_uncertainty_rules,
+    run_screening_pipeline,
+    sync_decision_and_reasoning,
+)
 from screening_agent.schemas import CandidateEvaluation, JobRubric
 from screening_agent.tools import (
     _extract_docx_text,
@@ -324,15 +330,19 @@ def _generate_next_job_id(db: Session) -> str:
 
 
 def _count_candidate_folders(app_dir: Path) -> int:
-    """Count candidate subfolders inside an applications directory."""
+    """Count candidate entries (subfolders or standalone resume files) inside an applications directory."""
     if not app_dir.exists() or not app_dir.is_dir():
         return 0
-    return len([d for d in app_dir.iterdir() if d.is_dir()])
+    return len(tools_module._resolve_candidate_entries(app_dir))
 
 
 def _count_candidate_documents(folder_path: Path) -> int:
-    """Count readable application documents inside a single candidate folder."""
-    if not folder_path.exists() or not folder_path.is_dir():
+    """Count readable application documents inside a single candidate folder or single file."""
+    if not folder_path.exists():
+        return 0
+    if folder_path.is_file():
+        return 1 if folder_path.suffix.lower() in ALLOWED_CV_EXTENSIONS else 0
+    if not folder_path.is_dir():
         return 0
     return len(
         [
@@ -345,6 +355,7 @@ def _count_candidate_documents(folder_path: Path) -> int:
 
 def _serialize_job(db: Session, job: Job) -> dict[str, Any]:
     """Serialize a Job ORM instance with candidate count and latest run info."""
+    job = _repair_default_job_paths(db, job)
     app_dir = Path(job.applications_dir)
     folder_count = _count_candidate_folders(app_dir)
     last_run = (
@@ -386,11 +397,28 @@ def _serialize_job(db: Session, job: Job) -> dict[str, Any]:
     }
 
 
+def _repair_default_job_paths(db: Session, job: Job) -> Job:
+    """Repair default JOB-2026-001 paths when running across environments (e.g., host vs Cloud Run /app)."""
+    if job.job_id == "JOB-2026-001":
+        changed = False
+        if not Path(job.applications_dir).exists() and DEFAULT_APPLICATIONS_DIR.exists():
+            job.applications_dir = str(DEFAULT_APPLICATIONS_DIR.resolve())
+            changed = True
+        if not Path(job.jd_path).exists() and DEFAULT_ADVERT_PATH.exists():
+            job.jd_path = str(DEFAULT_ADVERT_PATH.resolve())
+            job.jd_filename = DEFAULT_ADVERT_PATH.name
+            changed = True
+        if changed:
+            db.commit()
+            db.refresh(job)
+    return job
+
+
 def _ensure_default_job(db: Session, actor_email: str = "system") -> Job:
     """Return the latest Job in DB, or create JOB-2026-001 from current settings if none exists."""
     latest_job = db.query(Job).order_by(desc(Job.created_at_utc), desc(Job.job_id)).first()
     if latest_job is not None:
-        return latest_job
+        return _repair_default_job_paths(db, latest_job)
 
     settings = load_settings()
     jd_default = Path(tools_module.DEFAULT_ADVERT_PATH).resolve()
@@ -512,7 +540,7 @@ def _get_job_or_404(db: Session, job_id: str) -> Job:
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Job not found: {job_id}",
         )
-    return job
+    return _repair_default_job_paths(db, job)
 
 
 def _get_latest_hr_decisions_map(
@@ -833,6 +861,7 @@ def _execute_screening_run(
                     eval_obj.decision = "Not Shortlisted"
 
                 eval_obj = apply_uncertainty_rules(eval_obj, rubric_obj, raw_app_text)
+                eval_obj = sync_decision_and_reasoning(eval_obj, rubric_obj)
                 eval_objs.append(eval_obj)
 
                 cand_info = mapping.get(cid, {})
@@ -1074,7 +1103,7 @@ def _safe_folder_name(name: str, default: str = "Candidate") -> str:
 
 
 def _build_folders_response(app_dir: Path, job_id: str | None = None) -> dict[str, Any]:
-    """List candidate folders and their document counts/metadata for a given applications_dir."""
+    """List candidate folders (or standalone resume files) and their document counts/metadata for a given applications_dir."""
     if not app_dir.exists():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -1091,14 +1120,26 @@ def _build_folders_response(app_dir: Path, job_id: str | None = None) -> dict[st
         folder_path = Path(info.get("folder_path", app_dir / cand["source_folder"]))
         files_out: list[dict[str, Any]] = []
 
-        if folder_path.exists() and folder_path.is_dir():
-            for fpath in sorted(
-                [f for f in folder_path.iterdir() if f.is_file()],
-                key=lambda x: x.name.lower(),
-            ):
+        if folder_path.exists():
+            candidate_files = (
+                [folder_path]
+                if folder_path.is_file()
+                else sorted(
+                    [f for f in folder_path.iterdir() if f.is_file()],
+                    key=lambda x: x.name.lower(),
+                )
+            )
+            for fpath in candidate_files:
                 fsize = fpath.stat().st_size
                 _, parse_status = _extract_single_file_text(fpath)
                 doc_type = _classify_file_type(fpath)
+                if doc_type == "Document" and len(candidate_files) == 1 and fpath.suffix.lower() in (".pdf", ".docx", ".txt"):
+                    doc_type = "CV"
+                dl_url = (
+                    f"/api/jobs/{job_id}/folders/{cid}/files/{fpath.name}"
+                    if job_id
+                    else f"/api/folders/{cid}/files/{fpath.name}"
+                )
                 files_out.append(
                     {
                         "name": fpath.name,
@@ -1107,10 +1148,16 @@ def _build_folders_response(app_dir: Path, job_id: str | None = None) -> dict[st
                         "size": fsize,
                         "size_human": _human_size(fsize),
                         "parse_status": parse_status,
+                        "download_url": dl_url,
                     }
                 )
 
         doc_count = len(files_out)
+        bundle_url = (
+            f"/api/jobs/{job_id}/folders/{cid}/download"
+            if job_id
+            else f"/api/folders/{cid}/download"
+        )
         folders_out.append(
             {
                 "job_id": job_id,
@@ -1120,6 +1167,7 @@ def _build_folders_response(app_dir: Path, job_id: str | None = None) -> dict[st
                 "file_count": doc_count,
                 "document_count": doc_count,
                 "documents_label": f"{doc_count} document" if doc_count == 1 else f"{doc_count} documents",
+                "download_url": bundle_url,
                 "files": files_out,
             }
         )
@@ -1132,10 +1180,8 @@ def _build_folders_response(app_dir: Path, job_id: str | None = None) -> dict[st
     }
 
 
-def _build_candidate_preview_response(
-    app_dir: Path, candidate_id: str, job_id: str | None = None
-) -> dict[str, Any]:
-    """Return extracted text preview (~1500 chars) for each file in a candidate folder."""
+def _resolve_target_candidate_info(app_dir: Path, candidate_id: str) -> dict[str, str]:
+    """Resolve a candidate entry in _CANDIDATE_MAPPING by candidate_id, source_folder, or name."""
     if not app_dir.exists():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -1161,7 +1207,14 @@ def _build_candidate_preview_response(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Candidate folder not found: {candidate_id}",
         )
+    return target_info
 
+
+def _build_candidate_preview_response(
+    app_dir: Path, candidate_id: str, job_id: str | None = None
+) -> dict[str, Any]:
+    """Return extracted text preview (~1500 chars) for each file in a candidate folder or standalone file."""
+    target_info = _resolve_target_candidate_info(app_dir, candidate_id)
     resolved_cid = target_info["candidate_id"]
     folder_path = Path(target_info["folder_path"])
     if not folder_path.exists():
@@ -1170,27 +1223,47 @@ def _build_candidate_preview_response(
             detail=f"Folder path does not exist for candidate {resolved_cid}",
         )
 
+    candidate_files = (
+        [folder_path]
+        if folder_path.is_file()
+        else sorted(
+            [f for f in folder_path.iterdir() if f.is_file()],
+            key=lambda x: x.name.lower(),
+        )
+    )
+
     file_previews: list[dict[str, Any]] = []
-    for fpath in sorted(
-        [f for f in folder_path.iterdir() if f.is_file()],
-        key=lambda x: x.name.lower(),
-    ):
+    for fpath in candidate_files:
         text, parse_status = _extract_single_file_text(fpath)
         preview_text = text[:1500]
+        doc_type = _classify_file_type(fpath)
+        if doc_type == "Document" and len(candidate_files) == 1 and fpath.suffix.lower() in (".pdf", ".docx", ".txt"):
+            doc_type = "CV"
+        dl_url = (
+            f"/api/jobs/{job_id}/folders/{resolved_cid}/files/{fpath.name}"
+            if job_id
+            else f"/api/folders/{resolved_cid}/files/{fpath.name}"
+        )
         file_previews.append(
             {
                 "name": fpath.name,
-                "type": _classify_file_type(fpath),
+                "type": doc_type,
                 "size": fpath.stat().st_size,
                 "size_human": _human_size(fpath.stat().st_size),
                 "parse_status": parse_status,
                 "preview": preview_text,
                 "total_chars": len(text),
                 "truncated": len(text) > 1500,
+                "download_url": dl_url,
             }
         )
 
     full_combined = read_application(resolved_cid, str(app_dir))
+    bundle_url = (
+        f"/api/jobs/{job_id}/folders/{resolved_cid}/download"
+        if job_id
+        else f"/api/folders/{resolved_cid}/download"
+    )
     return {
         "job_id": job_id,
         "candidate_id": resolved_cid,
@@ -1202,9 +1275,100 @@ def _build_candidate_preview_response(
             if len(file_previews) == 1
             else f"{len(file_previews)} documents"
         ),
+        "download_url": bundle_url,
         "combined_preview": full_combined[:1500],
         "files": file_previews,
     }
+
+
+def _resolve_candidate_file_download(
+    app_dir: Path, candidate_id: str, filename: str
+) -> FileResponse:
+    """Return a FileResponse for a specific original document in a candidate's application."""
+    target_info = _resolve_target_candidate_info(app_dir, candidate_id)
+    folder_path = Path(target_info["folder_path"]).resolve()
+    if not folder_path.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Candidate path does not exist: {candidate_id}",
+        )
+
+    clean_fname = Path(filename.replace("\\", "/")).name.strip()
+    if folder_path.is_file():
+        if folder_path.name != clean_fname and _safe_filename(folder_path.name) != _safe_filename(clean_fname):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"File '{clean_fname}' not found for candidate {candidate_id}",
+            )
+        target_file = folder_path
+    else:
+        target_file = (folder_path / clean_fname).resolve()
+        if not target_file.is_relative_to(folder_path) or not target_file.is_file():
+            # Try case-insensitive match within candidate folder
+            matched = next(
+                (f for f in folder_path.iterdir() if f.is_file() and f.name.lower() == clean_fname.lower()),
+                None,
+            )
+            if matched is None:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"File '{clean_fname}' not found for candidate {candidate_id}",
+                )
+            target_file = matched.resolve()
+
+    return FileResponse(
+        path=str(target_file),
+        filename=target_file.name,
+        media_type="application/octet-stream",
+    )
+
+
+def _resolve_candidate_bundle_download(
+    app_dir: Path, candidate_id: str
+) -> Response:
+    """Download the candidate's single CV file directly, or a .zip archive if multiple files exist."""
+    target_info = _resolve_target_candidate_info(app_dir, candidate_id)
+    resolved_cid = target_info["candidate_id"]
+    folder_path = Path(target_info["folder_path"]).resolve()
+    if not folder_path.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Candidate path does not exist: {candidate_id}",
+        )
+
+    if folder_path.is_file():
+        return FileResponse(
+            path=str(folder_path),
+            filename=folder_path.name,
+            media_type="application/octet-stream",
+        )
+
+    files = sorted([f for f in folder_path.iterdir() if f.is_file()], key=lambda x: x.name.lower())
+    if not files:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No files found for candidate {resolved_cid}",
+        )
+
+    if len(files) == 1:
+        return FileResponse(
+            path=str(files[0]),
+            filename=files[0].name,
+            media_type="application/octet-stream",
+        )
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for fpath in files:
+            zf.write(fpath, arcname=fpath.name)
+    zip_bytes = buf.getvalue()
+    safe_cand = _safe_folder_name(target_info.get("name", resolved_cid))
+    zip_filename = f"{resolved_cid}_{safe_cand}.zip"
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{zip_filename}"'},
+    )
 
 
 def _start_run_for_job(
@@ -1860,6 +2024,8 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
             if cv_uploads:
                 apps_upload_dir.mkdir(parents=True, exist_ok=True)
                 saved_any = False
+                parsed_uploads: list[tuple[Any, list[str], str]] = []
+                subfolder_primary_counts: dict[str, int] = {}
                 for idx, upload_item in enumerate(cv_uploads):
                     rel_raw = (
                         cv_rel_paths[idx]
@@ -1876,11 +2042,21 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
                     fname = _safe_filename(parts[-1])
                     if Path(fname).suffix.lower() not in ALLOWED_CV_EXTENSIONS:
                         continue
+                    parsed_uploads.append((upload_item, parts, fname))
+                    if len(parts) >= 3 and not tools_module._is_complementary_doc(Path(fname)):
+                        sub_key = _safe_folder_name(parts[-2])
+                        subfolder_primary_counts[sub_key] = subfolder_primary_counts.get(sub_key, 0) + 1
+
+                for upload_item, parts, fname in parsed_uploads:
                     if len(parts) >= 3:
-                        cand_folder_name = _safe_folder_name(parts[-2])
-                    elif len(parts) == 2:
-                        cand_folder_name = _safe_folder_name(parts[0])
+                        sub_key = _safe_folder_name(parts[-2])
+                        if subfolder_primary_counts.get(sub_key, 0) >= 2:
+                            cand_folder_name = _safe_folder_name(Path(fname).stem)
+                        else:
+                            cand_folder_name = sub_key
                     else:
+                        # Flat folder upload (e.g. Sample_Resumes/Resume1.pdf) or single file:
+                        # 1 file = 1 candidate review
                         cand_folder_name = _safe_folder_name(Path(fname).stem)
 
                     dest_folder = apps_upload_dir / cand_folder_name
@@ -1996,6 +2172,37 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
         job = _get_job_or_404(db, job_id)
         return _build_candidate_preview_response(
             Path(job.applications_dir).resolve(), candidate_id=candidate_id, job_id=job.job_id
+        )
+
+    @app.get("/api/jobs/{job_id}/folders/{candidate_id}/files/{filename}")
+    def download_job_candidate_file_endpoint(
+        job_id: str,
+        candidate_id: str,
+        filename: str,
+        claims: dict[str, Any] = Depends(require_hr_auth),
+        db: Session = Depends(get_db),
+    ) -> Response:
+        """Download a specific original document for a candidate in a job."""
+        _ = claims
+        init_db()
+        job = _get_job_or_404(db, job_id)
+        return _resolve_candidate_file_download(
+            Path(job.applications_dir).resolve(), candidate_id=candidate_id, filename=filename
+        )
+
+    @app.get("/api/jobs/{job_id}/folders/{candidate_id}/download")
+    def download_job_candidate_bundle_endpoint(
+        job_id: str,
+        candidate_id: str,
+        claims: dict[str, Any] = Depends(require_hr_auth),
+        db: Session = Depends(get_db),
+    ) -> Response:
+        """Download original document (or ZIP bundle of documents) for a candidate in a job."""
+        _ = claims
+        init_db()
+        job = _get_job_or_404(db, job_id)
+        return _resolve_candidate_bundle_download(
+            Path(job.applications_dir).resolve(), candidate_id=candidate_id
         )
 
     @app.post("/api/jobs/{job_id}/runs")
@@ -2130,6 +2337,61 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
                     job_id=latest_job.job_id,
                 )
         return _build_candidate_preview_response(app_dir, candidate_id=candidate_id, job_id=None)
+
+    @app.get("/api/folders/{candidate_id}/files/{filename}")
+    def download_candidate_file(
+        candidate_id: str,
+        filename: str,
+        job_id: str | None = Query(default=None),
+        claims: dict[str, Any] = Depends(require_hr_auth),
+        db: Session = Depends(get_db),
+    ) -> Response:
+        """Download a specific original document for a candidate."""
+        _ = claims
+        init_db()
+        if job_id:
+            job = _get_job_or_404(db, job_id)
+            return _resolve_candidate_file_download(
+                Path(job.applications_dir).resolve(), candidate_id=candidate_id, filename=filename
+            )
+
+        settings = load_settings()
+        app_dir = Path(settings["applications_dir"]).resolve()
+        if not app_dir.exists():
+            latest_job = db.query(Job).order_by(desc(Job.created_at_utc), desc(Job.job_id)).first()
+            if latest_job is not None and Path(latest_job.applications_dir).exists():
+                return _resolve_candidate_file_download(
+                    Path(latest_job.applications_dir).resolve(),
+                    candidate_id=candidate_id,
+                    filename=filename,
+                )
+        return _resolve_candidate_file_download(app_dir, candidate_id=candidate_id, filename=filename)
+
+    @app.get("/api/folders/{candidate_id}/download")
+    def download_candidate_bundle(
+        candidate_id: str,
+        job_id: str | None = Query(default=None),
+        claims: dict[str, Any] = Depends(require_hr_auth),
+        db: Session = Depends(get_db),
+    ) -> Response:
+        """Download original document (or ZIP bundle) for a candidate."""
+        _ = claims
+        init_db()
+        if job_id:
+            job = _get_job_or_404(db, job_id)
+            return _resolve_candidate_bundle_download(
+                Path(job.applications_dir).resolve(), candidate_id=candidate_id
+            )
+
+        settings = load_settings()
+        app_dir = Path(settings["applications_dir"]).resolve()
+        if not app_dir.exists():
+            latest_job = db.query(Job).order_by(desc(Job.created_at_utc), desc(Job.job_id)).first()
+            if latest_job is not None and Path(latest_job.applications_dir).exists():
+                return _resolve_candidate_bundle_download(
+                    Path(latest_job.applications_dir).resolve(), candidate_id=candidate_id
+                )
+        return _resolve_candidate_bundle_download(app_dir, candidate_id=candidate_id)
 
     @app.get("/api/settings")
     def get_settings_endpoint(

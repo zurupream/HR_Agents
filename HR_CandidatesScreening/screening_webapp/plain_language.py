@@ -6,6 +6,7 @@ unreadable_document, low_confidence) to clear sentences suitable for HR users.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 
@@ -184,6 +185,44 @@ def build_plain_why_summary(
         reasoning_text = reasoning_text.replace(raw_code, raw_code.replace("_", " "))
 
     if reasoning_text:
+        if str(ai_decision).strip().lower() == "shortlisted":
+            reasoning_text = re.sub(
+                r"recommended\s+as\s+Not\s+Shortlisted",
+                "recommended as Shortlisted",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
+            reasoning_text = re.sub(
+                r"\bis\s+not\s+shortlisted\b",
+                "is recommended as Shortlisted",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
+            reasoning_text = re.sub(
+                r"\bdo\s+not\s+shortlist\b",
+                "recommend for shortlisting",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
+            reasoning_text = re.sub(
+                r"\(well\s+below\s+the\s+[\d.]+\s+threshold\),\s*the\s+candidate\s+is\s+a\s+clear\s+non-match\.?",
+                f"(above the {_fmt_num(threshold)} threshold), the candidate is a strong match for shortlisting.",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
+        else:
+            reasoning_text = re.sub(
+                r"recommended\s+as\s+Shortlisted",
+                "recommended as Not Shortlisted",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
+            reasoning_text = re.sub(
+                r"\bis\s+recommended\s+for\s+shortlisting\b",
+                "is recommended as Not Shortlisted",
+                reasoning_text,
+                flags=re.IGNORECASE,
+            )
         parts.append(reasoning_text)
     else:
         score_str = _fmt_num(ai_score)

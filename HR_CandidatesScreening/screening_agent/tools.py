@@ -120,11 +120,76 @@ def _extract_eml_text(file_path: Path) -> str:
     return "\n\n".join(p for p in parts if p)
 
 
+SUPPORTED_DOC_EXTENSIONS = {".docx", ".pdf", ".eml", ".txt"}
+
+
+def _is_complementary_doc(file_path: Path) -> bool:
+    """Return True if a file is a cover letter or email rather than a standalone CV/resume."""
+    lower_name = file_path.name.lower()
+    suffix = file_path.suffix.lower()
+    return "cover" in lower_name or "email" in lower_name or suffix == ".eml"
+
+
+def _resolve_candidate_entries(app_dir: Path) -> list[dict[str, str]]:
+    """Resolve candidate entries from an applications directory.
+
+    Supports both:
+    - Per-candidate subfolders (containing complementary files such as CV + Cover Letter + Email)
+    - Flat directories or batch subfolders where multiple standalone resume files sit in one folder
+      (1 resume file = 1 candidate).
+    """
+    entries: list[dict[str, str]] = []
+    items = sorted(app_dir.iterdir(), key=lambda p: p.name.lower())
+
+    for item in items:
+        if item.is_dir():
+            sub_files = sorted(
+                [
+                    f
+                    for f in item.iterdir()
+                    if f.is_file() and f.suffix.lower() in SUPPORTED_DOC_EXTENSIONS
+                ],
+                key=lambda f: f.name.lower(),
+            )
+            primary_docs = [f for f in sub_files if not _is_complementary_doc(f)]
+            if len(primary_docs) >= 2:
+                # Batch folder containing multiple standalone CVs/resumes: treat each file as 1 candidate
+                for fpath in sub_files:
+                    display_name = fpath.stem.replace("_", " ").replace("-", " ").strip() or fpath.name
+                    entries.append(
+                        {
+                            "name": display_name,
+                            "source_folder": fpath.stem,
+                            "folder_path": str(fpath.resolve()),
+                        }
+                    )
+            else:
+                display_name = item.name.replace("_", " ").strip()
+                entries.append(
+                    {
+                        "name": display_name,
+                        "source_folder": item.name,
+                        "folder_path": str(item.resolve()),
+                    }
+                )
+        elif item.is_file() and item.suffix.lower() in SUPPORTED_DOC_EXTENSIONS:
+            display_name = item.stem.replace("_", " ").replace("-", " ").strip() or item.name
+            entries.append(
+                {
+                    "name": display_name,
+                    "source_folder": item.stem,
+                    "folder_path": str(item.resolve()),
+                }
+            )
+
+    return entries
+
+
 def list_candidates(applications_dir: str | None = None) -> list[dict[str, str]]:
-    """List candidate folders, assign anonymous IDs (C001, C002, ...), and store local mapping.
+    """List candidate folders or standalone resume files, assign anonymous IDs (C001, C002, ...), and store local mapping.
 
     Args:
-        applications_dir: Optional directory containing candidate subfolders.
+        applications_dir: Optional directory containing candidate subfolders or resume files.
 
     Returns:
         List of dicts with keys 'candidate_id' and 'source_folder' (real name stays in local mapping).
@@ -133,23 +198,22 @@ def list_candidates(applications_dir: str | None = None) -> list[dict[str, str]]
     if not app_dir.exists():
         raise FileNotFoundError(f"Applications directory not found at: {app_dir}")
 
-    folders = sorted([p for p in app_dir.iterdir() if p.is_dir()], key=lambda p: p.name.lower())
+    resolved_entries = _resolve_candidate_entries(app_dir)
     _CANDIDATE_MAPPING.clear()
     public_records: list[dict[str, str]] = []
 
-    for idx, folder in enumerate(folders, start=1):
+    for idx, entry in enumerate(resolved_entries, start=1):
         cid = f"C{idx:03d}"
-        display_name = folder.name.replace("_", " ").strip()
         _CANDIDATE_MAPPING[cid] = {
             "candidate_id": cid,
-            "name": display_name,
-            "source_folder": folder.name,
-            "folder_path": str(folder.resolve()),
+            "name": entry["name"],
+            "source_folder": entry["source_folder"],
+            "folder_path": entry["folder_path"],
         }
         public_records.append(
             {
                 "candidate_id": cid,
-                "source_folder": folder.name,
+                "source_folder": entry["source_folder"],
             }
         )
 
@@ -157,21 +221,22 @@ def list_candidates(applications_dir: str | None = None) -> list[dict[str, str]]
 
 
 def read_application(candidate_identifier: str, applications_dir: str | None = None) -> str:
-    """Extract and concatenate full text from all files in a candidate folder.
+    """Extract and concatenate full text from all files in a candidate folder (or single resume file).
 
     Never truncates snippets: cover letter, email, and CV (if present) are included in full.
 
     Args:
-        candidate_identifier: Anonymous ID (e.g. 'C001'), folder name, or path to folder.
+        candidate_identifier: Anonymous ID (e.g. 'C001'), folder/file name, or path to folder/file.
         applications_dir: Optional base directory for applications.
 
     Returns:
-        Complete concatenated text of all files in the candidate's application folder.
+        Complete concatenated text of all files in the candidate's application.
     """
     folder_path: Path | None = None
     if applications_dir and candidate_identifier in _CANDIDATE_MAPPING:
-        cached_parent = Path(_CANDIDATE_MAPPING[candidate_identifier]["folder_path"]).parent.resolve()
-        if cached_parent != Path(applications_dir).resolve():
+        cached_path = Path(_CANDIDATE_MAPPING[candidate_identifier]["folder_path"]).resolve()
+        app_dir_resolved = Path(applications_dir).resolve()
+        if not cached_path.is_relative_to(app_dir_resolved):
             list_candidates(applications_dir)
     elif applications_dir and not _CANDIDATE_MAPPING:
         list_candidates(applications_dir)
@@ -180,18 +245,30 @@ def read_application(candidate_identifier: str, applications_dir: str | None = N
         folder_path = Path(_CANDIDATE_MAPPING[candidate_identifier]["folder_path"])
     else:
         candidate_path = Path(candidate_identifier)
-        if candidate_path.is_dir():
+        if candidate_path.exists():
             folder_path = candidate_path
         else:
             base = Path(applications_dir) if applications_dir else DEFAULT_APPLICATIONS_DIR
             potential = base / candidate_identifier
-            if potential.is_dir():
+            if potential.exists():
                 folder_path = potential
+            else:
+                list_candidates(str(base))
+                for info in _CANDIDATE_MAPPING.values():
+                    if (
+                        info.get("source_folder", "").lower() == candidate_identifier.strip().lower()
+                        or info.get("name", "").lower() == candidate_identifier.strip().lower()
+                    ):
+                        folder_path = Path(info["folder_path"])
+                        break
 
     if folder_path is None or not folder_path.exists():
         raise FileNotFoundError(f"Candidate folder not found for: {candidate_identifier}")
 
-    files = sorted([f for f in folder_path.iterdir() if f.is_file()], key=lambda f: f.name.lower())
+    if folder_path.is_file():
+        files = [folder_path]
+    else:
+        files = sorted([f for f in folder_path.iterdir() if f.is_file()], key=lambda f: f.name.lower())
     sections: list[str] = []
     present_types: list[str] = []
 
@@ -211,10 +288,10 @@ def read_application(candidate_identifier: str, applications_dir: str | None = N
         lower_name = file_path.name.lower()
         if "cover" in lower_name:
             doc_type = "COVER_LETTER"
-        elif "cv" in lower_name or "resume" in lower_name:
-            doc_type = "CV"
         elif "email" in lower_name or suffix == ".eml":
             doc_type = "EMAIL"
+        elif "cv" in lower_name or "resume" in lower_name or suffix in (".pdf", ".docx", ".txt"):
+            doc_type = "CV"
         else:
             doc_type = "DOCUMENT"
 

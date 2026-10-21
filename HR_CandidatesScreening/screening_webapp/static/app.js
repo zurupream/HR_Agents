@@ -11,6 +11,92 @@ let activeJobId = "";
 let resultsPage = 1;
 const resultsPageSize = 25;
 let resultsTotalPages = 1;
+let isScreeningRunActive = false;
+let activeScreeningJobId = "";
+
+function setScreeningRunButtonsState(isRunning, runningJobId = "") {
+  isScreeningRunActive = Boolean(isRunning);
+  activeScreeningJobId = isScreeningRunActive ? String(runningJobId || activeJobId || "") : "";
+
+  const createRunBtn = document.getElementById("btn-create-and-run-job");
+  if (createRunBtn) {
+    createRunBtn.disabled = isScreeningRunActive;
+    createRunBtn.innerHTML = isScreeningRunActive
+      ? `<span class="btn-spinner" aria-hidden="true"></span> Screening...`
+      : "Create Job &amp; Run Screening";
+  }
+
+  document.querySelectorAll(".btn-job-run").forEach((btn) => {
+    const jid = btn.getAttribute("data-jid") || "";
+    btn.disabled = isScreeningRunActive;
+    if (isScreeningRunActive && (!activeScreeningJobId || jid === activeScreeningJobId)) {
+      btn.innerHTML = `<span class="btn-spinner" aria-hidden="true"></span> Screening...`;
+    } else {
+      btn.textContent = "Run screening";
+    }
+  });
+}
+
+function syncCvSourceModeUI() {
+  const selected =
+    document.querySelector('input[name="cv-source-mode"]:checked')?.value || "upload";
+  const uploadGroup = document.getElementById("cv-source-upload-group");
+  const serverGroup = document.getElementById("cv-source-server-group");
+  const uploadPill = document.getElementById("cv-source-upload-pill");
+  const serverPill = document.getElementById("cv-source-server-pill");
+  if (uploadGroup) uploadGroup.classList.toggle("hidden", selected !== "upload");
+  if (serverGroup) serverGroup.classList.toggle("hidden", selected !== "server");
+  if (uploadPill) uploadPill.classList.toggle("active", selected === "upload");
+  if (serverPill) serverPill.classList.toggle("active", selected === "server");
+}
+
+function splitWhyIntoBullets(fullText, strengths = [], gaps = []) {
+  const raw = String(fullText || "").trim();
+  const points = [];
+  if (raw) {
+    const chunks = raw
+      .split(/(?:;\s+|\n+|•\s+|\.\s+(?=[A-Z0-9]))/g)
+      .map((s) => s.trim().replace(/^[•\-*]\s*/, ""))
+      .filter((s) => s.length > 0);
+    for (const chunk of chunks) {
+      const clean =
+        chunk.endsWith(".") || chunk.endsWith("!") || chunk.endsWith("?")
+          ? chunk
+          : `${chunk}.`;
+      if (!points.includes(clean)) {
+        points.push(clean);
+      }
+    }
+  }
+  const cleanStrengths = (Array.isArray(strengths) ? strengths : []).filter(
+    (s) => s && !String(s).toLowerCase().includes("none noted")
+  );
+  if (cleanStrengths.length > 0 && points.length < 4) {
+    const strBullet = `Key strengths: ${cleanStrengths.slice(0, 3).join(", ")}.`;
+    if (!points.some((p) => p.toLowerCase().includes("key strengths:"))) {
+      points.push(strBullet);
+    }
+  }
+  const cleanGaps = (Array.isArray(gaps) ? gaps : []).filter(
+    (g) => g && !String(g).toLowerCase().includes("none noted")
+  );
+  if (cleanGaps.length > 0 && points.length < 5) {
+    const gapBullet = `Identified gaps: ${cleanGaps.slice(0, 3).join(", ")}.`;
+    if (!points.some((p) => p.toLowerCase().includes("identified gaps:"))) {
+      points.push(gapBullet);
+    }
+  }
+  return points;
+}
+
+function renderWhyBulletListHtml(points, maxItems = 0) {
+  const list = Array.isArray(points) ? points : [];
+  if (list.length === 0) return "";
+  const visible = maxItems > 0 ? list.slice(0, maxItems) : list;
+  return `<ul class="why-bullet-list">${visible
+    .map((pt) => `<li>${escapeHtml(pt)}</li>`)
+    .join("")}</ul>`;
+}
 
 function showToast(message, isError = false) {
   const el = document.getElementById("global-toast");
@@ -336,19 +422,28 @@ async function loadJobs() {
           </td>
           <td>${lastRunHtml}</td>
           <td>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button type="button" class="btn btn-primary btn-xs btn-job-run" data-jid="${escapeHtml(j.job_id)}">
-                Run screening
-              </button>
-              <button type="button" class="btn btn-outline btn-xs btn-job-results" data-jid="${escapeHtml(j.job_id)}">
-                Results
-              </button>
-              <button type="button" class="btn btn-outline btn-xs btn-job-candidates" data-jid="${escapeHtml(j.job_id)}">
-                Candidates
-              </button>
-              <button type="button" class="btn btn-outline btn-xs btn-job-export" data-jid="${escapeHtml(j.job_id)}">
-                Excel
-              </button>
+            <div class="job-actions-group">
+              <div class="job-primary-action">
+                <button type="button" class="btn btn-primary btn-xs btn-job-run" data-jid="${escapeHtml(j.job_id)}" ${isScreeningRunActive ? "disabled" : ""}>
+                  ${
+                    isScreeningRunActive && (!activeScreeningJobId || j.job_id === activeScreeningJobId)
+                      ? `<span class="btn-spinner" aria-hidden="true"></span> Screening...`
+                      : "Run screening"
+                  }
+                </button>
+              </div>
+              <span class="job-actions-divider" aria-hidden="true"></span>
+              <div class="job-secondary-actions">
+                <button type="button" class="btn btn-outline btn-xs btn-job-results" data-jid="${escapeHtml(j.job_id)}">
+                  Results
+                </button>
+                <button type="button" class="btn btn-outline btn-xs btn-job-candidates" data-jid="${escapeHtml(j.job_id)}">
+                  Candidates
+                </button>
+                <button type="button" class="btn btn-outline btn-xs btn-job-export" data-jid="${escapeHtml(j.job_id)}">
+                  Excel
+                </button>
+              </div>
             </div>
           </td>
         </tr>
@@ -455,7 +550,11 @@ async function createNewJob(andRun = false) {
   formData.append("threshold", String(threshold));
   formData.append("requires_continuity", requiresContinuity ? "true" : "false");
   formData.append("model", model);
-  if (serverDir) {
+
+  const selectedSourceMode =
+    document.querySelector('input[name="cv-source-mode"]:checked')?.value || "upload";
+
+  if (selectedSourceMode === "server" && serverDir) {
     formData.append("applications_dir", serverDir);
   }
 
@@ -463,11 +562,13 @@ async function createNewJob(andRun = false) {
     formData.append("jd_file", jdFileEl.files[0]);
   }
 
-  if (cvFolderEl && cvFolderEl.files && cvFolderEl.files.length > 0) {
+  if (selectedSourceMode === "upload" && cvFolderEl && cvFolderEl.files && cvFolderEl.files.length > 0) {
     for (const file of cvFolderEl.files) {
       formData.append("cv_files", file);
       formData.append("cv_paths", file.webkitRelativePath || file.name);
     }
+  } else if (selectedSourceMode === "upload" && serverDir) {
+    formData.append("applications_dir", serverDir);
   }
 
   const createBtn = document.getElementById("btn-create-job");
@@ -564,41 +665,166 @@ async function saveSettings(silent = false) {
   return true;
 }
 
+async function downloadAuthenticatedFile(url, fallbackFilename = "candidate_document") {
+  try {
+    const resp = await apiFetch(url);
+    if (!resp.ok) {
+      let msg = "Could not download file.";
+      try {
+        const err = await resp.json();
+        msg = err.detail || msg;
+      } catch (_) {}
+      showToast(msg, true);
+      return;
+    }
+    const cd = resp.headers.get("Content-Disposition") || "";
+    const match = cd.match(/filename="?([^"]+)"?/i);
+    const filename = (match && match[1]) || fallbackFilename;
+    const blob = await resp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    showToast(err.message || "Download failed.", true);
+  }
+}
+
 async function openCandidatePreviewModal(candidateId, jobId) {
   const modal = document.getElementById("doc-preview-modal");
   const titleEl = document.getElementById("doc-modal-title");
   const bodyEl = document.getElementById("doc-modal-body");
+  const dlAllBtn = document.getElementById("btn-download-all-docs");
   if (!modal || !titleEl || !bodyEl) return;
+
+  const effectiveJobId = jobId || activeJobId || "";
+  const bundleDownloadUrl = effectiveJobId
+    ? `/api/jobs/${encodeURIComponent(effectiveJobId)}/folders/${encodeURIComponent(candidateId)}/download`
+    : `/api/folders/${encodeURIComponent(candidateId)}/download`;
+
+  if (dlAllBtn) {
+    dlAllBtn.classList.remove("hidden");
+    dlAllBtn.onclick = () => downloadAuthenticatedFile(bundleDownloadUrl, `${candidateId}_documents`);
+  }
 
   titleEl.textContent = `Loading documents for ${candidateId}...`;
   bodyEl.innerHTML = `<p style="color: var(--text-muted);">Loading preview...</p>`;
   modal.classList.remove("hidden");
 
-  const url = jobId
-    ? `/api/jobs/${encodeURIComponent(jobId)}/folders/${encodeURIComponent(candidateId)}/preview`
+  const url = effectiveJobId
+    ? `/api/jobs/${encodeURIComponent(effectiveJobId)}/folders/${encodeURIComponent(candidateId)}/preview`
     : `/api/folders/${encodeURIComponent(candidateId)}/preview`;
-  const pResp = await apiFetch(url);
-  if (!pResp.ok) {
-    bodyEl.innerHTML = `<p style="color: var(--danger-text);">Failed to load document preview.</p>`;
+  let pResp;
+  try {
+    pResp = await apiFetch(url);
+  } catch (_) {
+    pResp = { ok: false };
+  }
+  if (!pResp || !pResp.ok) {
+    bodyEl.innerHTML = `
+      <div id="doc-preview-error" class="doc-parse-warning">
+        <div>
+          <strong>Failed to load document preview.</strong>
+          <div style="margin-top: 4px;">The document could not be previewed in the browser. You can retry the preview or download the original file directly.</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-outline btn-xs" id="btn-retry-doc-preview">Retry Preview</button>
+          <button type="button" class="btn btn-primary btn-xs" id="btn-error-download-doc">⬇ Download File</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("btn-retry-doc-preview")?.addEventListener("click", () => {
+      openCandidatePreviewModal(candidateId, effectiveJobId);
+    });
+    document.getElementById("btn-error-download-doc")?.addEventListener("click", () => {
+      downloadAuthenticatedFile(bundleDownloadUrl, `${candidateId}_documents`);
+    });
     return;
   }
   const pData = await pResp.json();
   titleEl.textContent = `${pData.name} (${pData.candidate_id}) — ${pData.folder_name}`;
+  if (dlAllBtn && pData.download_url) {
+    dlAllBtn.onclick = () => downloadAuthenticatedFile(pData.download_url, `${pData.candidate_id}_documents`);
+  }
   const files = pData.files || [];
   if (files.length === 0) {
-    bodyEl.innerHTML = `<p style="color: var(--text-muted);">No readable documents found in this folder.</p>`;
+    bodyEl.innerHTML = `
+      <div id="doc-preview-error" class="doc-parse-warning">
+        <div>
+          <strong>No readable documents found in this folder.</strong>
+          <div style="margin-top: 4px;">Try downloading the original archive or retrying preview.</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-outline btn-xs" id="btn-retry-doc-preview">Retry Preview</button>
+          <button type="button" class="btn btn-primary btn-xs" id="btn-error-download-doc">⬇ Download File</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("btn-retry-doc-preview")?.addEventListener("click", () => {
+      openCandidatePreviewModal(candidateId, effectiveJobId);
+    });
+    document.getElementById("btn-error-download-doc")?.addEventListener("click", () => {
+      downloadAuthenticatedFile(pData.download_url || bundleDownloadUrl, `${candidateId}_documents`);
+    });
     return;
   }
   bodyEl.innerHTML = files
-    .map(
-      (f) => `
+    .map((f) => {
+      const dlUrl = f.download_url || pData.download_url || bundleDownloadUrl;
+      const isParseWarn =
+        (f.parse_status && f.parse_status !== "ok") ||
+        !f.preview ||
+        String(f.preview).startsWith("[Unable to extract") ||
+        String(f.preview).startsWith("[Unsupported");
+      return `
       <div class="cv-preview-file">
-        <h4>${fileIcon(f.type)} ${escapeHtml(f.type)} — ${escapeHtml(f.name)}</h4>
+        <div class="cv-preview-header-row">
+          <h4 style="margin: 0;">${fileIcon(f.type)} ${escapeHtml(f.type)} — ${escapeHtml(f.name)} ${f.size_human ? `<span class="folder-tag">(${escapeHtml(f.size_human)})</span>` : ""}</h4>
+          <button type="button" class="btn btn-outline btn-xs btn-download-single-doc"
+                  data-dl-url="${escapeHtml(dlUrl)}"
+                  data-dl-name="${escapeHtml(f.name)}">
+            ⬇ Download File
+          </button>
+        </div>
+        ${
+          isParseWarn
+            ? `
+            <div id="doc-preview-error" class="doc-parse-warning">
+              <span>⚠️ Inline text preview is unavailable or incomplete for this file format. Download the original file to inspect it directly.</span>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-outline btn-xs btn-retry-single-doc">Retry Preview</button>
+                <button type="button" class="btn btn-primary btn-xs btn-download-single-doc"
+                        data-dl-url="${escapeHtml(dlUrl)}"
+                        data-dl-name="${escapeHtml(f.name)}">
+                  ⬇ Download File
+                </button>
+              </div>
+            </div>
+            `
+            : ""
+        }
         <p class="cv-preview-text">${escapeHtml(f.preview)}${f.truncated ? "\n\n[Preview truncated at 1,500 characters]" : ""}</p>
       </div>
-    `
-    )
+    `;
+    })
     .join("");
+
+  bodyEl.querySelectorAll(".btn-download-single-doc").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const dlUrl = btn.getAttribute("data-dl-url");
+      const dlName = btn.getAttribute("data-dl-name") || "document";
+      if (dlUrl) downloadAuthenticatedFile(dlUrl, dlName);
+    });
+  });
+  bodyEl.querySelectorAll(".btn-retry-single-doc").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      openCandidatePreviewModal(candidateId, effectiveJobId);
+    });
+  });
 }
 
 async function loadCandidates() {
@@ -617,14 +843,26 @@ async function loadCandidates() {
 
   const container = document.getElementById("candidates-list");
   if (!container) return;
+  container.classList.add("candidates-grid");
   container.innerHTML = "";
 
   if (folders.length === 0) {
     container.innerHTML = `
-      <div class="table-card" style="padding: 24px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">
-        No candidate folders found for this job. Create a job and upload a CV folder on the <strong>1. Jobs</strong> tab.
+      <div class="empty-state-card">
+        <div class="empty-state-icon" aria-hidden="true">📂</div>
+        <h3 class="empty-state-title">Open Jobs &amp; Candidate Profiles Will Appear Here</h3>
+        <p class="empty-state-desc">
+          No candidate folders or CVs have been uploaded for this job yet. Add a Job Description and upload a candidate CV folder to begin screening.
+        </p>
+        <div class="empty-state-actions">
+          <button type="button" class="btn btn-primary" id="btn-empty-add-jd">+ Add Job Description</button>
+        </div>
       </div>
     `;
+    document.getElementById("btn-empty-add-jd")?.addEventListener("click", () => {
+      switchTab("jobs");
+      document.getElementById("new-job-title")?.focus();
+    });
     return;
   }
 
@@ -634,19 +872,47 @@ async function loadCandidates() {
     const docLabel =
       folder.documents_label ||
       `${folder.document_count ?? (folder.files || []).length} ${(folder.document_count ?? (folder.files || []).length) === 1 ? "document" : "documents"}`;
+    const filesList = Array.isArray(folder.files) ? folder.files : [];
+    const filesHtml =
+      filesList.length > 0
+        ? `<div class="candidate-files-list">
+            ${filesList
+              .slice(0, 3)
+              .map(
+                (f) => `
+              <div class="candidate-file-chip">
+                <span class="candidate-file-chip-name" title="${escapeHtml(f.name)}">${fileIcon(f.type)} ${escapeHtml(f.name)}</span>
+                <span class="candidate-file-chip-meta">${escapeHtml(f.type || "CV")}${f.size_human ? ` · ${escapeHtml(f.size_human)}` : ""}</span>
+              </div>
+            `
+              )
+              .join("")}
+          </div>`
+        : "";
+    const dlUrl =
+      folder.download_url ||
+      (activeJobId
+        ? `/api/jobs/${encodeURIComponent(activeJobId)}/folders/${encodeURIComponent(folder.candidate_id)}/download`
+        : `/api/folders/${encodeURIComponent(folder.candidate_id)}/download`);
 
     card.innerHTML = `
       <div class="candidate-card-header">
         <div>
           <h3>${escapeHtml(folder.name)} <span style="color: var(--text-muted); font-weight: 500;">(${escapeHtml(folder.candidate_id)})</span></h3>
-          <div class="folder-tag">Folder: ${escapeHtml(folder.folder_name)}</div>
+          <div class="folder-tag">Source: ${escapeHtml(folder.folder_name)}</div>
         </div>
       </div>
+      ${filesHtml}
       <div class="candidate-card-footer">
         <span class="doc-badge" title="Number of uploaded documents">📎 ${escapeHtml(docLabel)}</span>
-        <button type="button" class="btn btn-outline btn-xs btn-view-cv" data-cid="${escapeHtml(folder.candidate_id)}">
-          View
-        </button>
+        <div style="display: flex; gap: 6px;">
+          <button type="button" class="btn btn-outline btn-xs btn-dl-cv" data-dl-url="${escapeHtml(dlUrl)}" data-cid="${escapeHtml(folder.candidate_id)}">
+            ⬇ Download
+          </button>
+          <button type="button" class="btn btn-outline btn-xs btn-view-cv" data-cid="${escapeHtml(folder.candidate_id)}">
+            View
+          </button>
+        </div>
       </div>
     `;
 
@@ -657,6 +923,16 @@ async function loadCandidates() {
     btn.addEventListener("click", async () => {
       const cid = btn.getAttribute("data-cid");
       await openCandidatePreviewModal(cid, activeJobId);
+    });
+  });
+
+  container.querySelectorAll(".btn-dl-cv").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const dlUrl = btn.getAttribute("data-dl-url");
+      const cid = btn.getAttribute("data-cid") || "candidate";
+      if (dlUrl) {
+        await downloadAuthenticatedFile(dlUrl, `${cid}_cv`);
+      }
     });
   });
 }
@@ -741,11 +1017,29 @@ async function loadLatestResults() {
       const reasonsText = (r.review_reasons_plain || []).join(" • ");
       const fullWhy = r.why || r.why_full || r.why_plain || "";
       const shortWhy = r.why_short || fullWhy;
-      const showReadMore = Boolean(r.why_truncated || fullWhy.length > 120);
+      const whyPoints = splitWhyIntoBullets(fullWhy, r.strengths || [], r.gaps || []);
+      const showReadMore = Boolean(r.why_truncated || fullWhy.length > 120 || whyPoints.length > 2);
+      const collapsedWhyHtml =
+        whyPoints.length > 0
+          ? renderWhyBulletListHtml(whyPoints, 2)
+          : `<p style="margin: 0;">${escapeHtml(shortWhy)}</p>`;
+      const expandedWhyHtml =
+        whyPoints.length > 0
+          ? renderWhyBulletListHtml(whyPoints, 0)
+          : `<p style="margin: 0;">${escapeHtml(fullWhy)}</p>`;
+
       const docLabel =
         r.documents_label ||
         `${r.document_count ?? 1} ${(r.document_count ?? 1) === 1 ? "document" : "documents"}`;
       const rowJobId = r.job_id || activeJobId || "";
+
+      const effectiveDec = String(r.hr_decision?.decision || r.final_decision || "").toLowerCase();
+      const isShortlistActive =
+        effectiveDec === "shortlisted" || effectiveDec === "shortlist";
+      const isRejectActive =
+        effectiveDec === "not shortlisted" ||
+        effectiveDec === "not_shortlist" ||
+        effectiveDec === "reject";
 
       let hrDecisionHtml = `<div class="current-decision-note">Decision: <strong>${escapeHtml(r.final_decision)}</strong></div>`;
       if (r.hr_decision) {
@@ -787,10 +1081,12 @@ async function loadLatestResults() {
             <div id="why-box-${escapeHtml(r.candidate_id)}"
                  class="why-text-container why-clamped"
                  data-short="${escapeHtml(shortWhy)}"
-                 data-full="${escapeHtml(fullWhy)}">${escapeHtml(shortWhy)}</div>
+                 data-full="${escapeHtml(fullWhy)}"
+                 data-collapsed-html="${escapeHtml(collapsedWhyHtml)}"
+                 data-expanded-html="${escapeHtml(expandedWhyHtml)}">${collapsedWhyHtml}</div>
             ${
               showReadMore
-                ? `<button type="button" class="btn-link btn-toggle-why" data-cid="${escapeHtml(r.candidate_id)}" data-expanded="false">Read more</button>`
+                ? `<button type="button" class="btn-link btn-toggle-why" data-cid="${escapeHtml(r.candidate_id)}" data-expanded="false">Show more</button>`
                 : ""
             }
           </td>
@@ -802,16 +1098,18 @@ async function loadLatestResults() {
           <td>
             <div class="decision-controls">
               <div class="decision-btn-row">
-                <button type="button" class="btn btn-shortlist btn-xs btn-decide"
+                <button type="button" class="btn btn-shortlist btn-decision-shortlist btn-xs btn-decide ${isShortlistActive ? "decision-active active" : isRejectActive ? "decision-inactive" : ""}"
                         data-cid="${escapeHtml(r.candidate_id)}"
                         data-jid="${escapeHtml(rowJobId)}"
-                        data-decision="Shortlisted">
+                        data-decision="Shortlisted"
+                        aria-pressed="${isShortlistActive ? "true" : "false"}">
                   Shortlist
                 </button>
-                <button type="button" class="btn btn-reject btn-xs btn-decide"
+                <button type="button" class="btn btn-reject btn-decision-reject btn-xs btn-decide ${isRejectActive ? "decision-active active" : isShortlistActive ? "decision-inactive" : ""}"
                         data-cid="${escapeHtml(r.candidate_id)}"
                         data-jid="${escapeHtml(rowJobId)}"
-                        data-decision="Not Shortlisted">
+                        data-decision="Not Shortlisted"
+                        aria-pressed="${isRejectActive ? "true" : "false"}">
                   Not shortlist
                 </button>
               </div>
@@ -843,12 +1141,22 @@ async function loadLatestResults() {
       if (!whyBox) return;
       const expanded = btn.getAttribute("data-expanded") === "true";
       if (expanded) {
-        whyBox.textContent = whyBox.getAttribute("data-short") || "";
+        const collapsedHtml = whyBox.getAttribute("data-collapsed-html");
+        if (collapsedHtml) {
+          whyBox.innerHTML = collapsedHtml;
+        } else {
+          whyBox.textContent = whyBox.getAttribute("data-short") || "";
+        }
         whyBox.classList.add("why-clamped");
         btn.setAttribute("data-expanded", "false");
-        btn.textContent = "Read more";
+        btn.textContent = "Show more";
       } else {
-        whyBox.textContent = whyBox.getAttribute("data-full") || "";
+        const expandedHtml = whyBox.getAttribute("data-expanded-html");
+        if (expandedHtml) {
+          whyBox.innerHTML = expandedHtml;
+        } else {
+          whyBox.textContent = whyBox.getAttribute("data-full") || "";
+        }
         whyBox.classList.remove("why-clamped");
         btn.setAttribute("data-expanded", "true");
         btn.textContent = "Show less";
@@ -961,7 +1269,7 @@ async function loadHistory() {
           <td>${escapeHtml(a.at_utc)}</td>
           <td>${escapeHtml(a.actor_email)}</td>
           <td><strong>${escapeHtml(formatActionLabel(a.action))}</strong></td>
-          <td>${escapeHtml(a.detail)}</td>
+          <td class="audit-details-cell">${escapeHtml(a.detail)}</td>
         </tr>
       `
       )
@@ -1254,6 +1562,7 @@ async function triggerScreeningRun(jobIdOverride = "") {
   const progLabel = document.getElementById("run-progress-label");
   const progFill = document.getElementById("run-progress-fill");
 
+  setScreeningRunButtonsState(true, targetJobId);
   if (progBox) progBox.classList.remove("hidden");
   if (progLabel) {
     progLabel.textContent = targetJobId
@@ -1265,10 +1574,18 @@ async function triggerScreeningRun(jobIdOverride = "") {
   const endpoint = targetJobId
     ? `/api/jobs/${encodeURIComponent(targetJobId)}/runs`
     : `/api/runs`;
-  const resp = await apiFetch(endpoint, { method: "POST" });
+  let resp;
+  try {
+    resp = await apiFetch(endpoint, { method: "POST" });
+  } catch (err) {
+    setScreeningRunButtonsState(false);
+    if (progBox) progBox.classList.add("hidden");
+    return;
+  }
   if (!resp.ok) {
     const err = await resp.json();
     showToast(err.detail || "Could not start screening run.", true);
+    setScreeningRunButtonsState(false);
     if (progBox) progBox.classList.add("hidden");
     return;
   }
@@ -1291,15 +1608,17 @@ async function triggerScreeningRun(jobIdOverride = "") {
 
       if (progFill) progFill.style.width = `${Math.max(10, pct)}%`;
       if (progLabel) {
+        const curCand = st.current_candidate_id ? ` — ${st.current_candidate_id}` : "";
         progLabel.textContent =
           st.status === "running"
-            ? `Screening ${st.job_id || ""} (${idx} of ${total})...`
+            ? `Screening ${st.job_id || ""} (${idx} of ${total})${curCand}...`
             : `Status: ${st.status}`;
       }
 
       if (st.status === "finished" || st.status === "failed") {
         clearInterval(activePollTimer);
         activePollTimer = null;
+        setScreeningRunButtonsState(false);
         if (progBox) setTimeout(() => progBox.classList.add("hidden"), 1200);
 
         if (st.status === "finished") {
@@ -1385,9 +1704,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupTheme();
   setSettingsPanelFolded(true);
   updateSettingsSummary();
+  syncCvSourceModeUI();
+
+  document.querySelectorAll('input[name="cv-source-mode"]').forEach((radio) => {
+    radio.addEventListener("change", syncCvSourceModeUI);
+  });
 
   // Toggle folded Default Screening Settings panel from top bar
-  document.getElementById("btn-default-settings")?.addEventListener("click", () => {
+  document.getElementById("btn-default-settings")?.addEventListener("click", (e) => {
+    e.stopPropagation();
     const panel = document.getElementById("settings-panel");
     const currentlyFolded = !panel || panel.getAttribute("data-folded") === "true";
     setSettingsPanelFolded(!currentlyFolded);
@@ -1395,6 +1720,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("btn-close-settings")?.addEventListener("click", () => {
     setSettingsPanelFolded(true);
+  });
+
+  document.addEventListener("click", (e) => {
+    const panel = document.getElementById("settings-panel");
+    const trigger = document.getElementById("btn-default-settings");
+    if (
+      panel &&
+      panel.getAttribute("data-folded") === "false" &&
+      !panel.contains(e.target) &&
+      (!trigger || !trigger.contains(e.target))
+    ) {
+      setSettingsPanelFolded(true);
+    }
   });
 
   // Sliders live display

@@ -1107,3 +1107,305 @@ body {
   margin: 16px 0 8px 0;
   font-size: 15px;
 }
+
+/* =========================================================================
+   UI/UX Enhancements (Items #3–#12)
+   ========================================================================= */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Item #11: Single Settings Menu Trigger Button in Top Bar */
+.settings-trigger-btn[aria-expanded="true"] {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Item #5: Radio Button Toggle for Candidate CV Folder vs Server Folder Path */
+.cv-source-span {
+  grid-column: 1 / -1;
+}
+
+.source-radio-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  padding: 3px;
+  border-radius: 8px;
+}
+
+.source-radio-pill {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  margin: 0 !important;
+  border-radius: 6px;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.source-radio-pill input[type="radio"] {
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+.source-radio-pill.active {
+  background: var(--bg-surface);
+  color: var(--primary) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Item #4 & #6: Visually Separate Primary "Run screening" from Secondary View/Export Actions + Spinner */
+.job-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.job-primary-action {
+  display: inline-flex;
+  align-items: center;
+}
+
+.job-actions-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border-color);
+  display: inline-block;
+}
+
+.job-secondary-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btn-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin-anim 0.75s linear infinite;
+}
+
+@keyframes spin-anim {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Item #7 & #8: Candidates Tab Wide Multi-Column Grid + Actionable Empty State */
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 14px;
+}
+
+.candidate-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.candidate-card:hover {
+  border-color: var(--info-border);
+  box-shadow: var(--shadow-md);
+}
+
+.candidate-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.candidate-file-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+}
+
+.candidate-file-chip-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidate-file-chip-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.empty-state-card {
+  grid-column: 1 / -1;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 44px 28px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.empty-state-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.empty-state-desc {
+  margin: 0;
+  max-width: 500px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.empty-state-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* Item #9: Results Tab Bullet Points in "WHY" Column */
+.why-cell {
+  max-width: 390px;
+  min-width: 250px;
+}
+
+.why-bullet-list {
+  margin: 4px 0 0 0;
+  padding-left: 16px;
+  color: var(--text-secondary);
+  font-size: 12.25px;
+  line-height: 1.45;
+}
+
+.why-bullet-list li {
+  margin-bottom: 4px;
+}
+
+.why-bullet-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Item #10: Results Tab Clear Active States for "Shortlist" / "Not shortlist" */
+.btn-shortlist.decision-active,
+.btn-shortlist.active,
+.btn-decision-shortlist.active {
+  background: #15803d;
+  color: #ffffff;
+  border-color: #14532d;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.28);
+  font-weight: 700;
+}
+
+.btn-reject.decision-active,
+.btn-reject.active,
+.btn-decision-reject.active {
+  background: #b91c1c;
+  color: #ffffff;
+  border-color: #7f1d1d;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.28);
+  font-weight: 700;
+}
+
+.btn-decide.decision-inactive {
+  opacity: 0.65;
+}
+
+.btn-decide.decision-inactive:hover:not(:disabled) {
+  opacity: 1;
+}
+
+/* Item #12: History & Access Audit Log Constrained DETAILS Column */
+.audit-details-col,
+.audit-details-cell {
+  max-width: 460px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* Item #3: Document Preview Error State Callout + Download CTA */
+.cv-preview-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.doc-parse-warning {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+}
