@@ -297,21 +297,6 @@ def verify_google_token(raw_token: str) -> dict[str, Any]:
     if not token:
         raise ValueError("Empty Bearer token.")
 
-    if token.startswith("sso-session:"):
-        sso_email = token.split(":", 1)[1].strip().lower() or "guruprem.saginadham@sybyl.com"
-        return {
-            "email": sso_email,
-            "name": (
-                "Head of Talent Acquisition"
-                if sso_email == "guruprem.saginadham@sybyl.com"
-                else sso_email.split("@")[0].replace(".", " ").title()
-            ),
-            "sub": f"sso-{sso_email}",
-            "aud": GOOGLE_CLIENT_ID,
-            "iss": "https://accounts.google.com",
-            "demo_mode": True,
-        }
-
     if is_demo_test_auth_enabled():
         if token == "demo-hr-token":
             return {

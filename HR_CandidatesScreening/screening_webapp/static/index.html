@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Candidates Screening Agent — Enterprise HR Review Portal</title>
-  <link rel="stylesheet" href="/static/styles.css?v=20261021c" />
+  <link rel="stylesheet" href="/static/styles.css?v=20261021d" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -62,25 +62,13 @@
         </div>
       </div>
 
-      <!-- Right Panel: Enterprise SSO & Instant Demo Login -->
+      <!-- Right Panel: Enterprise Google Workspace SSO -->
       <div class="signin-card">
         <div class="signin-card-badge">ENTERPRISE WORKSPACE SSO</div>
         <h1>Sign In to Screening Agent</h1>
-        <p>Authenticate with your authorized Google Workspace account, corporate email, or launch an instant executive demo session.</p>
+        <p>Authenticate with your authorized Google Workspace account to access candidate screening, rubric evaluation, and HR review.</p>
 
         <div id="signin-error" class="status-toast error hidden"></div>
-
-        <!-- 1-Click Instant Demo SSO Sign-In -->
-        <div class="signin-demo-box">
-          <div class="signin-demo-label">INSTANT EVALUATION ACCESS</div>
-          <button id="btn-demo-sso" type="button" class="btn-demo-sso" onclick="signInDemo()">
-            <span>⚡ Instant Demo SSO Sign-In (Head of Talent Acquisition)</span>
-            <span class="btn-demo-arrow">→</span>
-          </button>
-          <div class="signin-demo-sub">Signs in as <strong>guruprem.saginadham@sybyl.com</strong> (Root Admin) with pre-loaded job &amp; scored candidates</div>
-        </div>
-
-        <div class="signin-divider"><span>OR CONTINUE WITH GOOGLE OAUTH 2.0</span></div>
 
         <div class="google-btn-wrapper">
           <div id="g_id_onload"
@@ -98,13 +86,6 @@
                data-width="340">
           </div>
         </div>
-
-        <div class="signin-divider"><span>OR WORKSPACE EMAIL SSO</span></div>
-
-        <form id="sso-email-form" class="signin-email-form" onsubmit="signInWithWorkEmail(event)">
-          <input id="sso-email-input" type="email" class="text-input" placeholder="name@company.com" value="guruprem.saginadham@sybyl.com" required />
-          <button type="submit" class="btn btn-primary signin-email-btn">Sign In with Work Email</button>
-        </form>
       </div>
     </div>
   </div>
@@ -630,6 +611,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261021c"></script>
+  <script src="/static/app.js?v=20261021d"></script>
 </body>
 </html>

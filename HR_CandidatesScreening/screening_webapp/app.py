@@ -1850,47 +1850,6 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
             headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
         )
 
-    @app.post("/api/auth/demo")
-    def demo_sso_sign_in(
-        db: Session = Depends(get_db),
-    ) -> dict[str, Any]:
-        """Instant 1-click Demo SSO Sign-In (Head of Talent Acquisition)."""
-        init_db()
-        email = "guruprem.saginadham@sybyl.com"
-        _ensure_demo_seeded_for_sso(db, actor_email=email)
-        return {
-            "authenticated": True,
-            "token": f"sso-session:{email}",
-            "email": email,
-            "name": "Head of Talent Acquisition",
-            "role": "admin",
-        }
-
-    @app.post("/api/auth/sso-email")
-    async def work_email_sso_sign_in(
-        request: Request,
-        db: Session = Depends(get_db),
-    ) -> dict[str, Any]:
-        """Work Email Enterprise SSO Sign-In."""
-        init_db()
-        try:
-            body = await request.json()
-        except Exception:
-            body = {}
-        email = str(body.get("email") or "").strip().lower()
-        if not email or "@" not in email:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Please enter a valid work email address.",
-            )
-        _ensure_demo_seeded_for_sso(db, actor_email=email)
-        return {
-            "authenticated": True,
-            "token": f"sso-session:{email}",
-            "email": email,
-            "name": email.split("@")[0].replace(".", " ").title(),
-        }
-
     @app.get("/api/me")
     def get_current_user(
         claims: dict[str, Any] = Depends(require_hr_auth),

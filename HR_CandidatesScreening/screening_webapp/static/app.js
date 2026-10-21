@@ -3,6 +3,10 @@
 */
 
 let idToken = sessionStorage.getItem("hr_google_id_token") || "";
+if (idToken.startsWith("sso-session:")) {
+  sessionStorage.removeItem("hr_google_id_token");
+  idToken = "";
+}
 let activePollTimer = null;
 let currentUserIsAdmin = false;
 
@@ -161,43 +165,6 @@ async function apiFetch(path, options = {}) {
 window.handleGoogleCredentialResponse = async function (response) {
   if (response && response.credential) {
     await completeSignIn(response.credential);
-  }
-};
-
-window.signInDemo = async function () {
-  try {
-    const resp = await fetch("/api/auth/demo", { method: "POST" });
-    const data = await resp.json();
-    if (!resp.ok || !data.token) {
-      throw new Error(data.detail || "Demo SSO sign-in failed.");
-    }
-    await completeSignIn(data.token);
-    if (typeof switchTab === "function") {
-      switchTab("results");
-    }
-  } catch (err) {
-    showSignInError(err.message || "Demo SSO sign-in failed.");
-  }
-};
-
-window.signInWithWorkEmail = async function (ev) {
-  if (ev) ev.preventDefault();
-  const input = document.getElementById("sso-email-input");
-  const email = input ? input.value.trim() : "";
-  if (!email) return;
-  try {
-    const resp = await fetch("/api/auth/sso-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    const data = await resp.json();
-    if (!resp.ok || !data.token) {
-      throw new Error(data.detail || "Work email SSO sign-in failed.");
-    }
-    await completeSignIn(data.token);
-  } catch (err) {
-    showSignInError(err.message || "Work email SSO sign-in failed.");
   }
 };
 
