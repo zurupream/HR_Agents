@@ -23,6 +23,14 @@ import {
 import SignInPage from './components/SignInPage';
 
 const STORAGE_KEY = 'hr_payroll_recon_agent05_user';
+const THEME_STORAGE_KEY = 'hr_payroll_recon_theme';
+
+const APPEARANCE_THEMES = [
+  { id: 'daylight', label: 'Daylight', title: 'Studio Daylight', swatch: '#F5F5F7' },
+  { id: 'sand', label: 'Sand', title: 'Warm Sand (Default)', swatch: '#F7F5F0' },
+  { id: 'dusk', label: 'Dusk', title: 'Quiet Dusk', swatch: '#1C1E26' },
+  { id: 'midnight', label: 'Midnight', title: 'Midnight OLED', swatch: '#0B0C10' }
+];
 
 function formatKES(val) {
   const num = Number(val || 0);
@@ -41,6 +49,28 @@ export default function App() {
       return null;
     }
   });
+
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (savedTheme && ['daylight', 'sand', 'dusk', 'midnight'].includes(savedTheme)) {
+        return savedTheme;
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return 'sand';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dusk' || theme === 'midnight');
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // ignore storage errors
+    }
+  }, [theme]);
 
   const [activeTab, setActiveTab] = useState('bridge'); // 'bridge' | 'audit' | 'agent' | 'certificate'
   const [employees, setEmployees] = useState([]);
@@ -286,11 +316,11 @@ export default function App() {
   });
 
   if (!user) {
-    return <SignInPage onSuccess={handleSignInSuccess} />;
+    return <SignInPage onSuccess={handleSignInSuccess} theme={theme} onThemeChange={setTheme} />;
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] flex flex-col">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col">
       {/* Top Frosted-Glass Apple Navigation Bar (Hidden when printing Sign-Off Sheet) */}
       <header className="print:hidden sticky top-0 z-30 apple-glass">
         <div className="max-w-7xl mx-auto px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
@@ -314,6 +344,35 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Compact 4-Dot Apple Appearance Switcher */}
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-2xs"
+              role="group"
+              aria-label="Reading Appearance Theme"
+            >
+              {APPEARANCE_THEMES.map((t) => {
+                const isActive = theme === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setTheme(t.id)}
+                    title={`${t.label} — ${t.title}`}
+                    aria-label={`${t.label} appearance`}
+                    className={`w-5 h-5 rounded-full transition-all flex items-center justify-center cursor-pointer ${
+                      isActive
+                        ? 'ring-2 ring-[#0071E3] ring-offset-1 scale-110'
+                        : 'opacity-80 hover:opacity-100 hover:scale-105'
+                    }`}
+                    style={{
+                      backgroundColor: t.swatch,
+                      border: '1px solid rgba(128,128,128,0.35)'
+                    }}
+                  />
+                );
+              })}
+            </div>
+
             <div className="text-right hidden sm:block">
               <div className="text-xs font-semibold text-[#1D1D1F]">{user.name}</div>
               <div className="text-[11px] text-gray-500">{user.email}</div>

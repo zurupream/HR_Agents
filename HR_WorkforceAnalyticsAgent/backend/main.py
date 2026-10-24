@@ -334,12 +334,12 @@ def ask_workforce_agent(payload: AskWorkforceAgentPayload) -> Dict[str, Any]:
             )
             if resp and resp.text:
                 deterministic["ai_live_summary"] = resp.text.strip()
-                deterministic["engine"] = "Workforce Analytics Agent (Vertex AI Gemini 2.5 Flash)"
+                deterministic["engine"] = "Enterprise People & Analytics Engine"
                 return deterministic
         except Exception:
             pass
 
-    deterministic["engine"] = "Workforce Analytics Agent (Deterministic HR Analytics Engine)"
+    deterministic["engine"] = "Enterprise People & Analytics Engine"
     return deterministic
 
 

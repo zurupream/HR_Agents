@@ -14,7 +14,81 @@ import {
 
 const GOOGLE_CLIENT_ID = '259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com';
 
-export default function SignInPage({ onSignIn }) {
+export const APPLE_READING_THEMES = [
+  {
+    id: 'daylight',
+    label: 'Daylight',
+    tooltip: 'Studio Daylight (#F5F5F7)',
+    swatch: '#F5F5F7',
+  },
+  {
+    id: 'sand',
+    label: 'Sand',
+    tooltip: 'Warm Sand (#F7F5F0)',
+    swatch: '#F7F5F0',
+  },
+  {
+    id: 'dusk',
+    label: 'Dusk',
+    tooltip: 'Quiet Dusk (#1C1E26)',
+    swatch: '#1C1E26',
+  },
+  {
+    id: 'midnight',
+    label: 'Midnight',
+    tooltip: 'Midnight OLED (#0B0C10)',
+    swatch: '#0B0C10',
+  },
+];
+
+export function AppleAppearanceSwitcher({ theme, onThemeChange }) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Reading Appearance"
+      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors"
+      style={{
+        backgroundColor: 'var(--bg-sidebar)',
+        borderColor: 'var(--border-subtle)',
+      }}
+    >
+      <span
+        className="text-[11px] font-semibold tracking-tight hidden sm:inline"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        Appearance
+      </span>
+      <div className="flex items-center gap-1.5">
+        {APPLE_READING_THEMES.map((item) => {
+          const isActive = theme === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              aria-label={`${item.label} theme`}
+              title={`${item.label} — ${item.tooltip}`}
+              data-theme-option={item.id}
+              onClick={() => onThemeChange && onThemeChange(item.id)}
+              className={`w-5 h-5 rounded-full transition-all flex items-center justify-center cursor-pointer ${
+                isActive
+                  ? 'ring-2 ring-[#0071E3] ring-offset-1 scale-110 shadow-xs'
+                  : 'opacity-80 hover:opacity-100 hover:scale-105'
+              }`}
+              style={{
+                backgroundColor: item.swatch,
+                border: '1px solid rgba(128, 128, 128, 0.35)',
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function SignInPage({ onSignIn, theme = 'sand', onThemeChange }) {
   const [email, setEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [step, setStep] = useState('request'); // 'request' | 'verify'
@@ -194,10 +268,13 @@ export default function SignInPage({ onSignIn }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] flex flex-col justify-between">
+    <div
+      className="min-h-screen flex flex-col justify-between transition-colors duration-200"
+      style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
+    >
       {/* Top Apple-Style Header */}
       <header className="apple-glass sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-2xl bg-[#0071E3] flex items-center justify-center text-white shadow-sm">
               <MessageCircleQuestion className="w-5 h-5" />
@@ -205,7 +282,7 @@ export default function SignInPage({ onSignIn }) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0071E3] border border-blue-200/80">
-                  HR Agent #07 • Employee Self-Service
+                  HR Agent • Employee Self-Service
                 </span>
                 <span className="text-xs text-neutral-500 font-medium hidden sm:inline">
                   Official Employee Handbook &amp; Support Desk
@@ -217,9 +294,12 @@ export default function SignInPage({ onSignIn }) {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-neutral-600 bg-white px-3.5 py-1.5 rounded-full border border-neutral-200/80 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#0071E3]" />
-            <span>Simple, Focused Employee HR Assistance</span>
+          <div className="flex items-center gap-3">
+            <AppleAppearanceSwitcher theme={theme} onThemeChange={onThemeChange} />
+            <div className="hidden lg:flex items-center gap-2 text-xs font-medium text-neutral-600 bg-white px-3.5 py-1.5 rounded-full border border-neutral-200/80 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#0071E3]" />
+              <span>Enterprise People &amp; Policy Intelligence</span>
+            </div>
           </div>
         </div>
       </header>
@@ -423,8 +503,18 @@ export default function SignInPage({ onSignIn }) {
         </div>
       </main>
 
-      <footer className="border-t border-neutral-200/80 bg-white/70 py-3.5 px-6 text-center text-xs text-neutral-500">
-        Employee HR Helpdesk Agent • Official Employee Handbook Self-Service &amp; HR Support Tracker
+      <footer
+        className="border-t py-3.5 px-6 flex flex-wrap items-center justify-between gap-3 text-xs"
+        style={{
+          backgroundColor: 'var(--bg-sidebar)',
+          borderColor: 'var(--border-subtle)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        <AppleAppearanceSwitcher theme={theme} onThemeChange={onThemeChange} />
+        <span>
+          Employee HR Helpdesk Agent • Official Employee Handbook Self-Service &amp; HR Support Tracker
+        </span>
       </footer>
     </div>
   );

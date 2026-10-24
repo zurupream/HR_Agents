@@ -1,20 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="sand">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Certification &amp; Skills Agent — Learning, Certification Expiry &amp; Skills Matrix</title>
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('apple_appearance_theme') || localStorage.getItem('theme') || 'sand';
+        if (!['daylight', 'sand', 'dusk', 'midnight'].includes(saved)) saved = 'sand';
+        document.documentElement.setAttribute('data-theme', saved);
+        if (saved === 'dusk' || saved === 'midnight') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    :root {
-      --bg-canvas: #F5F5F7;
+    :root,
+    [data-theme="sand"] {
+      --bg-canvas: #F7F5F0;
+      --bg-sidebar: #EFECE6;
       --bg-card: #FFFFFF;
-      --text-primary: #1D1D1F;
-      --text-secondary: #515154;
-      --text-muted: #86868B;
+      --text-primary: #1E1B18;
+      --text-secondary: #57534E;
+      --text-muted: #78716C;
       --apple-blue: #0071E3;
       --apple-blue-hover: #0077ED;
-      --border-subtle: #E5E5EA;
+      --border-subtle: rgba(0, 0, 0, 0.07);
+      --surface-elevated: #F2EFE9;
+      --surface-subtle: #FAF8F5;
+      --header-glass: rgba(255, 255, 255, 0.85);
       --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
       --shadow-elevated: 0 12px 34px rgba(0, 0, 0, 0.08);
       --radius-card: 18px;
@@ -29,6 +48,65 @@
       --badge-expired-fg: #C92A2A;
     }
 
+    [data-theme="daylight"] {
+      --bg-canvas: #F5F5F7;
+      --bg-sidebar: #EBEBED;
+      --bg-card: #FFFFFF;
+      --text-primary: #1D1D1F;
+      --text-secondary: #515154;
+      --text-muted: #6E6E73;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --surface-elevated: #EBEBED;
+      --surface-subtle: #FAFAFC;
+      --header-glass: rgba(255, 255, 255, 0.82);
+    }
+
+    [data-theme="dusk"] {
+      --bg-canvas: #1C1E26;
+      --bg-sidebar: #16181F;
+      --bg-card: #242834;
+      --text-primary: #E2E8F0;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --surface-elevated: #16181F;
+      --surface-subtle: #1C1E26;
+      --header-glass: rgba(36, 40, 52, 0.88);
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.28);
+      --shadow-elevated: 0 12px 34px rgba(0, 0, 0, 0.42);
+      --badge-valid-bg: rgba(52, 199, 89, 0.16);
+      --badge-valid-fg: #4ADE80;
+      --badge-30-bg: rgba(255, 149, 0, 0.16);
+      --badge-30-fg: #FBBF24;
+      --badge-60-bg: rgba(0, 113, 227, 0.20);
+      --badge-60-fg: #60A5FA;
+      --badge-expired-bg: rgba(255, 59, 48, 0.18);
+      --badge-expired-fg: #F87171;
+    }
+
+    [data-theme="midnight"] {
+      --bg-canvas: #0B0C10;
+      --bg-sidebar: #12141C;
+      --bg-card: #161923;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #64748B;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --surface-elevated: #12141C;
+      --surface-subtle: #0B0C10;
+      --header-glass: rgba(22, 25, 35, 0.88);
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+      --shadow-elevated: 0 12px 34px rgba(0, 0, 0, 0.6);
+      --badge-valid-bg: rgba(52, 199, 89, 0.16);
+      --badge-valid-fg: #4ADE80;
+      --badge-30-bg: rgba(255, 149, 0, 0.16);
+      --badge-30-fg: #FBBF24;
+      --badge-60-bg: rgba(0, 113, 227, 0.20);
+      --badge-60-fg: #60A5FA;
+      --badge-expired-bg: rgba(255, 59, 48, 0.18);
+      --badge-expired-fg: #F87171;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -41,6 +119,7 @@
       color: var(--text-primary);
       line-height: 1.45;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     /* ─── SIGN-IN PAGE (2-PANEL EXECUTIVE WORKFLOW + SSO) ─── */
@@ -50,7 +129,7 @@
       align-items: center;
       justify-content: center;
       padding: 32px 24px;
-      background: radial-gradient(circle at top left, #FFFFFF 0%, #F5F5F7 65%);
+      background: var(--bg-canvas);
     }
 
     .auth-shell {
@@ -788,6 +867,95 @@
         border: 1px solid #CCCCCC;
       }
     }
+
+    /* ─── THEME SURFACE OVERRIDES & 4-DOT APPEARANCE SWITCHER ─── */
+    .workflow-step-card,
+    .filter-pill:not(.active),
+    table.apple-table th,
+    .dept-card,
+    .input-control {
+      background: var(--surface-subtle) !important;
+      border-color: var(--border-subtle) !important;
+      color: var(--text-primary);
+    }
+    .input-control:focus {
+      background: var(--bg-card) !important;
+      border-color: var(--apple-blue) !important;
+    }
+    .frosted-header {
+      background: var(--header-glass) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+    }
+    .user-chip,
+    .btn-secondary,
+    .segmented-tabs,
+    .prompt-chip,
+    .agent-answer-card {
+      background: var(--surface-elevated) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-subtle) !important;
+    }
+    .btn-outline-sm,
+    .btn-google-fallback {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-subtle) !important;
+    }
+    .btn-outline-sm:hover,
+    .btn-google-fallback:hover {
+      background: var(--surface-elevated) !important;
+    }
+    .agent-qa-box {
+      background: var(--bg-card) !important;
+      border-color: var(--border-subtle) !important;
+    }
+    table.apple-table td,
+    .role-row {
+      border-color: var(--border-subtle) !important;
+    }
+    table.apple-table tr:hover td {
+      background: var(--surface-subtle) !important;
+    }
+    .eyebrow-pill,
+    .bond-tag {
+      background: var(--badge-60-bg) !important;
+      color: var(--badge-60-fg) !important;
+    }
+    #add-cert-modal > div {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-subtle);
+    }
+    .apple-theme-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-subtle);
+    }
+    .apple-theme-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .apple-theme-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(128, 128, 128, 0.38);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      padding: 0;
+    }
+    .apple-theme-dot:hover {
+      transform: scale(1.12);
+    }
+    .apple-theme-dot.active {
+      box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px #0071E3;
+      transform: scale(1.08);
+    }
   </style>
 </head>
 <body>
@@ -847,7 +1015,17 @@
 
       <!-- RIGHT PANEL: Google Single Sign-On (SSO), Work Email OTP, & Instant Demo Sign-In -->
       <div class="sso-panel">
-        <h2>Sign in to Certification &amp; Skills Agent</h2>
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:6px;">
+          <h2 style="margin-bottom:0;">Sign in to Certification &amp; Skills Agent</h2>
+          <div class="apple-theme-switcher" role="group" aria-label="Appearance Theme Switcher">
+            <div class="apple-theme-dots">
+              <button type="button" onclick="setTheme('daylight')" data-theme-target="daylight" title="Studio Daylight (#F5F5F7)" aria-label="Studio Daylight" class="apple-theme-dot" style="background-color:#F5F5F7;"></button>
+              <button type="button" onclick="setTheme('sand')" data-theme-target="sand" title="Warm Sand (#F7F5F0)" aria-label="Warm Sand" class="apple-theme-dot active" style="background-color:#F7F5F0;"></button>
+              <button type="button" onclick="setTheme('dusk')" data-theme-target="dusk" title="Quiet Dusk (#1C1E26)" aria-label="Quiet Dusk" class="apple-theme-dot" style="background-color:#1C1E26;"></button>
+              <button type="button" onclick="setTheme('midnight')" data-theme-target="midnight" title="Midnight OLED (#0B0C10)" aria-label="Midnight OLED" class="apple-theme-dot" style="background-color:#0B0C10;"></button>
+            </div>
+          </div>
+        </div>
         <p class="lead">Access the employee license tracker, department skills matrix, and compliance audit report.</p>
 
         <!-- 1-Click Instant Demo Sign-In -->
@@ -915,6 +1093,15 @@
         </div>
 
         <div class="header-actions">
+          <div class="apple-theme-switcher" role="group" aria-label="Appearance Theme Switcher">
+            <span style="font-size:11.5px; font-weight:600; color:var(--text-muted); padding-left:4px;">Appearance</span>
+            <div class="apple-theme-dots">
+              <button type="button" onclick="setTheme('daylight')" data-theme-target="daylight" title="Studio Daylight (#F5F5F7)" aria-label="Studio Daylight" class="apple-theme-dot" style="background-color:#F5F5F7;"></button>
+              <button type="button" onclick="setTheme('sand')" data-theme-target="sand" title="Warm Sand (#F7F5F0)" aria-label="Warm Sand" class="apple-theme-dot active" style="background-color:#F7F5F0;"></button>
+              <button type="button" onclick="setTheme('dusk')" data-theme-target="dusk" title="Quiet Dusk (#1C1E26)" aria-label="Quiet Dusk" class="apple-theme-dot" style="background-color:#1C1E26;"></button>
+              <button type="button" onclick="setTheme('midnight')" data-theme-target="midnight" title="Midnight OLED (#0B0C10)" aria-label="Midnight OLED" class="apple-theme-dot" style="background-color:#0B0C10;"></button>
+            </div>
+          </div>
           <button class="btn-outline-sm" onclick="switchView('audit')">1-Page Compliance Audit Report</button>
           <button class="btn-outline-sm" onclick="window.location.href='/api/audit-report/pdf'">Download Audit PDF</button>
           <div class="user-chip">
@@ -1605,6 +1792,30 @@
         await loadOverviewData();
       }
     }
+
+    function setTheme(theme) {
+      if (!["daylight", "sand", "dusk", "midnight"].includes(theme)) {
+        theme = "sand";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
+      if (theme === "dusk" || theme === "midnight") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      try {
+        localStorage.setItem("apple_appearance_theme", theme);
+        localStorage.setItem("theme", theme);
+      } catch (e) {}
+      document.querySelectorAll("[data-theme-target]").forEach(dot => {
+        dot.classList.toggle("active", dot.getAttribute("data-theme-target") === theme);
+      });
+    }
+
+    (function initAppearanceDots() {
+      const current = document.documentElement.getAttribute("data-theme") || "sand";
+      setTheme(current);
+    })();
 
     window.addEventListener("DOMContentLoaded", () => {
       const saved = sessionStorage.getItem("hr_skills_agent_user");

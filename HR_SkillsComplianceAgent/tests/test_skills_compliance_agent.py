@@ -218,6 +218,18 @@ def test_audit_report_pdf_csv_and_apple_ui(client: TestClient):
     assert "Step 2: 30 / 60 / 90-Day Expiry Detection Agent" in html
     assert "Step 3: One-Click Renewal Reminders &amp; Compliance Report" in html
     assert "Instant Demo Sign-In (L&amp;D and Compliance Lead)" in html
+    for theme_id in ["daylight", "sand", "dusk", "midnight"]:
+        assert f'data-theme="{theme_id}"' in html
+        assert f"setTheme('{theme_id}')" in html
+    for css_var in [
+        "--bg-canvas",
+        "--bg-sidebar",
+        "--bg-card",
+        "--text-primary",
+        "--text-muted",
+        "--border-subtle",
+    ]:
+        assert css_var in html
 
     pdf_res = client.get("/api/audit-report/pdf")
     assert pdf_res.status_code == 200

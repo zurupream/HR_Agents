@@ -1,27 +1,185 @@
 @import "tailwindcss";
 
+:root,
+[data-theme="sand"] {
+  --bg-canvas: #F7F5F0;
+  --bg-sidebar: #EFECE6;
+  --bg-card: #FFFEFC;
+  --text-primary: #1C1B18;
+  --text-muted: #6E6B64;
+  --border-subtle: #E2DFD7;
+  --glass-bg: rgba(255, 254, 252, 0.86);
+  color-scheme: light;
+}
+
+[data-theme="daylight"] {
+  --bg-canvas: #F5F5F7;
+  --bg-sidebar: #ECECEF;
+  --bg-card: #FFFFFF;
+  --text-primary: #1D1D1F;
+  --text-muted: #6E6E73;
+  --border-subtle: #E5E5EA;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  color-scheme: light;
+}
+
+[data-theme="dusk"] {
+  --bg-canvas: #1C1E26;
+  --bg-sidebar: #16181F;
+  --bg-card: #242731;
+  --text-primary: #F2F3F7;
+  --text-muted: #9BA0B0;
+  --border-subtle: #313543;
+  --glass-bg: rgba(28, 30, 38, 0.86);
+  color-scheme: dark;
+}
+
+[data-theme="midnight"] {
+  --bg-canvas: #0B0C10;
+  --bg-sidebar: #07080B;
+  --bg-card: #13151C;
+  --text-primary: #F5F6FA;
+  --text-muted: #8E93A4;
+  --border-subtle: #222634;
+  --glass-bg: rgba(19, 21, 28, 0.88);
+  color-scheme: dark;
+}
+
 @layer base {
   html, body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
-    background-color: #F5F5F7;
-    color: #1D1D1F;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
 .apple-card {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .apple-glass {
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: var(--glass-bg);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Theme-aware mappings for Tailwind utility classes across all 4 Apple reading palettes */
+[data-theme="sand"] .bg-\[\#F5F5F7\] {
+  background-color: var(--bg-canvas) !important;
+}
+[data-theme="sand"] .bg-white {
+  background-color: var(--bg-card) !important;
+}
+[data-theme="sand"] .border-gray-200,
+[data-theme="sand"] .border-gray-100,
+[data-theme="sand"] .border-gray-200\/70,
+[data-theme="sand"] .border-gray-200\/80,
+[data-theme="sand"] .border-gray-200\/90 {
+  border-color: var(--border-subtle) !important;
+}
+
+.dark .bg-\[\#F5F5F7\],
+.dark .bg-\[\#F5F5F7\]\/70 {
+  background-color: var(--bg-canvas) !important;
+}
+.dark .bg-white,
+.dark .bg-white\/85,
+.dark .bg-white\/90 {
+  background-color: var(--bg-card) !important;
+}
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .hover\:bg-gray-50\/80:hover,
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-gray-200:hover {
+  background-color: var(--bg-sidebar) !important;
+}
+.dark .text-\[\#1D1D1F\],
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-400 {
+  color: var(--text-muted) !important;
+}
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-gray-200\/70,
+.dark .border-gray-200\/80,
+.dark .border-gray-200\/90,
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-subtle) !important;
+}
+.dark .bg-blue-50,
+.dark .bg-blue-50\/50,
+.dark .bg-blue-50\/60 {
+  background-color: rgba(0, 113, 227, 0.16) !important;
+}
+.dark .border-blue-100,
+.dark .border-blue-200,
+.dark .border-blue-200\/80 {
+  border-color: rgba(0, 113, 227, 0.35) !important;
+}
+.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+.dark .text-emerald-700,
+.dark .text-emerald-800 {
+  color: #34D399 !important;
+}
+.dark .border-emerald-200 {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.16) !important;
+}
+.dark .text-amber-700,
+.dark .text-amber-800 {
+  color: #FBBF24 !important;
+}
+.dark .border-amber-200 {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.16) !important;
+}
+.dark .text-red-600,
+.dark .text-red-700 {
+  color: #F87171 !important;
+}
+.dark .border-red-200 {
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.18) !important;
+}
+.dark .text-indigo-600,
+.dark .text-indigo-700 {
+  color: #818CF8 !important;
+}
+.dark .border-indigo-200 {
+  border-color: rgba(99, 102, 241, 0.35) !important;
+}
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--bg-sidebar) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
 }
 
 input[type="range"] {

@@ -4,6 +4,7 @@ import os
 from fastapi.testclient import TestClient
 import pytest
 
+from app.database import get_conn
 from app.main import app
 from app.seed import seed_demo_data
 
@@ -11,6 +12,10 @@ from app.seed import seed_demo_data
 @pytest.fixture(autouse=True)
 def reset_db_before_tests():
     seed_demo_data(force_reset=True, base_url="http://localhost:8080")
+    conn = get_conn()
+    conn.execute("UPDATE smtp_settings SET live_mode_enabled = 0 WHERE id = 1")
+    conn.commit()
+    conn.close()
     yield
 
 
@@ -55,7 +60,7 @@ def test_batch_offer_dispatch_and_role_based_subagents():
                 "personal_email": "intern.test@university.edu",
                 "phone": "+1-555-1001",
                 "role_category": "INTERN",
-                "position_id": "pos-ux-intern",
+                "position_id": "pos-merch",
                 "compensation_package": "$4,000/mo Stipend",
                 "joining_date": "2025-07-01",
             },
@@ -64,7 +69,7 @@ def test_batch_offer_dispatch_and_role_based_subagents():
                 "personal_email": "trainee.test@gmail.com",
                 "phone": "+1-555-1002",
                 "role_category": "TRAINEE",
-                "position_id": "pos-data-assoc",
+                "position_id": "pos-proc-off",
                 "compensation_package": "$65,000/yr + Laptop + Uber",
                 "joining_date": "2025-07-01",
             },
@@ -73,7 +78,7 @@ def test_batch_offer_dispatch_and_role_based_subagents():
                 "personal_email": "employee.test@gmail.com",
                 "phone": "+1-555-1003",
                 "role_category": "EMPLOYEE",
-                "position_id": "pos-eng-ai",
+                "position_id": "pos-sales-mgr",
                 "compensation_package": "$150,000/yr + Full Benefits",
                 "joining_date": "2025-07-01",
             },
@@ -160,8 +165,7 @@ def test_decline_lapse_and_docuseal_webhook_notifications():
     batch_res = client.post(
         "/api/offers/batch",
         json={
-            "hr_email": "hr.onboarding@sybyl.com",
-            "ceo_email": "ceo@sybyl.com",
+            "cc_emails": "hr.onboarding@sybyl.com; rachel.adams@sybyl.com; ceo@sybyl.com",
             "offer_expires_in_hours": 48,
             "candidates": [
                 {
@@ -169,7 +173,7 @@ def test_decline_lapse_and_docuseal_webhook_notifications():
                     "personal_email": "decline@example.com",
                     "phone": "+1-555-2001",
                     "role_category": "EMPLOYEE",
-                    "position_id": "pos-eng-ai",
+                    "position_id": "pos-sales-mgr",
                     "compensation_package": "$140,000/yr",
                     "joining_date": "2025-08-01",
                 },
@@ -178,7 +182,7 @@ def test_decline_lapse_and_docuseal_webhook_notifications():
                     "personal_email": "webhook@example.com",
                     "phone": "+1-555-2002",
                     "role_category": "TRAINEE",
-                    "position_id": "pos-data-assoc",
+                    "position_id": "pos-proc-off",
                     "compensation_package": "$68,000/yr",
                     "joining_date": "2025-08-01",
                 },
@@ -197,12 +201,13 @@ def test_decline_lapse_and_docuseal_webhook_notifications():
     assert dec_res.status_code == 200
     assert dec_res.json()["status"] == "DECLINED"
 
-    # Verify notification logged with CC: HR, HoD, CEO
+    # Verify notification logged with To/CC: HR, HoD, CEO
     notifs = client.get(f"/api/notifications?candidate_id={decline_cand['candidate_id']}").json()
     decline_notif = next(n for n in notifs if n["event_type"] == "OFFER_DECLINED")
-    assert "hr.onboarding@sybyl.com" in decline_notif["recipients_cc"]
-    assert "elena.vance@sybyl.com" in decline_notif["recipients_cc"]
-    assert "ceo@sybyl.com" in decline_notif["recipients_cc"]
+    all_recipients = f"{decline_notif['recipient_to']}; {decline_notif['recipients_cc']}"
+    assert "hr.onboarding@sybyl.com" in all_recipients
+    assert "rachel.adams@sybyl.com" in all_recipients
+    assert "ceo@sybyl.com" in all_recipients
 
     # DocuSeal webhook completion for Trainee
     wh_res = client.post(
@@ -244,3 +249,22 @@ def test_smtp_configuration_for_sybyl_email():
     assert saved["sender_email"] == "psrmreports@sybyl.com"
     assert saved["has_app_password"] is True
     assert saved["app_password"] == "••••••••"
+
+
+def test_apple_4_reading_themes_and_whitelabel_ui():
+    """Verify the 4 Apple-inspired reading themes (Daylight, Sand, Dusk, Midnight) and white-label UI."""
+    client = TestClient(app)
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.text
+    assert 'data-theme="sand"' in html
+    assert 'data-theme-dot="daylight"' in html
+    assert 'data-theme-dot="sand"' in html
+    assert 'data-theme-dot="dusk"' in html
+    assert 'data-theme-dot="midnight"' in html
+    assert "--bg-canvas: #F7F5F0" in html
+    assert "--bg-canvas: #1C1E26" in html
+    assert "--bg-canvas: #0B0C10" in html
+    for term in ("Gemini", "ADK", "Vertex AI", "Firestore", "Cloud Run", "pypdf_native"):
+        assert term not in html
+

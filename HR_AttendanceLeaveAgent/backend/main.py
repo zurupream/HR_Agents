@@ -551,7 +551,7 @@ def ask_attendance_agent(payload: AgentAskPayload) -> Dict[str, Any]:
         else:
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key:
-                return {"answer": fallback_reply, "model": "attendance-leave-agent-v1"}
+                return {"answer": fallback_reply, "model": "Enterprise People & Analytics Engine"}
             client = genai.Client(api_key=api_key)
 
         prompt = (
@@ -571,11 +571,11 @@ def ask_attendance_agent(payload: AgentAskPayload) -> Dict[str, Any]:
         )
         text = (response.text or "").strip()
         if text:
-            return {"answer": text, "model": "gemini-2.5-flash"}
+            return {"answer": text, "model": "Enterprise People & Analytics Engine"}
     except Exception:
         pass
 
-    return {"answer": fallback_reply, "model": "attendance-leave-agent-v1"}
+    return {"answer": fallback_reply, "model": "Enterprise People & Analytics Engine"}
 
 
 # Mount compiled React SPA if present

@@ -1,14 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="sand">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee HR Helpdesk Agent</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('apple_reading_theme') || localStorage.getItem('theme') || 'sand';
+          var valid = ['daylight', 'sand', 'dusk', 'midnight'];
+          var theme = valid.indexOf(saved) !== -1 ? saved : 'sand';
+          document.documentElement.setAttribute('data-theme', theme);
+          if (theme === 'dusk' || theme === 'midnight') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script type="module" crossorigin src="/assets/index-_IeLr2tB.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DJo96r4U.css">
+    <script type="module" crossorigin src="/assets/index-B7ObFeyU.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DIH7zgbl.css">
   </head>
-  <body class="bg-[#F5F5F7] text-[#1D1D1F] antialiased">
+  <body class="bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors duration-200">
     <div id="root"></div>
   </body>
 </html>

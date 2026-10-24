@@ -12,15 +12,16 @@ import {
   CheckCircle2,
   ArrowRight,
   LogOut,
-  FileText,
   UserCheck,
   Sparkles,
   PlusCircle,
   Check
 } from 'lucide-react';
-import SignInPage from './components/SignInPage';
+import SignInPage, { AppleAppearanceSwitcher } from './components/SignInPage';
 
 const STORAGE_KEY = 'hr_helpdesk_agent_user_v1';
+const THEME_STORAGE_KEY = 'apple_reading_theme';
+const VALID_THEMES = ['daylight', 'sand', 'dusk', 'midnight'];
 
 const CATEGORY_ICONS = {
   annual_maternity_leave: Calendar,
@@ -32,6 +33,31 @@ const CATEGORY_ICONS = {
 };
 
 export default function App() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem('theme');
+      return saved && VALID_THEMES.includes(saved) ? saved : 'sand';
+    } catch {
+      return 'sand';
+    }
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    if (theme === 'dusk' || theme === 'midnight') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+      localStorage.setItem('theme', theme);
+    } catch {
+      // ignore storage errors
+    }
+  }, [theme]);
+
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -125,7 +151,7 @@ export default function App() {
   };
 
   if (!user) {
-    return <SignInPage onSignIn={handleSignIn} />;
+    return <SignInPage onSignIn={handleSignIn} theme={theme} onThemeChange={setTheme} />;
   }
 
   const handleSelectCategoryCard = (cat) => {
@@ -256,7 +282,10 @@ export default function App() {
     categories.find((c) => c.id === selectedCategoryId) || categories[0] || null;
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] flex flex-col">
+    <div
+      className="min-h-screen flex flex-col transition-colors duration-200"
+      style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
+    >
       {/* Apple-Inspired Sticky Header */}
       <header className="apple-glass sticky top-0 z-20 no-print">
         <div className="max-w-6xl mx-auto px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
@@ -267,7 +296,7 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0071E3] border border-blue-200/80">
-                  Agent #07 • Employee Self-Service
+                  HR Agent • Employee Self-Service
                 </span>
                 <span className="text-xs text-neutral-500 hidden sm:inline">
                   Official Employee Handbook &amp; HR Support Desk
@@ -280,6 +309,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3">
+            <AppleAppearanceSwitcher theme={theme} onThemeChange={setTheme} />
             <div className="text-right hidden sm:block">
               <div className="text-xs font-semibold text-[#1D1D1F]">{user.name}</div>
               <div className="text-[11px] text-neutral-500">{user.email}</div>
@@ -737,6 +767,23 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* Footer with Compact 4-Dot Apple Appearance Switcher */}
+      <footer
+        className="border-t py-3.5 px-6 no-print"
+        style={{
+          backgroundColor: 'var(--bg-sidebar)',
+          borderColor: 'var(--border-subtle)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+          <AppleAppearanceSwitcher theme={theme} onThemeChange={setTheme} />
+          <span>
+            Employee HR Helpdesk Agent • Enterprise People &amp; Policy Intelligence Engine
+          </span>
+        </div>
+      </footer>
 
       {/* Modal: Send Request to HR Team */}
       {showRequestForm && (

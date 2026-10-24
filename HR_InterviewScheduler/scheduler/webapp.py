@@ -52,7 +52,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Intelligent Multi-Stage Interview Scheduler (ADK + Web App)",
+    title="Intelligent Multi-Stage Interview Scheduler",
     description=(
         "AI-Driven Multi-Job, Multi-Stage, Multi-Interview Coordination Engine with "
         "Proactive Bottleneck Management, Panel Lead Slot Requests, and Live Conflict-Free Candidate Self-Booking."
@@ -1082,29 +1082,103 @@ def portal_candidate_deeplink(booking_token: str) -> HTMLResponse:
 # ---------------------------------------------------------------------------
 
 WEBAPP_HTML = r"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="sand">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interview Scheduler — Recruiting &amp; Interview Coordination</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('appearance_theme') || 'sand';
+        document.documentElement.setAttribute('data-theme', saved);
+        if (saved === 'dusk' || saved === 'midnight') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="if(window.initGoogleSSO) window.initGoogleSSO()"></script>
   <style>
-    :root {
-      --apple-bg: #F5F5F7;
-      --apple-card: #FFFFFF;
-      --apple-sidebar: rgba(248, 248, 250, 0.94);
-      --apple-header: rgba(255, 255, 255, 0.88);
-      --apple-text: #1D1D1F;
-      --apple-subtext: #6E6E73;
-      --apple-muted: #86868B;
+    :root, [data-theme="sand"] {
+      --bg-canvas: #F7F5F0;
+      --bg-sidebar: #EFECE6;
+      --bg-card: #FFFFFF;
+      --text-primary: #1E1B18;
+      --text-muted: #78716C;
+      --border-subtle: rgba(0, 0, 0, 0.07);
+
+      --apple-bg: var(--bg-canvas);
+      --apple-card: var(--bg-card);
+      --apple-sidebar: var(--bg-sidebar);
+      --apple-header: rgba(247, 245, 240, 0.88);
+      --apple-text: var(--text-primary);
+      --apple-subtext: var(--text-muted);
+      --apple-muted: var(--text-muted);
       --apple-blue: #0071E3;
       --apple-blue-hover: #0077ED;
       --apple-green: #28CD41;
       --apple-orange: #FF9500;
       --apple-red: #FF3B30;
       --apple-indigo: #5E5CE6;
-      --apple-border: rgba(0, 0, 0, 0.075);
+      --apple-border: var(--border-subtle);
+    }
+
+    [data-theme="daylight"] {
+      --bg-canvas: #F5F5F7;
+      --bg-sidebar: #EBEBED;
+      --bg-card: #FFFFFF;
+      --text-primary: #1D1D1F;
+      --text-muted: #6E6E73;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+
+      --apple-bg: var(--bg-canvas);
+      --apple-card: var(--bg-card);
+      --apple-sidebar: var(--bg-sidebar);
+      --apple-header: rgba(255, 255, 255, 0.88);
+      --apple-text: var(--text-primary);
+      --apple-subtext: var(--text-muted);
+      --apple-muted: #86868B;
+      --apple-border: var(--border-subtle);
+    }
+
+    [data-theme="dusk"] {
+      --bg-canvas: #1C1E26;
+      --bg-sidebar: #16181F;
+      --bg-card: #242834;
+      --text-primary: #E2E8F0;
+      --text-muted: #94A3B8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+
+      --apple-bg: var(--bg-canvas);
+      --apple-card: var(--bg-card);
+      --apple-sidebar: var(--bg-sidebar);
+      --apple-header: rgba(28, 30, 38, 0.88);
+      --apple-text: var(--text-primary);
+      --apple-subtext: var(--text-muted);
+      --apple-muted: var(--text-muted);
+      --apple-border: var(--border-subtle);
+    }
+
+    [data-theme="midnight"] {
+      --bg-canvas: #0B0C10;
+      --bg-sidebar: #12141C;
+      --bg-card: #161923;
+      --text-primary: #F8FAFC;
+      --text-muted: #64748B;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+
+      --apple-bg: var(--bg-canvas);
+      --apple-card: var(--bg-card);
+      --apple-sidebar: var(--bg-sidebar);
+      --apple-header: rgba(11, 12, 16, 0.88);
+      --apple-text: var(--text-primary);
+      --apple-subtext: var(--text-muted);
+      --apple-muted: var(--text-muted);
+      --apple-border: var(--border-subtle);
     }
 
     * {
@@ -1115,11 +1189,12 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--apple-bg);
-      color: var(--apple-text);
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
       margin: 0;
       padding: 0;
       letter-spacing: -0.011em;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .apple-display {
@@ -1128,25 +1203,25 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
     }
 
     .apple-glass-sidebar {
-      background: var(--apple-sidebar);
+      background: var(--bg-sidebar);
       backdrop-filter: saturate(180%) blur(24px);
       -webkit-backdrop-filter: saturate(180%) blur(24px);
-      border-right: 1px solid var(--apple-border);
+      border-right: 1px solid var(--border-subtle);
     }
 
     .apple-glass-header {
       background: var(--apple-header);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid var(--apple-border);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .apple-card {
-      background: var(--apple-card);
+      background: var(--bg-card);
       border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border-subtle);
       box-shadow: 0 1px 8px rgba(0, 0, 0, 0.028), 0 1px 2px rgba(0, 0, 0, 0.018);
-      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.2s ease;
     }
 
     .apple-nav-item {
@@ -1158,14 +1233,14 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
       border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
-      color: #424245;
+      color: var(--text-muted);
       transition: all 0.14s ease;
       text-align: left;
     }
 
     .apple-nav-item:hover {
-      background: rgba(0, 0, 0, 0.045);
-      color: #1D1D1F;
+      background: var(--border-subtle);
+      color: var(--text-primary);
     }
 
     .apple-nav-item.active {
@@ -1211,21 +1286,21 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
     }
 
     .apple-btn-neutral {
-      background: #F5F5F7;
-      color: #1D1D1F;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--bg-canvas);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
       border-radius: 999px;
       font-weight: 500;
       transition: all 0.15s ease;
     }
 
     .apple-btn-neutral:hover {
-      background: #E8E8ED;
+      filter: brightness(0.95);
     }
 
     .apple-segmented {
       display: inline-flex;
-      background: rgba(118, 118, 128, 0.11);
+      background: rgba(118, 118, 128, 0.14);
       padding: 2.5px;
       border-radius: 9px;
     }
@@ -1235,33 +1310,101 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
       border-radius: 7px;
       font-size: 12px;
       font-weight: 500;
-      color: #515154;
+      color: var(--text-muted);
       transition: all 0.14s ease;
     }
 
     .apple-segmented button.active {
-      background: #FFFFFF;
-      color: #1D1D1F;
+      background: var(--bg-card);
+      color: var(--text-primary);
       font-weight: 600;
-      box-shadow: 0 1px 2.5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 2.5px rgba(0, 0, 0, 0.12);
     }
 
     .apple-input {
       width: 100%;
       padding: 8px 12px;
       border-radius: 10px;
-      background: #F5F5F7;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
       font-size: 13px;
-      color: #1D1D1F;
+      color: var(--text-primary);
       transition: border-color 0.15s ease, background 0.15s ease;
     }
 
     .apple-input:focus {
       outline: none;
-      background: #FFFFFF;
+      background: var(--bg-card);
       border-color: var(--apple-blue);
       box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+    }
+
+    /* Curated Reading Theme Overrides for Utility Classes */
+    [data-theme="sand"] .bg-\[\#F5F5F7\] { background-color: var(--bg-canvas) !important; }
+    [data-theme="dusk"] .bg-\[\#F5F5F7\],
+    [data-theme="midnight"] .bg-\[\#F5F5F7\] { background-color: var(--bg-canvas) !important; }
+
+    [data-theme="dusk"] .bg-white,
+    [data-theme="midnight"] .bg-white,
+    [data-theme="dusk"] .bg-white\/60,
+    [data-theme="midnight"] .bg-white\/60 { background-color: var(--bg-card) !important; }
+
+    [data-theme="sand"] .text-\[\#1D1D1F\],
+    [data-theme="dusk"] .text-\[\#1D1D1F\],
+    [data-theme="midnight"] .text-\[\#1D1D1F\] { color: var(--text-primary) !important; }
+
+    [data-theme="sand"] .text-\[\#6E6E73\],
+    [data-theme="sand"] .text-\[\#86868B\],
+    [data-theme="sand"] .text-\[\#515154\],
+    [data-theme="sand"] .text-\[\#424245\],
+    [data-theme="dusk"] .text-\[\#6E6E73\],
+    [data-theme="dusk"] .text-\[\#86868B\],
+    [data-theme="dusk"] .text-\[\#515154\],
+    [data-theme="dusk"] .text-\[\#424245\],
+    [data-theme="midnight"] .text-\[\#6E6E73\],
+    [data-theme="midnight"] .text-\[\#86868B\],
+    [data-theme="midnight"] .text-\[\#515154\],
+    [data-theme="midnight"] .text-\[\#424245\] { color: var(--text-muted) !important; }
+
+    [data-theme="dusk"] .border-black\/5,
+    [data-theme="dusk"] .border-black\/10,
+    [data-theme="dusk"] .border-black\/\[0\.06\],
+    [data-theme="dusk"] .border-black\/\[0\.08\],
+    [data-theme="midnight"] .border-black\/5,
+    [data-theme="midnight"] .border-black\/10,
+    [data-theme="midnight"] .border-black\/\[0\.06\],
+    [data-theme="midnight"] .border-black\/\[0\.08\] { border-color: var(--border-subtle) !important; }
+
+    [data-theme="dusk"] .hover\:bg-black\/5:hover,
+    [data-theme="midnight"] .hover\:bg-black\/5:hover { background-color: rgba(255, 255, 255, 0.06) !important; }
+
+    /* Compact 4-Dot Apple Appearance Switcher */
+    .theme-switcher-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+    }
+    .theme-dot-btn {
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      border: 1.5px solid rgba(128, 128, 128, 0.32);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      position: relative;
+      padding: 0;
+    }
+    .theme-dot-btn:hover {
+      transform: scale(1.12);
+    }
+    .theme-dot-btn.active {
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 3.5px var(--apple-blue);
+      transform: scale(1.08);
     }
 
     .custom-scroll::-webkit-scrollbar {
@@ -1272,7 +1415,7 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
       background: transparent;
     }
     .custom-scroll::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(128, 128, 128, 0.25);
       border-radius: 9999px;
     }
   </style>
@@ -1534,8 +1677,25 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- User Account & Log Out Footer -->
-      <div class="p-3 border-t border-black/10 bg-white/60 space-y-2">
+      <!-- User Account, Appearance Switcher & Log Out Footer -->
+      <div class="p-3 border-t border-black/10 bg-white/60 space-y-2.5">
+        <!-- Apple 4-Dot Appearance Switcher -->
+        <div class="theme-switcher-pill" role="group" aria-label="Appearance Theme">
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-[#6E6E73]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <span id="theme-mode-label" class="text-[11px] font-semibold text-[#1D1D1F]">Sand</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="setTheme('daylight')" data-theme-dot="daylight" title="Daylight (Crisp Cool Light)" aria-label="Daylight theme" class="theme-dot-btn" style="background-color: #F5F5F7;"></button>
+            <button type="button" onclick="setTheme('sand')" data-theme-dot="sand" title="Sand (Warm Editorial Light — Default)" aria-label="Sand theme" class="theme-dot-btn active" style="background-color: #F7F5F0;"></button>
+            <button type="button" onclick="setTheme('dusk')" data-theme-dot="dusk" title="Dusk (Soft Slate Dark)" aria-label="Dusk theme" class="theme-dot-btn" style="background-color: #1C1E26;"></button>
+            <button type="button" onclick="setTheme('midnight')" data-theme-dot="midnight" title="Midnight (High-Contrast Dark)" aria-label="Midnight theme" class="theme-dot-btn" style="background-color: #0B0C10;"></button>
+          </div>
+        </div>
+
         <div class="flex items-center gap-2.5 px-1">
           <div id="user-avatar-badge" class="w-7 h-7 rounded-full bg-[#0071E3]/12 text-[#0071E3] font-semibold text-[11px] flex items-center justify-center shrink-0">
             HR
@@ -4226,7 +4386,46 @@ WEBAPP_HTML = r"""<!DOCTYPE html>
       await fetchDashboard();
     }
 
+    // -----------------------------------------------------------------------
+    // Apple 4-Theme Reading Appearance Switcher (Daylight, Sand, Dusk, Midnight)
+    // -----------------------------------------------------------------------
+    const THEME_LABELS = {
+      daylight: "Daylight",
+      sand: "Sand",
+      dusk: "Dusk",
+      midnight: "Midnight"
+    };
+
+    function setTheme(theme) {
+      const validTheme = THEME_LABELS[theme] ? theme : "sand";
+      document.documentElement.setAttribute("data-theme", validTheme);
+      if (validTheme === "dusk" || validTheme === "midnight") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      try {
+        localStorage.setItem("appearance_theme", validTheme);
+      } catch (e) {}
+
+      const labelEl = document.getElementById("theme-mode-label");
+      if (labelEl) {
+        labelEl.textContent = THEME_LABELS[validTheme];
+      }
+      document.querySelectorAll("[data-theme-dot]").forEach((btn) => {
+        const isMatch = btn.getAttribute("data-theme-dot") === validTheme;
+        btn.classList.toggle("active", isMatch);
+      });
+    }
+
     window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const savedTheme = localStorage.getItem("appearance_theme") || "sand";
+        setTheme(savedTheme);
+      } catch (e) {
+        setTheme("sand");
+      }
+
       const params = new URLSearchParams(window.location.search);
       const oauthEmail = params.get("oauth_email");
       const oauthName = params.get("oauth_name");

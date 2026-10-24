@@ -16,7 +16,14 @@ import {
 const GOOGLE_CLIENT_ID =
   '259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com';
 
-export default function SignInPage({ onSuccess }) {
+const APPEARANCE_THEMES = [
+  { id: 'daylight', label: 'Daylight', title: 'Studio Daylight', swatch: '#F5F5F7' },
+  { id: 'sand', label: 'Sand', title: 'Warm Sand (Default)', swatch: '#F7F5F0' },
+  { id: 'dusk', label: 'Dusk', title: 'Quiet Dusk', swatch: '#1C1E26' },
+  { id: 'midnight', label: 'Midnight', title: 'Midnight OLED', swatch: '#0B0C10' }
+];
+
+export default function SignInPage({ onSuccess, theme = 'sand', onThemeChange }) {
   const [email, setEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [step, setStep] = useState('email'); // 'email' | 'otp'
@@ -153,10 +160,10 @@ export default function SignInPage({ onSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] flex flex-col justify-between">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between">
       {/* Frosted-Glass Top Bar */}
       <header className="apple-glass sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#0071E3] flex items-center justify-center text-white shadow-sm">
               <Clock className="w-5 h-5" />
@@ -175,9 +182,40 @@ export default function SignInPage({ onSuccess }) {
               </h1>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-xs text-gray-600 bg-gray-100 px-3.5 py-1.5 rounded-full border border-gray-200/80">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Daily Shift Hours + Leave Cross-Check</span>
+          <div className="flex items-center gap-3">
+            {onThemeChange && (
+              <div
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-2xs"
+                role="group"
+                aria-label="Reading Appearance Theme"
+              >
+                {APPEARANCE_THEMES.map((t) => {
+                  const isActive = theme === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => onThemeChange(t.id)}
+                      title={`${t.label} — ${t.title}`}
+                      aria-label={`${t.label} appearance`}
+                      className={`w-5 h-5 rounded-full transition-all flex items-center justify-center cursor-pointer ${
+                        isActive
+                          ? 'ring-2 ring-[#0071E3] ring-offset-1 scale-110'
+                          : 'opacity-80 hover:opacity-100 hover:scale-105'
+                      }`}
+                      style={{
+                        backgroundColor: t.swatch,
+                        border: '1px solid rgba(128,128,128,0.35)'
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            <div className="hidden sm:flex items-center gap-2 text-xs text-gray-600 bg-gray-100 px-3.5 py-1.5 rounded-full border border-gray-200/80">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Daily Shift Hours + Leave Cross-Check</span>
+            </div>
           </div>
         </div>
       </header>

@@ -154,7 +154,7 @@ def dispatch_stakeholder_email(
 ) -> Dict[str, Any]:
     """Logs the email in the in-app Outbox AND sends via Live Email if enabled."""
     settings = get_smtp_settings()
-    cc_clean = parse_cc_emails(*(recipients_cc or []))
+    cc_clean = parse_cc_emails("; ".join(recipients_cc or []))
     cc_str = "; ".join(cc_clean)
 
     delivery_mode = "LOGGED"

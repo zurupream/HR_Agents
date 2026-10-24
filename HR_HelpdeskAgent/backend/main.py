@@ -234,9 +234,9 @@ def ask_hr_helpdesk_agent(payload: AskHelpdeskAgentPayload) -> Dict[str, Any]:
     _QUESTIONS_ANSWERED_COUNT += 1
     structured = answer_hr_question(question, payload.category_id)
     plain_answer = structured["plain_english_answer"]
-    model_used = "employee-handbook-engine-v1"
+    model_used = "Enterprise People & Policy Intelligence Engine"
 
-    # Optional Gemini 2.5 Flash refinement if credentials are active in environment
+    # Optional live model refinement if credentials are active in environment
     if os.getenv("ENABLE_LIVE_GEMINI_HELPDESK", "0") == "1":
         try:
             from google import genai
@@ -264,7 +264,7 @@ def ask_hr_helpdesk_agent(payload: AskHelpdeskAgentPayload) -> Dict[str, Any]:
             )
             if resp.text and resp.text.strip():
                 plain_answer = resp.text.strip()
-                model_used = "gemini-2.5-flash"
+                model_used = "Enterprise People & Policy Intelligence Engine"
         except Exception:
             pass
 

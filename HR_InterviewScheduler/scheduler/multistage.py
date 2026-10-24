@@ -1881,7 +1881,7 @@ def seed_enterprise_scenario(base_url: str = "http://localhost:8000") -> MultiSt
                             "panel_lead_email": "tech.recruiter@company.example",
                             "required_panel_emails": ["tech.recruiter@company.example"],
                             "interviewer_pool": ["tech.recruiter2@company.example"],
-                            "prep_notes": "High-level review of distributed systems & Vertex AI experience.",
+                            "prep_notes": "High-level review of distributed systems & enterprise AI architecture experience.",
                         }
                     ],
                 },
@@ -1905,7 +1905,7 @@ def seed_enterprise_scenario(base_url: str = "http://localhost:8000") -> MultiSt
                         },
                         {
                             "interview_code": "2B",
-                            "title": "Agentic AI & ADK Live Coding",
+                            "title": "Agentic AI & Systems Live Coding",
                             "duration_minutes": 60,
                             "interview_type": "video",
                             "panel_lead_email": "ai.lead@company.example",

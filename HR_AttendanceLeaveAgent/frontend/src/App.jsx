@@ -21,6 +21,14 @@ import {
 import SignInPage from './components/SignInPage';
 
 const STORAGE_KEY = 'hr_attendance_leave_agent06_user';
+const THEME_STORAGE_KEY = 'hr_attendance_leave_theme';
+
+const APPEARANCE_THEMES = [
+  { id: 'daylight', label: 'Daylight', title: 'Studio Daylight', swatch: '#F5F5F7' },
+  { id: 'sand', label: 'Sand', title: 'Warm Sand (Default)', swatch: '#F7F5F0' },
+  { id: 'dusk', label: 'Dusk', title: 'Quiet Dusk', swatch: '#1C1E26' },
+  { id: 'midnight', label: 'Midnight', title: 'Midnight OLED', swatch: '#0B0C10' }
+];
 
 const LEAVE_OPTIONS = [
   'None',
@@ -165,6 +173,28 @@ export default function App() {
       return null;
     }
   });
+
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (savedTheme && ['daylight', 'sand', 'dusk', 'midnight'].includes(savedTheme)) {
+        return savedTheme;
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return 'sand';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dusk' || theme === 'midnight');
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // ignore storage errors
+    }
+  }, [theme]);
 
   const [activeView, setActiveView] = useState('dashboard'); // 'dashboard' | 'ask' | 'report'
   const [employees, setEmployees] = useState([]);
@@ -426,7 +456,7 @@ export default function App() {
         {
           role: 'assistant',
           text: data.answer || 'No response received from Attendance & Leave Agent.',
-          model: data.model || 'attendance-leave-agent-v1'
+          model: data.model || 'Enterprise People & Analytics Engine'
         }
       ]);
     } catch (err) {
@@ -444,11 +474,11 @@ export default function App() {
   };
 
   if (!user) {
-    return <SignInPage onSuccess={handleSignInSuccess} />;
+    return <SignInPage onSuccess={handleSignInSuccess} theme={theme} onThemeChange={setTheme} />;
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] flex flex-col">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col">
       {/* Frosted-Glass Top Navigation Bar */}
       <header className="no-print apple-glass sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
@@ -472,6 +502,35 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2.5">
+            {/* Compact 4-Dot Apple Appearance Switcher */}
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-2xs"
+              role="group"
+              aria-label="Reading Appearance Theme"
+            >
+              {APPEARANCE_THEMES.map((t) => {
+                const isActive = theme === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setTheme(t.id)}
+                    title={`${t.label} — ${t.title}`}
+                    aria-label={`${t.label} appearance`}
+                    className={`w-5 h-5 rounded-full transition-all flex items-center justify-center cursor-pointer ${
+                      isActive
+                        ? 'ring-2 ring-[#0071E3] ring-offset-1 scale-110'
+                        : 'opacity-80 hover:opacity-100 hover:scale-105'
+                    }`}
+                    style={{
+                      backgroundColor: t.swatch,
+                      border: '1px solid rgba(128,128,128,0.35)'
+                    }}
+                  />
+                );
+              })}
+            </div>
+
             <button
               onClick={handleResetDemo}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-medium text-gray-700 cursor-pointer"

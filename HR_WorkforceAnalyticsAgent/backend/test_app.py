@@ -137,6 +137,9 @@ def test_ask_workforce_agent_endpoint():
     assert res3.status_code == 200
     ans3 = res3.json()
     assert "Projected Annual Payroll" in ans3["headline"]
+    assert ans3["engine"] == "Enterprise People & Analytics Engine"
+    assert "gemini" not in ans3["engine"].lower()
+    assert "vertex" not in ans3["engine"].lower()
 
 
 def test_sso_and_otp_endpoints():

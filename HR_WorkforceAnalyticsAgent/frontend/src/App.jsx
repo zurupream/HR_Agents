@@ -21,7 +21,7 @@ import {
   FileText,
   ShieldAlert,
 } from 'lucide-react';
-import SignInPage from './components/SignInPage';
+import SignInPage, { AppleAppearanceSwitcher, APPLE_READING_THEMES } from './components/SignInPage';
 
 function formatCurrency(amount) {
   const num = Number(amount || 0);
@@ -38,6 +38,31 @@ function formatSignedCurrency(amount) {
 }
 
 export default function App() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('apple_reading_theme');
+      const valid = APPLE_READING_THEMES.map((t) => t.id);
+      return valid.includes(saved) ? saved : 'sand';
+    } catch {
+      return 'sand';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('apple_reading_theme', theme);
+    } catch {
+      // ignore storage errors
+    }
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    if (theme === 'dusk' || theme === 'midnight') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
   const [user, setUser] = useState(() => {
     try {
       const saved = sessionStorage.getItem('hr_workforce_agent_user');
@@ -213,7 +238,7 @@ export default function App() {
   };
 
   if (!user) {
-    return <SignInPage onSuccess={handleSignInSuccess} />;
+    return <SignInPage onSuccess={handleSignInSuccess} theme={theme} onSelectTheme={setTheme} />;
   }
 
   const kpis = overview?.executive_kpis || {
@@ -289,6 +314,8 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2.5">
+            <AppleAppearanceSwitcher theme={theme} onSelectTheme={setTheme} />
+
             <button
               type="button"
               onClick={() => window.print()}
@@ -1062,6 +1089,11 @@ export default function App() {
           </div>
         </section>
       </main>
+
+      <footer className="max-w-7xl mx-auto px-6 pt-8 pb-4 text-xs text-gray-500 flex flex-wrap items-center justify-between gap-3 no-print">
+        <span>Enterprise HR AI Agent Portfolio • Agent #09: Workforce Analytics Agent</span>
+        <AppleAppearanceSwitcher theme={theme} onSelectTheme={setTheme} />
+      </footer>
     </div>
   );
 }

@@ -89,6 +89,9 @@ def test_ask_hr_helpdesk_agent_questions():
     d3 = res3.json()
     assert d3["category_id"] == "payroll_payslip"
     assert "25th" in d3["plain_english_answer"]
+    assert d3["model"] == "Enterprise People & Policy Intelligence Engine"
+    assert "gemini" not in d3["model"].lower()
+    assert "vertex" not in d3["model"].lower()
 
 
 def test_create_and_resolve_hr_helpdesk_request():

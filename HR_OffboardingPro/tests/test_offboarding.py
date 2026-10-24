@@ -221,3 +221,24 @@ def test_settlement_dispute_creates_hr_action_center_alert():
     ov = client.get("/api/overview").json()
     reasons = [a["reason"] for a in ov["action_items"]]
     assert any("carryover days" in r for r in reasons)
+
+
+def test_apple_reading_themes_and_appearance_switcher():
+    """Verify the 4 Apple-inspired reading themes and compact 4-dot switcher in index.html & sign.html."""
+    for route in ["/", "/sign/demo-token-check"]:
+        res = client.get(route)
+        assert res.status_code == 200
+        html = res.text
+        for theme_id in ["daylight", "sand", "dusk", "midnight"]:
+            assert f'data-theme="{theme_id}"' in html
+            assert f"setTheme('{theme_id}')" in html
+        for css_var in [
+            "--bg-canvas",
+            "--bg-sidebar",
+            "--bg-card",
+            "--text-primary",
+            "--text-muted",
+            "--border-subtle",
+        ]:
+            assert css_var in html
+

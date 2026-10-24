@@ -16,7 +16,51 @@ import {
 
 const GOOGLE_CLIENT_ID = '259388273008-n8vg3ae8be86e56svvg09rbdciah17u1.apps.googleusercontent.com';
 
-export default function SignInPage({ onSuccess }) {
+export const APPLE_READING_THEMES = [
+  { id: 'daylight', label: 'Daylight', swatch: '#F5F5F7', border: '#D2D2D7' },
+  { id: 'sand', label: 'Sand', swatch: '#F7F5F0', border: '#D4CFC3' },
+  { id: 'dusk', label: 'Dusk', swatch: '#1C1E26', border: '#3E4251' },
+  { id: 'midnight', label: 'Midnight', swatch: '#0B0C10', border: '#2D3142' },
+];
+
+export function AppleAppearanceSwitcher({ theme, onSelectTheme }) {
+  return (
+    <div
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-2xs"
+      role="radiogroup"
+      aria-label="Appearance Theme"
+    >
+      <span className="text-[10px] font-semibold tracking-tight text-[var(--text-muted)] pr-0.5 hidden sm:inline">
+        Theme
+      </span>
+      {APPLE_READING_THEMES.map((item) => {
+        const active = theme === item.id;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            aria-label={`${item.label} theme`}
+            title={item.label}
+            onClick={() => onSelectTheme(item.id)}
+            className={`w-4 h-4 rounded-full transition-all cursor-pointer flex items-center justify-center ${
+              active
+                ? 'ring-2 ring-[#0071E3] ring-offset-1 ring-offset-[var(--bg-card)] scale-110'
+                : 'opacity-80 hover:opacity-100 hover:scale-105'
+            }`}
+            style={{
+              backgroundColor: item.swatch,
+              border: `1px solid ${item.border}`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export default function SignInPage({ onSuccess, theme = 'sand', onSelectTheme = () => {} }) {
   const [email, setEmail] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
@@ -207,13 +251,14 @@ export default function SignInPage({ onSuccess }) {
               </p>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-4 text-xs text-gray-600">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium border border-emerald-200">
+          <div className="flex items-center gap-3 text-xs text-gray-600">
+            <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium border border-emerald-200">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Live Workforce &amp; Payroll Feed
             </span>
-            <span className="text-gray-300">|</span>
-            <span className="font-medium text-gray-700">CHRO • CEO • CFO Boardroom View</span>
+            <span className="hidden md:inline text-gray-300">|</span>
+            <span className="hidden md:inline font-medium text-gray-700">CHRO • CEO • CFO Boardroom View</span>
+            <AppleAppearanceSwitcher theme={theme} onSelectTheme={onSelectTheme} />
           </div>
         </div>
       </header>
@@ -442,8 +487,11 @@ export default function SignInPage({ onSuccess }) {
         </div>
       </main>
 
-      <footer className="border-t border-gray-200/70 bg-white py-3 px-6 text-center text-xs text-gray-500">
-        Enterprise HR AI Agent Portfolio • Agent #09: Workforce Analytics Agent
+      <footer className="border-t border-gray-200/70 bg-white py-3 px-6 text-xs text-gray-500">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <span>Enterprise HR AI Agent Portfolio • Agent #09: Workforce Analytics Agent</span>
+          <AppleAppearanceSwitcher theme={theme} onSelectTheme={onSelectTheme} />
+        </div>
       </footer>
     </div>
   );

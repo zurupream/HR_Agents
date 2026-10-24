@@ -272,4 +272,14 @@ def test_step6_job_opening_3_default_stages_plus_dynamic_stage_addition(multista
     home_html = client.get("/").text
     assert "home-jobs-stages-overview" in home_html
     assert "openAndRequestPanelSlots" in home_html
+    assert 'data-theme="sand"' in home_html
+    assert 'data-theme-dot="daylight"' in home_html
+    assert 'data-theme-dot="sand"' in home_html
+    assert 'data-theme-dot="dusk"' in home_html
+    assert 'data-theme-dot="midnight"' in home_html
+    assert "--bg-canvas: #F7F5F0" in home_html
+    assert "--bg-canvas: #1C1E26" in home_html
+    assert "--bg-canvas: #0B0C10" in home_html
+    assert "ADK" not in home_html
+    assert "Vertex AI" not in home_html
 
