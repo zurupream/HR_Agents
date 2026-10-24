@@ -178,12 +178,12 @@ def test_adk_web_first_message_hi_with_empty_state(
 
 
 def test_get_model_name_defaults_to_gemini_2_5_pro(monkeypatch: pytest.MonkeyPatch) -> None:
-    """(c) Check get_model_name() returns 'gemini-4-argon' when MODEL_NAME is unset."""
+    """(c) Check get_model_name() returns 'enterprise-reasoning-ultra' when MODEL_NAME is unset."""
     monkeypatch.delenv("MODEL_NAME", raising=False)
-    assert agent_module.get_model_name() == "gemini-4-argon"
+    assert agent_module.get_model_name() == "enterprise-reasoning-ultra"
 
-    # Also verify .env configures MODEL_NAME=gemini-4-argon
+    # Also verify .env configures MODEL_NAME=enterprise-reasoning-ultra
     env_path = Path(agent_module.__file__).resolve().parent / ".env"
     assert env_path.exists()
     env_text = env_path.read_text(encoding="utf-8")
-    assert "MODEL_NAME=gemini-4-argon" in env_text
+    assert "MODEL_NAME=enterprise-reasoning-ultra" in env_text

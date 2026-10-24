@@ -89,10 +89,24 @@ WEBAPP_EXCEL_PATH = DATA_DIR / "screening_results.xlsx"
 STATIC_DIR = WEBAPP_DIR / "static"
 
 ALLOWED_MODELS = (
-    "gemini-4-argon",
-    "gemini-2.5-pro",
-    "gemini-2.5-flash",
+    "enterprise-reasoning-ultra",
+    "enterprise-reasoning-pro",
+    "enterprise-reasoning-fast",
 )
+
+LEGACY_MODEL_ALIASES = {
+    "gemini-4-argon": "enterprise-reasoning-ultra",
+    "gemini-2.5-pro": "enterprise-reasoning-pro",
+    "gemini-2.5-flash": "enterprise-reasoning-fast",
+}
+
+
+def normalize_model_name(model_name: str | None) -> str:
+    """Normalize legacy model identifiers to white-labeled enterprise model identifiers."""
+    cleaned = (model_name or "").strip()
+    if not cleaned:
+        return "enterprise-reasoning-ultra"
+    return LEGACY_MODEL_ALIASES.get(cleaned, cleaned)
 
 ALLOWED_JD_EXTENSIONS = {".docx", ".pdf", ".txt", ".md"}
 ALLOWED_CV_EXTENSIONS = {".docx", ".pdf", ".eml", ".txt"}
@@ -263,7 +277,7 @@ def load_settings() -> dict[str, Any]:
     defaults: dict[str, Any] = {
         "threshold": 70.0,
         "requires_continuity": False,
-        "model": "gemini-4-argon",
+        "model": "enterprise-reasoning-ultra",
         "applications_dir": str(default_app_dir),
         "redact_before_scoring": True,
         "allowed_models": list(ALLOWED_MODELS),
@@ -276,8 +290,9 @@ def load_settings() -> dict[str, Any]:
                     defaults["threshold"] = float(saved["threshold"])
                 if "requires_continuity" in saved:
                     defaults["requires_continuity"] = bool(saved["requires_continuity"])
-                if saved.get("model") in ALLOWED_MODELS:
-                    defaults["model"] = saved["model"]
+                norm_model = normalize_model_name(saved.get("model"))
+                if norm_model in ALLOWED_MODELS:
+                    defaults["model"] = norm_model
                 if saved.get("applications_dir"):
                     try:
                         valid_dir = validate_applications_dir(str(saved["applications_dir"]))
@@ -376,7 +391,7 @@ def _serialize_job(db: Session, job: Job) -> dict[str, Any]:
             "started_at": last_run.started_at,
             "finished_at": last_run.finished_at,
             "candidate_count": last_run.candidate_count,
-            "model": last_run.model,
+            "model": normalize_model_name(last_run.model),
             "threshold": last_run.threshold,
             "error": last_run.error,
         }
@@ -388,7 +403,7 @@ def _serialize_job(db: Session, job: Job) -> dict[str, Any]:
         "applications_dir": job.applications_dir,
         "threshold": float(job.threshold),
         "requires_continuity": bool(job.requires_continuity),
-        "model": job.model,
+        "model": normalize_model_name(job.model),
         "candidate_count": cand_count,
         "last_run_status": last_run_status,
         "last_run": last_run_info,
@@ -606,11 +621,11 @@ def _regenerate_excel_from_db(
     candidate_mapping: dict[str, dict[str, str]] = {}
     threshold_val = float(job_row.threshold) if job_row else 70.0
     requires_continuity_val = bool(job_row.requires_continuity) if job_row else False
-    model_val = str(job_row.model) if job_row else "gemini-4-argon"
+    model_val = normalize_model_name(str(job_row.model) if job_row else "enterprise-reasoning-ultra")
 
     if target_run is not None:
         threshold_val = float(target_run.threshold)
-        model_val = target_run.model
+        model_val = normalize_model_name(target_run.model)
         try:
             s_data = json.loads(target_run.settings_json or "{}")
             requires_continuity_val = bool(s_data.get("requires_continuity", requires_continuity_val))
@@ -986,7 +1001,7 @@ class SettingsUpdateRequest(BaseModel):
 
     threshold: float = Field(default=70.0)
     requires_continuity: bool = Field(default=False)
-    model: str = Field(default="gemini-4-argon")
+    model: str = Field(default="enterprise-reasoning-ultra")
     applications_dir: str | None = Field(default=None)
     redact_before_scoring: bool = Field(default=True)
 
@@ -1667,7 +1682,7 @@ def _build_job_results_payload(
             "started_at": latest_run.started_at,
             "finished_at": latest_run.finished_at,
             "status": latest_run.status,
-            "model": latest_run.model,
+            "model": normalize_model_name(latest_run.model),
             "threshold": latest_run.threshold,
             "candidate_count": latest_run.candidate_count,
         },
@@ -2051,6 +2066,7 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Job Title is required.",
             )
+        model = normalize_model_name(model)
         if model not in ALLOWED_MODELS:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -2381,7 +2397,8 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
     ) -> dict[str, Any]:
         """Validate and update screening settings."""
         init_db()
-        if payload.model not in ALLOWED_MODELS:
+        normalized_model = normalize_model_name(payload.model)
+        if normalized_model not in ALLOWED_MODELS:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid model '{payload.model}'. Allowed models: {', '.join(ALLOWED_MODELS)}.",
@@ -2410,7 +2427,7 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
             {
                 "threshold": payload.threshold,
                 "requires_continuity": payload.requires_continuity,
-                "model": payload.model,
+                "model": normalized_model,
                 "applications_dir": app_dir_str,
                 "redact_before_scoring": True,
             }
@@ -2515,7 +2532,7 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
             "status": run_row.status,
             "started_at": run_row.started_at,
             "finished_at": run_row.finished_at,
-            "model": run_row.model,
+            "model": normalize_model_name(run_row.model),
             "threshold": run_row.threshold,
             "candidate_count": total,
             "current_candidate_index": current_idx,
@@ -2613,7 +2630,7 @@ def create_webapp(initialize_db: bool = True) -> FastAPI:
                     "started_at": r.started_at,
                     "finished_at": r.finished_at,
                     "status": r.status,
-                    "model": r.model,
+                    "model": normalize_model_name(r.model),
                     "threshold": r.threshold,
                     "requires_continuity": bool(parsed_settings.get("requires_continuity", False)),
                     "candidate_count": r.candidate_count,

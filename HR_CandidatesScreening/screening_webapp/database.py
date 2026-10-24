@@ -44,7 +44,7 @@ class Job(Base):
     applications_dir = Column(Text, nullable=False)
     threshold = Column(Float, nullable=False, default=70.0)
     requires_continuity = Column(Boolean, nullable=False, default=False)
-    model = Column(String(64), nullable=False, default="gemini-4-argon")
+    model = Column(String(64), nullable=False, default="enterprise-reasoning-ultra")
     created_at_utc = Column(String(64), nullable=False)
     created_by_email = Column(String(255), nullable=False, default="system")
 

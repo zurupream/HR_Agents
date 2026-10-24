@@ -452,7 +452,7 @@ async function loadJobs() {
 
 function formatSettingsSummary(threshold, model) {
   const cleanThreshold = Math.round(Number(threshold ?? 70));
-  const cleanModel = model || "gemini-4-argon";
+  const cleanModel = model || "enterprise-reasoning-ultra";
   return `Threshold ${cleanThreshold} · ${cleanModel} · Redaction on`;
 }
 
@@ -460,7 +460,7 @@ function updateSettingsSummary() {
   const summaryEl = document.getElementById("settings-summary");
   if (!summaryEl) return;
   const threshold = document.getElementById("setting-threshold")?.value ?? 70;
-  const model = document.getElementById("setting-model")?.value || "gemini-4-argon";
+  const model = document.getElementById("setting-model")?.value || "enterprise-reasoning-ultra";
   summaryEl.textContent = formatSettingsSummary(threshold, model);
 }
 
@@ -474,7 +474,7 @@ function syncJobFormDefaults(threshold, requiresContinuity, model) {
   const jobCont = document.getElementById("new-job-continuity");
   if (jobCont) jobCont.checked = Boolean(requiresContinuity);
   const jobModel = document.getElementById("new-job-model");
-  if (jobModel) jobModel.value = model || "gemini-4-argon";
+  if (jobModel) jobModel.value = model || "enterprise-reasoning-ultra";
 }
 
 function setSettingsPanelFolded(folded) {
@@ -509,7 +509,7 @@ async function createNewJob(andRun = false) {
   const title = (titleEl ? titleEl.value : "").trim() || "Sales Executive - Retail and Business Clients";
   const threshold = Number(thresholdEl ? thresholdEl.value : 70);
   const requiresContinuity = Boolean(continuityEl && continuityEl.checked);
-  const model = modelEl ? modelEl.value : "gemini-4-argon";
+  const model = modelEl ? modelEl.value : "enterprise-reasoning-ultra";
   const serverDir = (serverDirEl ? serverDirEl.value : "").trim();
 
   const formData = new FormData();
@@ -567,7 +567,7 @@ async function createNewJob(andRun = false) {
     syncJobFormDefaults(
       document.getElementById("setting-threshold")?.value ?? 70,
       document.getElementById("setting-continuity")?.checked ?? false,
-      document.getElementById("setting-model")?.value || "gemini-4-argon"
+      document.getElementById("setting-model")?.value || "enterprise-reasoning-ultra"
     );
 
     activeJobId = job.job_id;
@@ -598,10 +598,10 @@ async function loadSettings() {
   const contEl = document.getElementById("setting-continuity");
   if (contEl) contEl.checked = Boolean(s.requires_continuity);
   const modelEl = document.getElementById("setting-model");
-  if (modelEl) modelEl.value = s.model || "gemini-4-argon";
+  if (modelEl) modelEl.value = s.model || "enterprise-reasoning-ultra";
 
   updateSettingsSummary();
-  syncJobFormDefaults(s.threshold ?? 70, s.requires_continuity, s.model || "gemini-4-argon");
+  syncJobFormDefaults(s.threshold ?? 70, s.requires_continuity, s.model || "enterprise-reasoning-ultra");
 }
 
 async function saveSettings(silent = false) {
@@ -1645,26 +1645,53 @@ function switchTab(tabName) {
   }
 }
 
+const VALID_THEMES = ["daylight", "sand", "dusk", "midnight"];
+
+function normalizeTheme(theme) {
+  if (VALID_THEMES.includes(theme)) return theme;
+  if (theme === "light") return "daylight";
+  if (theme === "dark") return "dusk";
+  return "sand";
+}
+
 function setupTheme() {
   const select = document.getElementById("theme-select");
-  const savedTheme = localStorage.getItem("hr_theme_pref") || "system";
-  select.value = savedTheme;
+  const savedTheme = normalizeTheme(localStorage.getItem("hr_theme_pref") || "sand");
   applyTheme(savedTheme);
 
-  select.addEventListener("change", () => {
-    const val = select.value;
-    localStorage.setItem("hr_theme_pref", val);
-    applyTheme(val);
+  if (select) {
+    select.addEventListener("change", () => {
+      const val = normalizeTheme(select.value);
+      localStorage.setItem("hr_theme_pref", val);
+      applyTheme(val);
+    });
+  }
+
+  document.querySelectorAll(".theme-dot[data-theme-val]").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const val = normalizeTheme(dot.getAttribute("data-theme-val"));
+      localStorage.setItem("hr_theme_pref", val);
+      applyTheme(val);
+    });
   });
 }
 
 function applyTheme(theme) {
+  const validTheme = normalizeTheme(theme);
   const root = document.documentElement;
-  if (theme === "light" || theme === "dark") {
-    root.setAttribute("data-theme", theme);
-  } else {
-    root.removeAttribute("data-theme");
+  root.setAttribute("data-theme", validTheme);
+  root.classList.toggle("dark", validTheme === "dusk" || validTheme === "midnight");
+
+  const select = document.getElementById("theme-select");
+  if (select && select.value !== validTheme) {
+    select.value = validTheme;
   }
+
+  document.querySelectorAll(".theme-dot[data-theme-val]").forEach((dot) => {
+    const isActive = dot.getAttribute("data-theme-val") === validTheme;
+    dot.classList.toggle("active", isActive);
+    dot.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

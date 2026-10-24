@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Candidates Screening Agent — Enterprise HR Review Portal</title>
-  <link rel="stylesheet" href="/static/styles.css?v=20261021d" />
+  <link rel="stylesheet" href="/static/styles.css?v=20261024a" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
         </div>
         <h1 class="signin-hero-title">Candidates Screening Agent</h1>
         <p class="signin-hero-subtitle">
-          Blind CV redaction, multi-agent Gemini rubric scoring, and Human-in-the-Loop HR shortlisting with full SQLite &amp; Excel auditability.
+          Blind CV redaction, multi-agent AI rubric scoring, and Human-in-the-Loop HR shortlisting with full SQLite &amp; Excel auditability.
         </p>
 
         <div class="signin-workflow-title">3-Step Autonomous Screening Workflow</div>
@@ -64,7 +64,15 @@
 
       <!-- Right Panel: Enterprise Google Workspace SSO -->
       <div class="signin-card">
-        <div class="signin-card-badge">ENTERPRISE WORKSPACE SSO</div>
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+          <div class="signin-card-badge" style="margin-bottom: 0;">ENTERPRISE WORKSPACE SSO</div>
+          <div class="theme-switcher-pill" role="group" aria-label="Appearance theme">
+            <button type="button" class="theme-dot theme-dot-daylight" data-theme-val="daylight" title="Studio Daylight" aria-label="Studio Daylight"></button>
+            <button type="button" class="theme-dot theme-dot-sand active" data-theme-val="sand" title="Warm Sand" aria-label="Warm Sand"></button>
+            <button type="button" class="theme-dot theme-dot-dusk" data-theme-val="dusk" title="Quiet Dusk" aria-label="Quiet Dusk"></button>
+            <button type="button" class="theme-dot theme-dot-midnight" data-theme-val="midnight" title="Midnight OLED" aria-label="Midnight OLED"></button>
+          </div>
+        </div>
         <h1>Sign In to Screening Agent</h1>
         <p>Authenticate with your authorized Google Workspace account to access candidate screening, rubric evaluation, and HR review.</p>
 
@@ -102,6 +110,12 @@
         <span id="topbar-active-job" class="badge badge-hr hidden"></span>
       </div>
       <div class="topbar-actions">
+        <div class="theme-switcher-pill" role="group" aria-label="Appearance theme">
+          <button type="button" class="theme-dot theme-dot-daylight" data-theme-val="daylight" title="Studio Daylight" aria-label="Studio Daylight"></button>
+          <button type="button" class="theme-dot theme-dot-sand active" data-theme-val="sand" title="Warm Sand" aria-label="Warm Sand"></button>
+          <button type="button" class="theme-dot theme-dot-dusk" data-theme-val="dusk" title="Quiet Dusk" aria-label="Quiet Dusk"></button>
+          <button type="button" class="theme-dot theme-dot-midnight" data-theme-val="midnight" title="Midnight OLED" aria-label="Midnight OLED"></button>
+        </div>
         <button id="btn-default-settings" type="button" class="btn btn-outline settings-trigger-btn" aria-expanded="false" aria-controls="settings-panel" title="Global &amp; Default Settings">
           <span>⚙️ Settings</span>
           <span class="sr-only">Default settings</span>
@@ -119,7 +133,7 @@
         <div class="settings-panel-header">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <h2>Global &amp; Default Screening Settings</h2>
-            <span id="settings-summary" class="settings-summary-pill" aria-live="polite">Threshold 70 · gemini-4-argon · Redaction on</span>
+            <span id="settings-summary" class="settings-summary-pill" aria-live="polite">Threshold 70 · enterprise-reasoning-ultra · Redaction on</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <button id="btn-export-excel" type="button" class="btn btn-outline btn-xs">
@@ -135,11 +149,12 @@
           <div class="form-group">
             <label for="theme-select">Appearance / Theme</label>
             <select id="theme-select" class="select-input" aria-label="Color theme">
-              <option value="system">Theme: Follow OS</option>
-              <option value="light">Theme: Light</option>
-              <option value="dark">Theme: Dark</option>
+              <option value="sand">Warm Sand (Default)</option>
+              <option value="daylight">Studio Daylight</option>
+              <option value="dusk">Quiet Dusk</option>
+              <option value="midnight">Midnight OLED</option>
             </select>
-            <div class="form-help">Switch between OS default, light, or dark interface theme.</div>
+            <div class="form-help">Switch between curated Apple-inspired reading themes.</div>
           </div>
 
           <div class="form-group">
@@ -162,9 +177,9 @@
           <div class="form-group">
             <label for="setting-model">AI Model</label>
             <select id="setting-model" class="select-input">
-              <option value="gemini-4-argon">gemini-4-argon (Strongest)</option>
-              <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-              <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+              <option value="enterprise-reasoning-ultra">enterprise-reasoning-ultra (Strongest)</option>
+              <option value="enterprise-reasoning-pro">enterprise-reasoning-pro</option>
+              <option value="enterprise-reasoning-fast">enterprise-reasoning-fast</option>
             </select>
           </div>
 
@@ -276,9 +291,9 @@
               <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
                 <label for="new-job-model">AI Model</label>
                 <select id="new-job-model" class="select-input">
-                  <option value="gemini-4-argon">gemini-4-argon (Strongest)</option>
-                  <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-                  <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                  <option value="enterprise-reasoning-ultra">enterprise-reasoning-ultra (Strongest)</option>
+                  <option value="enterprise-reasoning-pro">enterprise-reasoning-pro</option>
+                  <option value="enterprise-reasoning-fast">enterprise-reasoning-fast</option>
                 </select>
               </div>
 
@@ -611,6 +626,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=20261021d"></script>
+  <script src="/static/app.js?v=20261024a"></script>
 </body>
 </html>

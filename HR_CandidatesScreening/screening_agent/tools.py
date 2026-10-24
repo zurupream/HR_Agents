@@ -554,7 +554,13 @@ def write_results_excel(
 
     eval_objs.sort(key=_sort_key)
 
-    resolved_model = model_name or os.environ.get("MODEL_NAME") or "gemini-4-argon"
+    _public_model_labels = {
+        "gemini-4-argon": "enterprise-reasoning-ultra",
+        "gemini-2.5-pro": "enterprise-reasoning-pro",
+        "gemini-2.5-flash": "enterprise-reasoning-fast",
+    }
+    raw_model = model_name or os.environ.get("MODEL_NAME") or "enterprise-reasoning-ultra"
+    resolved_model = _public_model_labels.get(raw_model, raw_model)
     wb = Workbook()
 
     # Styles

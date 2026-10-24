@@ -285,7 +285,7 @@ def test_settings_validation(
     defaults = get_resp.json()
     assert defaults["threshold"] == 70.0
     assert defaults["requires_continuity"] is False
-    assert defaults["model"] == "gemini-4-argon"
+    assert defaults["model"] == "enterprise-reasoning-ultra"
     assert defaults["redact_before_scoring"] is True
 
     # Invalid model not in allow-list -> rejected (400)
@@ -303,7 +303,7 @@ def test_settings_validation(
         json={
             "threshold": 70,
             "requires_continuity": False,
-            "model": "gemini-4-argon",
+            "model": "enterprise-reasoning-ultra",
             "applications_dir": "/etc",
         },
     )
@@ -315,7 +315,7 @@ def test_settings_validation(
         json={
             "threshold": 70,
             "requires_continuity": False,
-            "model": "gemini-4-argon",
+            "model": "enterprise-reasoning-ultra",
             "applications_dir": "../../outside_project",
         },
     )
@@ -328,7 +328,7 @@ def test_settings_validation(
         json={
             "threshold": 70,
             "requires_continuity": False,
-            "model": "gemini-4-argon",
+            "model": "enterprise-reasoning-ultra",
             "redact_before_scoring": False,
         },
     )
@@ -341,14 +341,14 @@ def test_settings_validation(
         json={
             "threshold": 75,
             "requires_continuity": True,
-            "model": "gemini-2.5-pro",
+            "model": "enterprise-reasoning-pro",
         },
     )
     assert ok_resp.status_code == 200
     updated = ok_resp.json()
     assert updated["threshold"] == 75.0
     assert updated["requires_continuity"] is True
-    assert updated["model"] == "gemini-2.5-pro"
+    assert updated["model"] == "enterprise-reasoning-pro"
     assert updated["redact_before_scoring"] is True
 
 
@@ -888,7 +888,7 @@ def test_t019_create_jobs_run_filter_decisions_and_export(
             "title": "Sales Executive - Retail Clients",
             "threshold": "70",
             "requires_continuity": "false",
-            "model": "gemini-4-argon",
+            "model": "enterprise-reasoning-ultra",
             "cv_paths": [
                 "applications/Dummy Candidate A/cv.pdf",
                 "applications/Dummy Candidate A/cover_letter.docx",
@@ -929,7 +929,7 @@ def test_t019_create_jobs_run_filter_decisions_and_export(
             "applications_dir": str(sales_dataset["applications_dir"]),
             "threshold": 70.0,
             "requires_continuity": False,
-            "model": "gemini-4-argon",
+            "model": "enterprise-reasoning-ultra",
         },
     )
     assert j2_resp.status_code == 200
@@ -1080,7 +1080,11 @@ def test_settings_panel_folded_by_default_and_new_jobs_use_saved_defaults(
     assert 'aria-controls="settings-panel"' in html
     assert "Default settings" in html
     assert 'id="settings-summary"' in html
-    assert "Threshold 70 · gemini-4-argon · Redaction on" in html
+    assert "Threshold 70 · enterprise-reasoning-ultra · Redaction on" in html
+    assert 'data-theme-val="daylight"' in html
+    assert 'data-theme-val="sand"' in html
+    assert 'data-theme-val="dusk"' in html
+    assert 'data-theme-val="midnight"' in html
 
     # 2. Settings panel is folded away by default
     assert (
@@ -1102,7 +1106,7 @@ def test_settings_panel_folded_by_default_and_new_jobs_use_saved_defaults(
         json={
             "threshold": 82,
             "requires_continuity": True,
-            "model": "gemini-2.5-pro",
+            "model": "enterprise-reasoning-pro",
             "redact_before_scoring": True,
         },
     )
@@ -1110,7 +1114,7 @@ def test_settings_panel_folded_by_default_and_new_jobs_use_saved_defaults(
     saved = save_resp.json()
     assert saved["threshold"] == 82.0
     assert saved["requires_continuity"] is True
-    assert saved["model"] == "gemini-2.5-pro"
+    assert saved["model"] == "enterprise-reasoning-pro"
 
     sales_dataset = test_env["sales_dataset"]
     job_resp = client.post(
@@ -1126,6 +1130,6 @@ def test_settings_panel_folded_by_default_and_new_jobs_use_saved_defaults(
     created_job = job_resp.json()["job"]
     assert created_job["threshold"] == 82.0
     assert created_job["requires_continuity"] is True
-    assert created_job["model"] == "gemini-2.5-pro"
+    assert created_job["model"] == "enterprise-reasoning-pro"
     assert created_job["applications_dir"] == str(sales_dataset["applications_dir"])
 

@@ -284,7 +284,13 @@ def apply_uncertainty_rules(
 
 def get_model_name() -> str:
     """Return the configured LLM model name from the environment."""
-    return os.environ.get("MODEL_NAME") or "gemini-4-argon"
+    raw = os.environ.get("MODEL_NAME") or "enterprise-reasoning-ultra"
+    _aliases = {
+        "gemini-4-argon": "enterprise-reasoning-ultra",
+        "gemini-2.5-pro": "enterprise-reasoning-pro",
+        "gemini-2.5-flash": "enterprise-reasoning-fast",
+    }
+    return _aliases.get(raw, raw)
 
 
 def _has_live_genai_credentials() -> bool:
@@ -671,9 +677,16 @@ class ScreeningAdkLlm(BaseLlm):
     async def generate_content_async(
         self, llm_request: LlmRequest, stream: bool = False
     ) -> AsyncGenerator[LlmResponse, None]:
-        """Use live Gemini API if credentials exist; otherwise run deterministic schema evaluator."""
+        """Use live LLM API if credentials exist; otherwise run deterministic schema evaluator."""
         if _has_live_genai_credentials():
-            gemini_llm = Gemini(model=self.model)
+            _sdk_model_map = {
+                "enterprise-reasoning-ultra": "gemini-2.5-pro",
+                "enterprise-reasoning-pro": "gemini-2.5-pro",
+                "enterprise-reasoning-fast": "gemini-2.5-flash",
+                "gemini-4-argon": "gemini-2.5-pro",
+            }
+            sdk_model = _sdk_model_map.get(self.model, self.model)
+            gemini_llm = Gemini(model=sdk_model)
             async for resp in gemini_llm.generate_content_async(llm_request, stream=stream):
                 yield resp
             return
@@ -1232,7 +1245,7 @@ def create_http_app() -> FastAPI:
     """Create the HTTP entry point that enforces Google OAuth ID token verification."""
     api = FastAPI(
         title="Candidate Screening Agent API",
-        description="Google ADK Candidate Screening Service protected by Google OAuth.",
+        description="Enterprise AI Candidate Screening Service protected by Google OAuth.",
         version="1.0.0",
     )
 
